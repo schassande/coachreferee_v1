@@ -1,0 +1,75 @@
+<!--
+  Generated template for the CoachingGamePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
+        <ion-title>Coaching</ion-title>
+    </ion-navbar>
+    <ion-toolbar *ngIf="coaching">
+        <button ion-button class="buttonReferee" *ngIf="coaching.referees[0].refereeShortName" (click)="refereeSelected(0)" [ngClass]="{'refereeSelected' : currentRefereeIdx == 0}">
+            {{coaching.referees[0].refereeShortName}}
+        </button>
+        <button ion-button class="buttonReferee" *ngIf="coaching.referees[1].refereeShortName" (click)="refereeSelected(1)" [ngClass]="{'refereeSelected' : currentRefereeIdx == 1}">
+            {{coaching.referees[1].refereeShortName}}
+        </button>
+        <button ion-button class="buttonReferee" *ngIf="coaching.referees[2].refereeShortName" (click)="refereeSelected(2)" [ngClass]="{'refereeSelected' : currentRefereeIdx == 2}">
+            {{coaching.referees[2].refereeShortName}}
+        </button>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding *ngIf="coaching">
+    <div *ngIf="currentReferee" style="text-align: center;margin-bottom: 10px;">{{currentReferee.firstName}} {{currentReferee.lastName}}, {{currentReferee.referee.refereeLevel}}/{{currentReferee.referee.refereeCategory}}</div>
+    <ion-list>
+        <ion-item-group>
+            <ion-item-divider color="light">Positive points ({{coaching.referees[currentRefereeIdx].positiveFeedbacks.length}})</ion-item-divider>
+            <ion-item *ngFor="let positiveFeedback of coaching.referees[currentRefereeIdx].positiveFeedbacks; let idx = index" [ngClass]="{'period1' : positiveFeedback.period == 1, 'period2' : positiveFeedback.period == 2}">
+                <ion-icon name="star" (click)="deliverPositiveFeedback(positiveFeedback, idx)" class="star" [ngClass]="{'yellowStar' : positiveFeedback.deliver}"></ion-icon>
+                <p (click)="selectPositiveFeedback(positiveFeedback, idx)" class="feedbackTxt">{{positiveFeedback.skillName}}</p>
+                <ion-icon item-end name="trash" (click)="deletePositiveFeedback(idx)"></ion-icon>
+            </ion-item>
+            <div *ngIf="coaching.referees[currentRefereeIdx].positiveFeedbacks.length == 0" style="padding: 5px;">No positive feedback, please click on green + to add one.</div>
+        </ion-item-group>
+        <ion-item-group style="margin-top: 20px;">
+            <ion-item-divider color="light">Axis of improvment ({{coaching.referees[currentRefereeIdx].feedbacks.length}})</ion-item-divider>
+            <ion-item *ngFor="let feedback of coaching.referees[currentRefereeIdx].feedbacks; let idx = index" [ngClass]="{'period1' : feedback.period == 1, 'period2' : feedback.period == 2}">
+                <ion-icon name="star" (click)="deliverFeedback(feedback, idx)" class="star" [ngClass]="{'yellowStar' : feedback.deliver}"></ion-icon>
+                <p (click)="selectFeedback(feedback, idx)" class="feedbackTxt">{{feedback.problemShortDesc}}</p>
+                <ion-icon item-end name="trash" (click)="deleteFeedback(idx)"></ion-icon>
+            </ion-item>
+            <div *ngIf="coaching.referees[currentRefereeIdx].feedbacks.length == 0" style="padding: 5px;">No feedback, please click on red + to add one.</div>
+        </ion-item-group>
+        <ion-item-group style="margin-top: 20px;">
+            <ion-item-divider color="light">Misc</ion-item-divider>
+            <ion-item *ngIf="lookingForUpgrade()">
+                <ion-label>Upgrade</ion-label>
+                <ion-select [(ngModel)]="coaching.referees[currentRefereeIdx].upgrade" (ionChange)="saveCoaching()">
+                    <ion-option value="DNS">Do Not See</ion-option>
+                    <ion-option value="DNSE">Do Not See Enough</ion-option>
+                    <ion-option value="No">No</ion-option>
+                    <ion-option value="Possible">Possible</ion-option>
+                    <ion-option value="Yes">Yes</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label>Rank</ion-label>
+                <ion-input type="number" [(ngModel)]="coaching.referees[currentRefereeIdx].rank" (change)="saveCoaching()"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Current Period</ion-label>
+                <ion-input type="number" [(ngModel)]="currentPeriod"></ion-input>
+            </ion-item>
+        </ion-item-group>
+    </ion-list>
+    <button ion-button (click)="sendCoaching($event)" style="width: 80%;">Send by email</button>
+    <ion-fab bottom right>
+        <button ion-fab (click)="newPositiveFeedback($event)" class="plusButton greenButton">+</button>
+        <button ion-fab (click)="newFeedback($event)" class="plusButton redButton">+</button>
+    </ion-fab>
+</ion-content>

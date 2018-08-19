@@ -1,0 +1,21 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+        <ion-title>Home {{getShortName()}}</ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <div class="welcome">Welcome to Referee coaching application !</div>
+    <ion-list>
+        <button ion-item detail-push class="menu-entry" [navPush]="coachingNewPage">Coach a game</button>
+        <button ion-item detail-push class="menu-entry" [navPush]="homePage">Report</button>
+        <button ion-item detail-push class="menu-entry" [navPush]="refereeListPage">Referees</button>
+        <button ion-item detail-push class="menu-entry" [navPush]="skillProfilePage">Profiles n skills</button>
+        <button ion-item detail-push class="menu-entry" [navPush]="proPage">PROs</button>
+        <button ion-item detail-push class="menu-entry" [navPush]="settingsPage">Settings</button>
+        <button ion-item detail-push class="menu-entry" (click)="gotToMyAccount()" *ngIf="this.connectedUserService.isConnected()">My account</button>
+        <button ion-item detail-push class="menu-entry" [navPush]="userSelectionPage">Change of account</button>
+    </ion-list>
+</ion-content>

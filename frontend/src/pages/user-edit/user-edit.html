@@ -1,0 +1,77 @@
+<!--
+  Generated template for the UserNewPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-navbar>
+        <ion-title>Account Edition</ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <ion-list *ngIf="user">
+        <ion-item>
+            <ion-label *ngIf="!user.photo || !user.photo.url">No photo</ion-label>
+            <ion-avatar item-start *ngIf="user.photo && user.photo.url"><img src="{{user.photo.url}}"></ion-avatar>
+            <ion-icon item-end name="camera" (click)="getPicture()"></ion-icon>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>First name</ion-label>
+            <ion-input type="text" [(ngModel)]="user.firstName"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>Last name</ion-label>
+            <ion-input type="text" [(ngModel)]="user.lastName"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>Short Name</ion-label>
+            <ion-input type="text" [(ngModel)]="user.shortName"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>Email</ion-label>
+            <ion-input type="text" [(ngModel)]="user.email"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>Password</ion-label>
+            <ion-input type="password" [(ngModel)]="user.password"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Birthday</ion-label>
+            <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD/MM/YYYY" [(ngModel)]="user.birthday"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label>Country</ion-label>
+            <ion-select [(ngModel)]="user.country">
+                <ion-option value="Australia">Australia</ion-option>
+                <ion-option value="Austria">Austria</ion-option>
+                <ion-option value="England">England</ion-option>
+                <ion-option value="France">France</ion-option>
+                <ion-option value="Germany">Germany</ion-option>
+                <ion-option value="Scotland">Scotland</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label>Gender</ion-label>
+            <ion-select [(ngModel)]="user.gender">
+                <ion-option value="F">Female</ion-option>
+                <ion-option value="M">Male</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>Mobile phones</ion-label>
+            <ion-input type="phone" [(ngModel)]="user.mobilePhones"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Speaking languages</ion-label>
+            <ion-select [(ngModel)]="user.speakingLanguages" multiple="true">
+                <ion-option value="FR">Francais</ion-option>
+                <ion-option value="EN">English</ion-option>
+                <ion-option value="DE">Deush</ion-option>
+                <ion-option value="ES">Spanish</ion-option>
+            </ion-select>
+        </ion-item>
+    </ion-list>
+
+    <button ion-button secondary (click)="newUser($event)" style="width: 100%;" class="greenButton">Save</button>
+</ion-content>
