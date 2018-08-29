@@ -21,7 +21,7 @@ export class SkillProfileService  extends RemotePersistentDataService<SkillProfi
     }
     
     getLocalStoragePrefix() {
-        return 'skillprofiles'
+        return 'skillprofile'
     }
 
     getPriority(): number { 

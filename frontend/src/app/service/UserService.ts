@@ -26,7 +26,7 @@ export class UserService  extends RemotePersistentDataService<User>{
     }
 
     getLocalStoragePrefix() {
-        return 'users'
+        return 'user'
     }
 
     getPriority(): number { 

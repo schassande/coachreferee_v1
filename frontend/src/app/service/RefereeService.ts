@@ -23,7 +23,7 @@ export class RefereeService extends RemotePersistentDataService<Referee>{
     }
     
     getLocalStoragePrefix() {
-        return 'referees'
+        return 'referee'
     }
 
     getPriority(): number { 

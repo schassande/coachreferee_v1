@@ -23,7 +23,7 @@ export class PROService extends RemotePersistentDataService<PersistentPRO>{
     }
 
     getLocalStoragePrefix() {
-        return 'pros';
+        return 'pro';
     }
 
     getPriority(): number { 

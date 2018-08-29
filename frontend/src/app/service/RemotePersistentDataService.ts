@@ -71,7 +71,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             data.version ++;
         }
         if (data.id === 0) {
-            data.id = -new Date().getTime();
+            data.id = new Date().getTime();
             data.creationDate = new Date();
             data.dataStatus = 'NEW';
         } else {
