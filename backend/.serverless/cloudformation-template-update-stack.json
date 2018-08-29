@@ -1,0 +1,4771 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "The AWS CloudFormation template for this Serverless application",
+  "Resources": {
+    "ServerlessDeploymentBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+    "AuthorizerLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-authorizer"
+      }
+    },
+    "AuthorizerDashpassthroughLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-authorizer-passthrough"
+      }
+    },
+    "AuthenticationLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-authentication"
+      }
+    },
+    "SaveuserLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-saveuser"
+      }
+    },
+    "RemoveuserLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-removeuser"
+      }
+    },
+    "GetuserLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-getuser"
+      }
+    },
+    "GetusersLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-getusers"
+      }
+    },
+    "GetAssessmentLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-assessment-get"
+      }
+    },
+    "GetAssessmentsLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-assessment-gets"
+      }
+    },
+    "SaveAssessmentLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-assessment-save"
+      }
+    },
+    "RemoveAssessmentLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-assessment-remove"
+      }
+    },
+    "GetCoachingLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-coaching-get"
+      }
+    },
+    "GetCoachingsLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-coaching-gets"
+      }
+    },
+    "SaveCoachingLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-coaching-save"
+      }
+    },
+    "RemoveCoachingLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-coaching-remove"
+      }
+    },
+    "GetProLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-pro-get"
+      }
+    },
+    "GetProsLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-pro-gets"
+      }
+    },
+    "SaveProLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-pro-save"
+      }
+    },
+    "RemoveProLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-pro-remove"
+      }
+    },
+    "GetRefereeLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-referee-get"
+      }
+    },
+    "GetRefereesLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-referee-gets"
+      }
+    },
+    "SaveRefereeLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-referee-save"
+      }
+    },
+    "RemoveRefereeLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-referee-remove"
+      }
+    },
+    "GetSkillProfileLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-skillprofile-get"
+      }
+    },
+    "GetSkillProfilesLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-skillprofile-gets"
+      }
+    },
+    "SaveSkillProfileLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-skillprofile-save"
+      }
+    },
+    "RemoveSkillProfileLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/refcoach-skillprofile-remove"
+      }
+    },
+    "IamRoleLambdaExecution": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": {
+              "Fn::Join": [
+                "-",
+                [
+                  "dev",
+                  "refcoach",
+                  "lambda"
+                ]
+              ]
+            },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogStream"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-authorizer:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-authorizer-passthrough:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-authentication:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-saveuser:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-removeuser:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-getuser:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-getusers:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-assessment-get:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-assessment-gets:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-assessment-save:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-assessment-remove:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-coaching-get:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-coaching-gets:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-coaching-save:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-coaching-remove:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-pro-get:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-pro-gets:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-pro-save:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-pro-remove:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-referee-get:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-referee-gets:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-referee-save:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-referee-remove:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-skillprofile-get:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-skillprofile-gets:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-skillprofile-save:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-skillprofile-remove:*"
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-authorizer:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-authorizer-passthrough:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-authentication:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-saveuser:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-removeuser:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-getuser:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-getusers:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-assessment-get:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-assessment-gets:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-assessment-save:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-assessment-remove:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-coaching-get:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-coaching-gets:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-coaching-save:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-coaching-remove:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-pro-get:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-pro-gets:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-pro-save:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-pro-remove:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-referee-get:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-referee-gets:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-referee-save:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-referee-remove:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-skillprofile-get:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-skillprofile-gets:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-skillprofile-save:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/refcoach-skillprofile-remove:*:*"
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:DescribeTable",
+                    "dynamodb:Query",
+                    "dynamodb:Scan",
+                    "dynamodb:GetItem",
+                    "dynamodb:PutItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:DeleteItem"
+                  ],
+                  "Resource": "arn:aws:dynamodb:eu-west-1:*:table/refcoach_*"
+                }
+              ]
+            }
+          }
+        ],
+        "Path": "/",
+        "RoleName": {
+          "Fn::Join": [
+            "-",
+            [
+              "refcoach",
+              "dev",
+              "eu-west-1",
+              "lambdaRole"
+            ]
+          ]
+        }
+      }
+    },
+    "AuthorizerLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-authorizer",
+        "Handler": "src/user/lambda-authorizer.handler",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "The custom authorizer used by API GW to validate a token",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "AuthorizerLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "AuthorizerLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "AuthorizerLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "The custom authorizer used by API GW to validate a token"
+      }
+    },
+    "AuthorizerDashpassthroughLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-authorizer-passthrough",
+        "Handler": "src/user/lambda-authorizer-passthrough.handler",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "The custom authorizer passthrough used by API GW to validate a token when there is one",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "AuthorizerDashpassthroughLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "AuthorizerDashpassthroughLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "AuthorizerDashpassthroughLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "The custom authorizer passthrough used by API GW to validate a token when there is one"
+      }
+    },
+    "AuthenticationLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-authentication",
+        "Handler": "src/user/lambda-authentication.handler",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "The lambda in charge of user authentication",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "AuthenticationLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "AuthenticationLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "AuthenticationLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "The lambda in charge of user authentication"
+      }
+    },
+    "SaveuserLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-saveuser",
+        "Handler": "src/user/lambda-saveuser.handler",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Save an user",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "SaveuserLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "SaveuserLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "SaveuserLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Save an user"
+      }
+    },
+    "RemoveuserLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-removeuser",
+        "Handler": "src/user/lambda-removeuser.handler",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Remove an user",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "RemoveuserLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "RemoveuserLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "RemoveuserLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Remove an user"
+      }
+    },
+    "GetuserLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-getuser",
+        "Handler": "src/user/lambda-getuser.handler",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Get an user",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "GetuserLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "GetuserLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetuserLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Get an user"
+      }
+    },
+    "GetusersLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-getusers",
+        "Handler": "src/user/lambda-getusers.handler",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Get all users",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "GetusersLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "GetusersLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetusersLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Get all users"
+      }
+    },
+    "GetAssessmentLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-assessment-get",
+        "Handler": "src/lambda-crud-assessment.getItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Get an assessment",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "GetAssessmentLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "GetAssessmentLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetAssessmentLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Get an assessment"
+      }
+    },
+    "GetAssessmentsLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-assessment-gets",
+        "Handler": "src/lambda-crud-assessment.getItems",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Get all assessments",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "GetAssessmentsLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "GetAssessmentsLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetAssessmentsLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Get all assessments"
+      }
+    },
+    "SaveAssessmentLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-assessment-save",
+        "Handler": "src/lambda-crud-assessment.saveItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Save an assessment",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "SaveAssessmentLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "SaveAssessmentLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "SaveAssessmentLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Save an assessment"
+      }
+    },
+    "RemoveAssessmentLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-assessment-remove",
+        "Handler": "src/lambda-crud-assessment.removeItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Remove an assessment",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "RemoveAssessmentLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "RemoveAssessmentLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "RemoveAssessmentLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Remove an assessment"
+      }
+    },
+    "GetCoachingLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-coaching-get",
+        "Handler": "src/lambda-crud-coaching.getItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Get an coaching",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "GetCoachingLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "GetCoachingLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetCoachingLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Get an coaching"
+      }
+    },
+    "GetCoachingsLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-coaching-gets",
+        "Handler": "src/lambda-crud-coaching.getItems",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Get all coachings",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "GetCoachingsLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "GetCoachingsLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetCoachingsLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Get all coachings"
+      }
+    },
+    "SaveCoachingLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-coaching-save",
+        "Handler": "src/lambda-crud-coaching.saveItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Save an coaching",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "SaveCoachingLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "SaveCoachingLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "SaveCoachingLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Save an coaching"
+      }
+    },
+    "RemoveCoachingLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-coaching-remove",
+        "Handler": "src/lambda-crud-coaching.removeItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Remove an coaching",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "RemoveCoachingLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "RemoveCoachingLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "RemoveCoachingLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Remove an coaching"
+      }
+    },
+    "GetProLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-pro-get",
+        "Handler": "src/lambda-crud-pro.getItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Get an pro",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "GetProLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "GetProLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetProLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Get an pro"
+      }
+    },
+    "GetProsLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-pro-gets",
+        "Handler": "src/lambda-crud-pro.getItems",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Get all pros",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "GetProsLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "GetProsLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetProsLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Get all pros"
+      }
+    },
+    "SaveProLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-pro-save",
+        "Handler": "src/lambda-crud-pro.saveItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Save an pro",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "SaveProLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "SaveProLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "SaveProLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Save an pro"
+      }
+    },
+    "RemoveProLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-pro-remove",
+        "Handler": "src/lambda-crud-pro.removeItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Remove an pro",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "RemoveProLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "RemoveProLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "RemoveProLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Remove an pro"
+      }
+    },
+    "GetRefereeLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-referee-get",
+        "Handler": "src/lambda-crud-referee.getItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Get an referee",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "GetRefereeLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "GetRefereeLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetRefereeLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Get an referee"
+      }
+    },
+    "GetRefereesLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-referee-gets",
+        "Handler": "src/lambda-crud-referee.getItems",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Get all referees",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "GetRefereesLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "GetRefereesLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetRefereesLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Get all referees"
+      }
+    },
+    "SaveRefereeLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-referee-save",
+        "Handler": "src/lambda-crud-referee.saveItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Save an referee",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "SaveRefereeLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "SaveRefereeLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "SaveRefereeLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Save an referee"
+      }
+    },
+    "RemoveRefereeLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-referee-remove",
+        "Handler": "src/lambda-crud-referee.removeItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Remove an referee",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "RemoveRefereeLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "RemoveRefereeLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "RemoveRefereeLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Remove an referee"
+      }
+    },
+    "GetSkillProfileLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-skillprofile-get",
+        "Handler": "src/lambda-crud-skillprofile.getItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Get an skillprofile",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "GetSkillProfileLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "GetSkillProfileLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetSkillProfileLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Get an skillprofile"
+      }
+    },
+    "GetSkillProfilesLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-skillprofile-gets",
+        "Handler": "src/lambda-crud-skillprofile.getItems",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Get all skillprofiles",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "GetSkillProfilesLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "GetSkillProfilesLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetSkillProfilesLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Get all skillprofiles"
+      }
+    },
+    "SaveSkillProfileLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-skillprofile-save",
+        "Handler": "src/lambda-crud-skillprofile.saveItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Save an skillprofile",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "SaveSkillProfileLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "SaveSkillProfileLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "SaveSkillProfileLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Save an skillprofile"
+      }
+    },
+    "RemoveSkillProfileLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/refcoach/dev/1535527067064-2018-08-29T07:17:47.064Z/refcoach.zip"
+        },
+        "FunctionName": "refcoach-skillprofile-remove",
+        "Handler": "src/lambda-crud-skillprofile.removeItem",
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs8.10",
+        "Timeout": 300,
+        "Description": "Remove an skillprofile",
+        "Environment": {
+          "Variables": {
+            "SERVERLESS_PROJECT_NAME": "refcoach",
+            "SERVERLESS_PROJECT": "refcoach",
+            "SERVERLESS_STAGE": "dev",
+            "SERVERLESS_REGION": "eu-west-1"
+          }
+        }
+      },
+      "DependsOn": [
+        "RemoveSkillProfileLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "RemoveSkillProfileLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "RemoveSkillProfileLambdaFunction"
+        },
+        "CodeSha256": "3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380=",
+        "Description": "Remove an skillprofile"
+      }
+    },
+    "ApiGatewayRestApi": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "refcoach"
+      }
+    },
+    "ApiGatewayResourceUser": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "user",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceAssessment": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "assessment",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceCoaching": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "coaching",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourcePro": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "pro",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceReferee": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "referee",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceSkillprofile": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "skillprofile",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceUserLogin": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceUser"
+        },
+        "PathPart": "login",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceUserEmailVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceUser"
+        },
+        "PathPart": "{email}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceAssessmentIdVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceAssessment"
+        },
+        "PathPart": "{id}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceCoachingIdVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceCoaching"
+        },
+        "PathPart": "{id}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceProIdVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourcePro"
+        },
+        "PathPart": "{id}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceRefereeIdVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceReferee"
+        },
+        "PathPart": "{id}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceSkillprofileIdVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceSkillprofile"
+        },
+        "PathPart": "{id}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodUserLoginOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceUserLogin"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodUserOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceUser"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodUserEmailVarOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,DELETE'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceUserEmailVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodAssessmentIdVarOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAssessmentIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodAssessmentOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST,GET'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAssessment"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodCoachingIdVarOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachingIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodCoachingOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST,GET'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoaching"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodProIdVarOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceProIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodProOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST,GET'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourcePro"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodRefereeIdVarOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceRefereeIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodRefereeOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST,GET'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceReferee"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodSkillprofileIdVarOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceSkillprofileIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodSkillprofileOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST,GET'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceSkillprofile"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodUserLoginPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceUserLogin"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "AuthenticationLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      }
+    },
+    "ApiGatewayMethodUserPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceUser"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerDashpassthroughApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaveuserLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerDashpassthroughApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodUserEmailVarDelete": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceUserEmailVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "RemoveuserLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodUserEmailVarGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceUserEmailVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetuserLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodUserGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceUser"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetusersLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodAssessmentIdVarGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAssessmentIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetAssessmentLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodAssessmentGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAssessment"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetAssessmentsLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodAssessmentPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAssessment"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaveAssessmentLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodAssessmentIdVarDelete": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAssessmentIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "RemoveAssessmentLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodCoachingIdVarGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachingIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetCoachingLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodCoachingGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoaching"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetCoachingsLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodCoachingPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoaching"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaveCoachingLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodCoachingIdVarDelete": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachingIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "RemoveCoachingLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodProIdVarGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceProIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetProLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodProGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourcePro"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetProsLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodProPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourcePro"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaveProLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodProIdVarDelete": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceProIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "RemoveProLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodRefereeIdVarGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceRefereeIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetRefereeLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodRefereeGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceReferee"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetRefereesLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodRefereePost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceReferee"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaveRefereeLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodRefereeIdVarDelete": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceRefereeIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "RemoveRefereeLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodSkillprofileIdVarGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceSkillprofileIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetSkillProfileLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodSkillprofileGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceSkillprofile"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetSkillProfilesLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodSkillprofilePost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceSkillprofile"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaveSkillProfileLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "ApiGatewayMethodSkillprofileIdVarDelete": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceSkillprofileIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "RemoveSkillProfileLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "AuthorizerApiGatewayAuthorizer"
+    },
+    "AuthorizerDashpassthroughApiGatewayAuthorizer": {
+      "Type": "AWS::ApiGateway::Authorizer",
+      "Properties": {
+        "AuthorizerResultTtlInSeconds": 300,
+        "IdentitySource": "method.request.header.Authorization",
+        "Name": "authorizer-passthrough",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "AuthorizerUri": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:apigateway:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":lambda:path/2015-03-31/functions/",
+              {
+                "Fn::GetAtt": [
+                  "AuthorizerDashpassthroughLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "/invocations"
+            ]
+          ]
+        },
+        "Type": "TOKEN"
+      }
+    },
+    "AuthorizerApiGatewayAuthorizer": {
+      "Type": "AWS::ApiGateway::Authorizer",
+      "Properties": {
+        "AuthorizerResultTtlInSeconds": 0,
+        "IdentitySource": "method.request.header.Authorization",
+        "Name": "authorizer",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "IdentityValidationExpression": "^Bearer [-0-9a-zA-z\\.]*$",
+        "AuthorizerUri": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:apigateway:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":lambda:path/2015-03-31/functions/",
+              {
+                "Fn::GetAtt": [
+                  "AuthorizerLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "/invocations"
+            ]
+          ]
+        },
+        "Type": "TOKEN"
+      }
+    },
+    "ApiGatewayDeployment1535527070765": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "StageName": "dev"
+      },
+      "DependsOn": [
+        "ApiGatewayMethodUserLoginPost",
+        "ApiGatewayMethodUserPost",
+        "ApiGatewayMethodUserEmailVarDelete",
+        "ApiGatewayMethodUserEmailVarGet",
+        "ApiGatewayMethodUserGet",
+        "ApiGatewayMethodAssessmentIdVarGet",
+        "ApiGatewayMethodAssessmentGet",
+        "ApiGatewayMethodAssessmentPost",
+        "ApiGatewayMethodAssessmentIdVarDelete",
+        "ApiGatewayMethodCoachingIdVarGet",
+        "ApiGatewayMethodCoachingGet",
+        "ApiGatewayMethodCoachingPost",
+        "ApiGatewayMethodCoachingIdVarDelete",
+        "ApiGatewayMethodProIdVarGet",
+        "ApiGatewayMethodProGet",
+        "ApiGatewayMethodProPost",
+        "ApiGatewayMethodProIdVarDelete",
+        "ApiGatewayMethodRefereeIdVarGet",
+        "ApiGatewayMethodRefereeGet",
+        "ApiGatewayMethodRefereePost",
+        "ApiGatewayMethodRefereeIdVarDelete",
+        "ApiGatewayMethodSkillprofileIdVarGet",
+        "ApiGatewayMethodSkillprofileGet",
+        "ApiGatewayMethodSkillprofilePost",
+        "ApiGatewayMethodSkillprofileIdVarDelete"
+      ]
+    },
+    "AuthenticationLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "AuthenticationLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "SaveuserLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaveuserLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "AuthorizerDashpassthroughLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "AuthorizerDashpassthroughLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com"
+      }
+    },
+    "RemoveuserLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "RemoveuserLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "AuthorizerLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "AuthorizerLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com"
+      }
+    },
+    "GetuserLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetuserLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetusersLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetusersLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetAssessmentLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetAssessmentLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetAssessmentsLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetAssessmentsLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "SaveAssessmentLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaveAssessmentLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "RemoveAssessmentLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "RemoveAssessmentLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetCoachingLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetCoachingLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetCoachingsLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetCoachingsLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "SaveCoachingLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaveCoachingLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "RemoveCoachingLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "RemoveCoachingLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetProLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetProLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetProsLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetProsLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "SaveProLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaveProLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "RemoveProLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "RemoveProLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetRefereeLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetRefereeLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetRefereesLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetRefereesLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "SaveRefereeLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaveRefereeLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "RemoveRefereeLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "RemoveRefereeLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetSkillProfileLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetSkillProfileLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetSkillProfilesLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetSkillProfilesLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "SaveSkillProfileLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaveSkillProfileLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "RemoveSkillProfileLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "RemoveSkillProfileLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "UsersTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "refcoach_user_dev",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "email",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "email",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
+        }
+      }
+    },
+    "AssessmentTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "refcoach_assessment_dev",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
+        }
+      }
+    },
+    "CoachingTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "refcoach_coaching_dev",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
+        }
+      }
+    },
+    "ProTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "refcoach_pro_dev",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
+        }
+      }
+    },
+    "RefereeTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "refcoach_referee_dev",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
+        }
+      }
+    },
+    "SkillProfileTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "refcoach_skillprofile_dev",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "ServerlessDeploymentBucketName": {
+      "Value": {
+        "Ref": "ServerlessDeploymentBucket"
+      }
+    },
+    "AuthorizerLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "AuthorizerLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "AuthorizerDashpassthroughLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "AuthorizerDashpassthroughLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "AuthenticationLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "AuthenticationLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "SaveuserLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "SaveuserLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "RemoveuserLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "RemoveuserLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "GetuserLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetuserLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "GetusersLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetusersLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "GetAssessmentLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetAssessmentLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "GetAssessmentsLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetAssessmentsLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "SaveAssessmentLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "SaveAssessmentLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "RemoveAssessmentLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "RemoveAssessmentLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "GetCoachingLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetCoachingLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "GetCoachingsLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetCoachingsLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "SaveCoachingLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "SaveCoachingLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "RemoveCoachingLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "RemoveCoachingLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "GetProLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetProLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "GetProsLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetProsLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "SaveProLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "SaveProLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "RemoveProLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "RemoveProLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "GetRefereeLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetRefereeLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "GetRefereesLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetRefereesLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "SaveRefereeLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "SaveRefereeLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "RemoveRefereeLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "RemoveRefereeLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "GetSkillProfileLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetSkillProfileLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "GetSkillProfilesLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetSkillProfilesLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "SaveSkillProfileLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "SaveSkillProfileLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "RemoveSkillProfileLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "RemoveSkillProfileLambdaVersion3jTaaWYhRJ7p3zf83vrISad6ZjJfxxXPRxjxxS8x380"
+      }
+    },
+    "ServiceEndpoint": {
+      "Description": "URL of the service endpoint",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "ApiGatewayRestApi"
+            },
+            ".execute-api.eu-west-1.amazonaws.com/dev"
+          ]
+        ]
+      }
+    }
+  }
+}

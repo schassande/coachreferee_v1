@@ -1,0 +1,30 @@
+{
+    "name": "refcoach",
+    "version": "1.0.0",
+    "licence": "LGPL",
+    "description": "Projet de coaching d'arbitre : backend de stockage des informations.",
+    "scripts": {
+        "installDB": "serverless dynamodb install --region eu-west-1",
+        "initDB": "serverless dynamodb start --dbPath \\tmp\\DynamoDB\\refcoach\\ --migrate --seed=dev --region eu-west-1",
+        "runNode": "serverless offline --apiKey 2O3I4U928U349F82N3948D923U932F --region eu-west-1",
+        "runDB": "serverless dynamodb start --dbPath \\tmp\\DynamoDB\\refcoach\\ --cors --sharedDb --port 8000",
+        "resetDB": "rm -rf node_modules\\dynamodb-localhost && npm install dynamodb-localhost",
+        "deploy": "serverless deploy --alias=dev --region eu-west-1",
+        "remove": "serverless alias remove --alias=dev --region eu-west-1",
+        "deployLambda": "serverless deploy function -f boxplotData --alias=dev --region eu-west-1 --force"
+    },
+    "dependencies": {
+        "jsonwebtoken": "^8.3.0",
+        "q": "^1.5.1",
+        "serverless": "^1.30.1",
+        "serverless-dynamodb-client": "0.0.2"
+    },
+    "devDependencies": {
+        "serverless-aws-alias": "^1.7.1",
+        "serverless-dynamodb-local": "^0.2.33",
+        "serverless-offline": "^3.25.9",
+        "serverless-offline-scheduler": "^0.3.4",
+        "serverless-plugin-diff": "^1.3.0",
+        "serverless-plugin-scripts": "^1.0.2"
+    }
+}
