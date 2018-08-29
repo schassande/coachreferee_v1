@@ -43,3 +43,6 @@ Thumbs.db
 
 yarn.lock
 .vscode
+
+.dynamodb
+.serverless
