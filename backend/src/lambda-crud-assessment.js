@@ -61,6 +61,7 @@ const checkItem = function(item, responseHelper) {
  * @return the item to store, eventually adjusted
  */
 const adjustStoredItem = function(itemToStore, existingItem, responseHelper) {
+    itemToStore.dataStatus = 'CLEAN';
     return itemToStore; // no modification before storing the item
 };
 
