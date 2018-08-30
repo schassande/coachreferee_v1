@@ -46,3 +46,4 @@ yarn.lock
 
 .dynamodb
 .serverless
+package-lock.json
