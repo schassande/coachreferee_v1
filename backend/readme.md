@@ -1,221 +1,168 @@
-# Quick Start
+# Projet RefCoach Backend
 
-## Documentation de serverless
-https://serverless.com
+This application RefCoach backend permits to share and persist referee coaching information.
+It exposes and stores the following resources :
 
-## Installation de node.js
-https://nodejs.org/en/
+- User: the user of the application
+- Referee: the shared  database of the referees
+- Skill Profile: a set of common Skill Profile to assess the referees
+- Assessment: the referee assessment database done by referee coaches.
+- Coaching: the referee coaching feedback database done by referee coaches
 
-## Installation de la CLI AWS pour windows
-http://docs.aws.amazon.com/fr_fr/cli/latest/userguide/awscli-install-windows.html
+From a technology point of view this backend is build on top of AWS Lambda exposed via API GW. 
+The Lambda function are developed in JavaScript.
+The persistency of the data is made with AWS DynamoDB.
+This project use serverless framework.
 
-## Installation de la CLI Serverless
-https://serverless.com/framework/docs/providers/aws/guide/installation/
-npm install -g serverless
+For a testing purpose this backend can work in offline mode.
 
-## Récupération du projet depuis code commit
-git clone https://git-codecommit.eu-west-1.amazonaws.com/v1/repos/AWS_Lambda_Project_Template
-cd AWS_Lambda_Project_Template
+For more details about the APIs open the Swagger file.
 
-## Installation des dépendances
+## 1 - Installation
+
+### 1.1 - Requirements
+
+- [Serverless](https://serverless.com)
+- [Node.js](https://nodejs.org/en/)
+- [AWS CLI for windows](http://docs.aws.amazon.com/fr_fr/cli/latest/userguide/awscli-install-windows.html)
+- [CLI Serverless](https://serverless.com/framework/docs/providers/aws/guide/installation/)
+
+### 1.2 - Fetch sources and dependancies
+
+Get projet from GitHub
+```
+git clone https://github.com/schassande/referee-coaching.git
+cd referee-coaching
 npm install
+```
 
-## Déployer le template
-npm run deploy
-ou
-serverless deploy --alias=dev --region eu-west-1
+## 2 - Deploy on you AWS Account
 
+This section desribes how to deploy the baskend on your AWS Account.
 
+### 2.1 Configure your AWS account
 
-# Projet ServerLessSkeleton
-
-Ce projet est un projet exemple de backend fait à base de AWS Lambda exposées via API GW.
-L'application utilise aussi une base de données DynamoDB.
-L'application est aussi capble de fonctionner en local (offline), sans connexion à AWS.
-
-## 1 - L'application exemple
-
-### 1.1 - Principe d'organisation du code source
-
-Le projet regroupe plusieurs lambda formant un groupe fonctionnel cohérent.
-Chaque lambda est dans un fichier dont le nom est src/\<domaine\>/lambda-xxx.js
-Le projet montre aussi l'usage d'une librairie src/user/lib-user.js  C'est un moyen de factoriser du code entre lambda.
-
-Le fichier package.json liste les dépendances et contient des commandes minimales pour initialer l'application et la faire fonctionner en local.
-Le fichier serverless.yml contient la déclaration des ressources AWS (Lambda, exposition des lambda, dynamodb ...)
-
-### 1.2 - Description de l'application
-
-L'application permet de faire d'appeler un service REST hello, implanté par la lambda lambda-hello.js. Pour appeler cette lambda il faut au préalable s'etre authentifier avec login/password. L'authentification s'effectue en appelant la lambda lambda-authentification.js et renvoie le token a passer dans le header dans l'appel à Hello.
-La creation d'utilisateur est ouverte via la lambda-adduser.js
-
-### 1.3 - Comment lancer le backend en local ?
-
-#### 1.3.1 A faire la première fois
-
-0) Configurer ses credentials AWS
-  * Creer le fichier ~/.aws/config contenant :
-
+Configure  AWS credentials
+1) Create file ~/.aws/config with the following content:
+    ```
     [default]
     region = eu-west-1
+    ```
 
-  * Creer le fichier ~/.aws/credentials contenant :
+2) Create file ~/.aws/credentials with the following content:
 
+    ```
     [default]
     aws_access_key_id = <votre access id>
     aws_secret_access_key = <votre access key>
+    ```
 
-  * Vous devez avoir installer [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) .
-
-1) Installer les dépendances nodes:  yarn install   (ou npm install)
-2) Creer le répertoire de stockage la BD: /tmp/DynamoDB/myproject
-3) Installer la base de données: npm run installDB
-4) Initialiser la base de données: npm run initDB   (Arreter le serveur en faisant Ctr+C)
-
-En cas de plantage à la l'étape 3 faites: npm run resetDB
-En cas de plantage à la l'étape 4 ou pour vider la base de données, supprimer simplement le contenu de /tmp/DynamoDB/myproject et relancer npm run initDB.
-Le répertoire de stockage de la BD peut etre modifié en changeant les scripts se trouvant dans package.json
+Don't forget to install [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html).
 
 
-#### 1.3.1 A faire pour lancer le backend
+## 2.2 Deploy the application
 
-1) Lancer la base de données: npm run runDB
-2) Lancer le backend node: npm run runNode
+`npm run deploy` or `serverless deploy --alias=dev --region eu-west-1`
 
+## 2.3 Create API key
 
-### 1.4 - Comment appeler la lambda addUser ?
+1) Connect to the AWS console.
+2) Go to API Gateway service
+3) Create an API Key. Suggested named: `REFCOACH`
 
-Envoyer une requete POST à l'url http://localhost:3000/adduser
-avec les headers suivants :
+## 2.4 Create Plan
 
-    "x-api-key":"AAAABBBB"
+1) Connect to the AWS console.
+2) Go to API Gateway service
+3) Create an Usage Plan
+4) Associate the API key to the usage plan
+5) Add the API stage to the usage plan
+
+WARNING: Each type the application is deployed, the API stage must be associated to the usage plan
+
+## 3 - Work in locally in offline mode
+
+### 3.1 To do the first time
+
+1) Configure your AWS account as describe in section 2.1
+2) Create storage directory: `/tmp/DynamoDB/refcoach`. If you want to change the storage directory, you have to updage the package.json file (scripts section)
+3) Run a script to install the database: `npm run installDB`
+4) Run a script to install the database: `npm run initDB`
+
+Note: If you need to restart the procedure simply drop the content of the storage directory.
+
+### 3.2 Launch the backend
+
+1) Launch the database: `npm run runDB`
+2) In another window/tab, Launch Node: `npm run runNode`
+
+To stop, simply make a `Ctrl+C`
+
+### 3.3 - Call a function to add a user
+
+Send a POST request (with Postman for instance) to the url: `http://localhost:3000/user`
+with the following header fields:
+
+    "x-api-key":"2O3I4U928U349F82N3948D923U932F"
     "Content-Type":"application/json"
 
-Et le body suivant :
+And the following body content:
 
-    { 
-      "login": "Seb",
+    {
+      "email": "Seb",
       "password": "123456"
     }
-La réponse attendue :
+
+The expected answer is the following:
 
     {
       "id": "Seb"
     }
 
+### 3.4 - Call the lambda about user authentication
 
-### 1.5 - Comment appeler la lambda authentication ?
+Send a POST request to `http://localhost:3000/user/login` with the following header fields:
 
-Envoyer une requete POST à l'url http://localhost:3000/authentication
-avec les headers suivants :
-
-    "x-api-key":"AAAABBBB"
+    "x-api-key":"2O3I4U928U349F82N3948D923U932F"
     "Content-Type":"application/json"
 
-Et le body suivant :
+And the following body content:
 
     { 
-      "login": "Seb",
+      "email": "Seb",
       "password": "123456"
     }
-En réponse :
+As answer you should receive a JWT token.
 
-### 1.5 - Comment (re)deployer ?
+## 4 - Development
 
-* Creer une API Key
-* Creer un Usage Plan
-* Associer l'API key à l'Usage Plan
-* Ajouter l'API stage 'dev' à l'Usage Plan
-* lancer la commande serverless deploy --region eu-west-1
+### 4.1 - Secure access to REST function
 
-Pour supprimer serverless remove --region eu-west-1
+The exemple below declares a function name toto from the `lambda-toto.js` file and exposes at the url `/toto` to a GET http call.
 
-A chaque redéploiement de toute l'application, il faut Ajouter l'API stage 'dev' à l'Usage Plan
-
-Pour redeployer juste une fonction: serverless deploy function --function hello
-
-
-
-## 2 - How to dev
-
-Ce document décrit la manière de développer sur le projet
-
-### 2.1 - Comment ajouter un service dans le backend ?
-
-1- Creer le fichier src/\<domaine\>/lambda-\<fonction\>.js
-2- Déclarer la fonction dans le fichier serverless.yml avec son exposition (http avec autorizer)
-3- Relancer le serveur node pour prendre en compte les modifications du fichier serverless.yml
-
-
-### 2.3 - Comment acceder au body d'une requete ?
-
-Dans l'exemple la lambda hello est en mode proxy. Ceci permet d'avoir automatiquement les informations de contexte. Ceci implique que le body est stringifié en entrée et doit l'etre en sortie.
-Ainsi en début de fonction, pour acceder au body d'une requete POST, il faut donc faire :
-
-    const body = JSON.parse(event.body);
-
-Le retour de la function doit aussi etre stringifié :
-
-    const success = (body) => {
-        let res = {
-            statusCode: '200',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body) // body response must be stringified due to the Proxy mode of the Lambda
-        }
-        callback(null, res);
-    };
-
-
-### 2.3 - Comment securiser l'access à un service REST exposé par le backend ?
-
-L'exemple ci-dessous déclare la fonction toto en GET
-
+```
   toto:
-    handler: src/user/lambda-toto.handler
+    handler: src/user/lambda-toto.myfunction
     name: cuicuizz-toto-${self:provider.stage}
     description: Toto is the best
     events:
       - http:
-          path: toto
+          path: /toto
           method: get
           cors: true
           private: true
         authorizer:    # An AWS API Gateway custom authorizer function
-          name: myauthorizer # The name of the authorizer function (must be in this service)
+          name: authorizer # The name of the authorizer function (must be in this service)
           resultTtlInSeconds: 30
-          identitySource: method.request.header.authorizationToken
+          identitySource: method.request.header.Authorization
           identityValidationExpression: '^Bearer [-0-9a-zA-z\.]*$'
+```
 
-QQ précisions sur cette exemple :
+Explantions:
 
-- La section 'handler' défini le fichier JS qui contient la fonction exportée sous le nom handler
-- la section 'method' défini la methode HTTP d'exposition du service (get, post, del, any ...)
-- la section 'cors' active les cors pour cette ressource web
-- La section 'private' à true indique que l'appel au service necessite de fournir une clé dans le header de la requete http. En local la cle est passée au démarrage du server node (voir backend/package.json). En AWS, la clé est spécifier dans la console AWS.
-- La section 'authorizer' impose l'appel d'une lambda (authorizer) pour vérifier le token web devant se trouver dans le champ 'authorizationToken' du header de la requete web.
-- authorizer.name fait référence à la lambda authorizer utilisée sur le projet pour valider les tokens. Le token est obtenu lors de la phase de login.
-
-Dans l'implementation de la fonction metier (ex hello), il possible de récupérer des données venant du Token. C'est l'authorizer qui décode le token et place des données dans le contexte d'execution de la fonction metier. Pour une lambda en mode proxy (ex: hello), les données fournies par un authorizer sont disponibles dans la variable: event.requestContext.authorizer.*
-Dans l'exemple hello c'est ainsi qu'on récupère le login et le profile de l'utilisateur.
-
-## 3 - Statut du template de projet
-
-### 3.1 - Ce qui fonctionne
-
-- Utilisation de serverless
-- Fonctionnement en local : Lambda exposé en Http via API GW
-- Fonctionnement en locat : DynamoDB (creation des schemas, peuplement initial)
-- Fonctionnement en local : Securisation des appels Lambda avec un authorizer et transmission des données en provenance du Token
-- Fonctionnement en local : Securisation des appels Lambda avec API key dans les lambdas (Une seule API Key par run fourni en param du run)
-
-
-### 3.2 - Ce qui ne fonctionne pas / n'existe pas
-
-- Fonctionnement en local : Déclenchement en local d'un Lambda par un message SNS
-- Fonctionnement en local : Déclenchement de lambda via un événement d'un S3 local
-
-
-### 3.3 - Ce qu'il faudrait tester
-
-- Fonctionnement en local : Acces à S3 en local
-- TypeScript : ecrire une lambda en TypeScript avec le transpileur babel
+- the `handler` defines the JS file containing the exposed function (`exports.myfunction = ...`)
+- The section `method` defines the Http method of the function. Possible values are: get, post, delete, any
+- the section `cors` activate cors for this web resource.
+- the section `private` to true indicate the call to the web service requires an API key as header field of the Http request. In offline mode the API key is defined at noder server start (see `backend/package.json`, scripts section). In online mode (AWS), the key is defined in the AWS console.
+- the section `authorizer` defines the name of the lambda authorizer in charge of checking the web token (JWT) expected in header field `Authorization` of the Http request. The token is fetched during login step.
+- `authorizer.name` is the name of the lambda function
