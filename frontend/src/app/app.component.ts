@@ -8,11 +8,6 @@ import { ScreenOrientation }    from '@ionic-native/screen-orientation';
 import { VersionService }       from './service/VersionService';
 
 import { HomePage }             from '../pages/home/home';
-import { UserSelectionPage }    from '../pages/user-selection/user-selection';
-import { RefereeListPage }      from '../pages/referee-list/referee-list';
-import { ProListPage }          from '../pages/pro-list/pro-list';
-import { CoachingListPage }     from '../pages/coaching-list/coaching-list';
-import { SkillProfileListPage } from './../pages/skill-profile-list/skill-profile-list';
 
 @Component({
   templateUrl: 'app.html'
