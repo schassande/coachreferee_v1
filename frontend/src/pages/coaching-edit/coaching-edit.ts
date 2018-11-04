@@ -76,10 +76,7 @@ export class CoachingEditPage {
         gameCategory: 'OPEN',
         gameSpeed: 'Medium',
         gameSkill: 'Medium',
-        referees : [
-          { refereeId: 0, refereeShortName: null, feedbacks: [], positiveFeedbacks: [], rank: 0, upgrade: 'DNS'}, 
-          { refereeId: 0, refereeShortName: null, feedbacks: [], positiveFeedbacks: [], rank: 0, upgrade: 'DNS'}, 
-          { refereeId: 0, refereeShortName: null, feedbacks: [], positiveFeedbacks: [], rank: 0, upgrade: 'DNS'}]
+        referees : []
       }
   }
   private loadingReferees() {
@@ -89,6 +86,9 @@ export class CoachingEditPage {
   }
 
   getReferee(idx: number): string {
+    if (idx >= this.coaching.referees.length) {
+      return null;
+    }
     const refereeId = this.coaching.referees[idx].refereeId;
     if (refereeId === 0) {
       return '';
@@ -119,10 +119,18 @@ export class CoachingEditPage {
   }
 
   searchReferee(idx: number) {
-    const coachRef = this.coaching.referees[idx];
+    const refereeIndex = idx;
+    const referees = this.coaching.referees;    
     const mapId2referee = this.id2referee;
     const callbackRefereeSelected = function(referee:Referee) {
       console.log("Selected referee (" + idx + ', ' + referee.id + ')');
+      let coachRef;
+      if (idx < referees.length) {
+        coachRef = referees[refereeIndex];
+      } else {
+        coachRef = { refereeId: 0, refereeShortName: null, feedbacks: [], positiveFeedbacks: [], rank: 0, upgrade: 'DNS'};
+        referees.push(coachRef);
+      }      
       coachRef.refereeId = referee.id;
       coachRef.refereeShortName = referee.shortName;
       mapId2referee.set(referee.id, referee);
@@ -137,7 +145,7 @@ export class CoachingEditPage {
   coach(event) {
     this.coachingService.save(this.coaching)
       .map((response: ResponseWithData<Coaching>) => {
-        this.navCtrl.setRoot(CoachingGamePage, { coachingId: response.data.id, coaching: response.data });
+        this.navCtrl.push(CoachingGamePage, { coachingId: response.data.id, coaching: response.data });
       }).subscribe();
   }
 

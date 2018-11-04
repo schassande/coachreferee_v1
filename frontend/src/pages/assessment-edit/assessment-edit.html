@@ -1,20 +1,11 @@
-<!--
-  Generated template for the CoachingNewPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
     <ion-navbar>
-        <ion-title>Create a game to coach</ion-title>
+        <ion-title>Create an assessment</ion-title>
+        <ion-buttons end><button ion-button menuToggle ion-button icon-only><ion-icon name="menu"></ion-icon></button></ion-buttons>
     </ion-navbar>
 </ion-header>
 
-<ion-content padding *ngIf="coaching">
-    <ion-tabs>
-        <ion-tab [root]="newGameTab">New game</ion-tab>
-        <ion-tab [root]="existingGameTab">Existing game</ion-tab>
-    </ion-tabs>
+<ion-content *ngIf="assessment" padding>
     <ion-item>
         <ion-label fixed>Competition:</ion-label>
         <ion-input type="text" [(ngModel)]="competition"></ion-input>
@@ -25,11 +16,11 @@
     </ion-item>
     <ion-item>
         <ion-label>Slot:</ion-label>
-        <ion-datetime displayFormat="HH:mm" [(ngModel)]="coaching.timeSlot"></ion-datetime>
+        <ion-datetime displayFormat="HH:mm" [(ngModel)]="assessment.timeSlot"></ion-datetime>
     </ion-item>
     <ion-item>
         <ion-label>Field:</ion-label>
-        <ion-select [(ngModel)]="coaching.field">
+        <ion-select [(ngModel)]="assessment.field">
             <ion-option value="1">1</ion-option>
             <ion-option value="2">2</ion-option>
             <ion-option value="3">3</ion-option>
@@ -59,7 +50,7 @@
     </ion-item>
     <ion-item>
         <ion-label>Category:</ion-label>
-        <ion-select [(ngModel)]="coaching.gameCategory">
+        <ion-select [(ngModel)]="assessment.gameCategory">
             <ion-option value="OPEN">OPEN</ion-option>
             <ion-option value="MXO">MXO</ion-option>
             <ion-option value="MO">MO</ion-option>
@@ -80,7 +71,7 @@
     </ion-item>
     <ion-item>
         <ion-label>Speed:</ion-label>
-        <ion-select [(ngModel)]="coaching.gameSpeed">
+        <ion-select [(ngModel)]="assessment.gameSpeed">
             <ion-option value="Low">Low</ion-option>
             <ion-option value="Medium">Medium</ion-option>
             <ion-option value="High">High</ion-option>
@@ -88,27 +79,23 @@
     </ion-item>
     <ion-item>
         <ion-label>Skill:</ion-label>
-        <ion-select [(ngModel)]="coaching.gameSkill">
+        <ion-select [(ngModel)]="assessment.gameSkill">
             <ion-option value="Low">Low</ion-option>
             <ion-option value="Medium">Medium</ion-option>
             <ion-option value="High">High</ion-option>
         </ion-select>
     </ion-item>
-    <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
-        <ion-item-divider color="light" style="text-align: center; font-size: 1.2em;">Referees</ion-item-divider>
-        <ion-item>
-            <ion-label>1: {{getReferee(0)}}</ion-label>
-            <ion-icon item-end name="search" (click)="searchReferee(0)"></ion-icon>
-        </ion-item>
-        <ion-item>
-            <ion-label>2: {{getReferee(1)}}</ion-label>
-            <ion-icon item-end name="search" (click)="searchReferee(1)"></ion-icon>
-        </ion-item>
-        <ion-item>
-            <ion-label>3: {{getReferee(2)}}</ion-label>
-            <ion-icon item-end name="search" (click)="searchReferee(2)"></ion-icon>
-        </ion-item>
-    </ion-item-group>
-    <button ion-button full round (click)="coach($event)" style="width: 100%;">Coach the game</button>
-    <button ion-button full round (click)="sendCoaching($event)" style="width: 100%;">Email this coaching</button>
+    <ion-item>
+        <ion-label>Referee: {{getReferee(0)}}</ion-label>
+        <ion-icon item-end name="search" (click)="searchReferee(0)"></ion-icon>
+    </ion-item>
+    <ion-item>
+        <ion-label>Level:</ion-label>
+        <ion-select [(ngModel)]="profileId" (ionChange)="updateAssessmentValid()">
+            <ion-option *ngFor="let profile of profiles" value="{{profile.id}}">{{profile.name}}</ion-option>
+        </ion-select>
+    </ion-item>
+    <button ion-button full round [disabled]="!assessmentValid" (click)="assess($event)" style="width: 100%;">Assess the referee</button>
+    <button ion-button full round [disabled]="!assessmentValid" (click)="sendAssessment($event)" style="width: 100%;">Email this assessment</button>
+
 </ion-content>

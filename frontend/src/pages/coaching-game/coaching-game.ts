@@ -1,12 +1,14 @@
+import { RefereeViewPage } from './../referee-view/referee-view';
 import { Observable } from 'rxjs';
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, AlertController, Segment } from 'ionic-angular';
 import { EmailService }                       from '../../app/service/EmailService';
 import { ConnectedUserService }               from '../../app/service/ConnectedUserService';
 import { RefereeService }                     from '../../app/service/RefereeService';
 import { UserService }                        from '../../app/service/UserService';
 import { ResponseWithData }                   from '../../app/service/response';
 import { CoachingService }                    from '../../app/service/CoachingService';
+import { BookmarkService, Bookmark }          from '../../app/service/BookmarkService';
 import { Referee }                            from '../../app/model/user';
 import { CoachingImprovmentFeedbackEditPage } from '../coaching-improvment-feedback-edit/coaching-improvment-feedback-edit';
 import { CoachingPositiveFeedbackEditPage }   from '../coaching-positive-feedback-edit/coaching-positive-feedback-edit';
@@ -33,6 +35,8 @@ export class CoachingGamePage {
   refereesLoaded = false;
   currentPeriod: number = 1;
 
+  @ViewChild(Segment) segment :Segment;
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -41,14 +45,31 @@ export class CoachingGamePage {
     public connectedUserService: ConnectedUserService,
     public refereeService: RefereeService,
     public alertCtrl: AlertController,
+    private bookmarkService:BookmarkService,
     private emailService: EmailService) {
   }
 
   ionViewDidLoad() {
+    this.bookmarkService.clearContext();
     this.loadCoaching().subscribe((response: ResponseWithData<Coaching>) => {
-        this.coaching = response.data; 
+        this.coaching = this.clean(response.data); 
         this.loadingReferees();
-    });
+        this.bookmarkPage();
+      });
+  }
+
+  private clean(coaching:Coaching):Coaching {
+    if (coaching && coaching.referees) {
+      let idx = 0;
+      while(idx < coaching.referees.length) {
+        if (coaching.referees[idx].refereeShortName) {
+          idx++;
+        } else {
+          coaching.referees.splice(idx, 1);
+        }
+      }
+    }
+    return coaching;
   }
 
   public getReferee(idx: number): string {
@@ -84,7 +105,34 @@ export class CoachingGamePage {
     });
   }
 
+  private bookmarkPage() {
+    let refereeNames:string[] = this.coaching.referees.map((referee) => referee.refereeShortName);
+    var datestring = ("0" + this.coaching.date.getDate()).slice(-2) + "/" 
+      + ("0"+(this.coaching.date.getMonth()+1)).slice(-2) + " " 
+      + ("0" + this.coaching.date.getHours()).slice(-2) + ":" 
+      + ("0" + this.coaching.date.getMinutes()).slice(-2);
+
+    this.bookmarkService.addBookmarkEntry({ 
+      id: 'coach' + this.coaching.id, 
+      label: 'Coach ' + datestring + ' ' + refereeNames.join(","), 
+      component: CoachingGamePage, 
+      parameter : { coachingId: this.coaching.id } });
+    let ctx:Bookmark[] = [];
+    this.coaching.referees.forEach((referee) => {
+      ctx.push(
+        { 
+          id: 'referee' + referee.refereeId, 
+          label: 'Referee ' + referee.refereeShortName, 
+          component: RefereeViewPage, 
+          parameter : { id: referee.refereeId } }
+      );
+    })      
+    this.bookmarkService.setContext(ctx);
+  }
+
   refereeSelected(refereeIndex: number) {
+    console.log("refereeSelected(" + refereeIndex + ")", "Segment.value=" + this.segment.value);
+    this.segment.value = String(refereeIndex);
     this.currentRefereeIdx = refereeIndex;
     this.currentReferee = this.id2referee.get(this.coaching.referees[this.currentRefereeIdx].refereeId);
   }
@@ -93,10 +141,10 @@ export class CoachingGamePage {
     const ref:Referee = this.id2referee.get(this.coaching.referees[this.currentRefereeIdx].refereeId);
     if (ref) {
       const res:boolean = ref && ref.referee.nextRefereeLevel && ref.referee.nextRefereeLevel != null;
-      console.log('lookingForUpgrade ', this.coaching.referees[this.currentRefereeIdx].refereeShortName, res, ref.referee.nextRefereeLevel);
+      //console.log('lookingForUpgrade ', this.coaching.referees[this.currentRefereeIdx].refereeShortName, res, ref.referee.nextRefereeLevel);
       return res;
       } else {
-        console.log('lookingForUpgrade: referee not found !')
+        //console.log('lookingForUpgrade: referee not found !')
         return false;
       }
   }
@@ -158,6 +206,7 @@ export class CoachingGamePage {
         this.saveCoaching();
       }
     } else {
+      feedback.description = this.makeNotEmpty(feedback.description, feedback.skillName);
       if (index >= 0) {
         // update it
         this.coaching.referees[this.currentRefereeIdx].positiveFeedbacks[index] = feedback;
@@ -250,6 +299,12 @@ export class CoachingGamePage {
         this.saveCoaching();
       }
     } else {
+      //make sure fields are not enmpty
+      feedback.skillName = this.makeNotEmpty(feedback.skillName, '-');
+      feedback.problem = this.makeNotEmpty(feedback.problem, feedback.problemShortDesc);
+      feedback.remedy = this.makeNotEmpty(feedback.remedy, '-');
+      feedback.outcome = this.makeNotEmpty(feedback.outcome, '-');
+      
       if (feedbackIndex >= 0) {
         console.log('Update feedback \'', feedback.problemShortDesc, '\/', feedbackIndex, 
           ' of the referee ', this.coaching.referees[refereeIndex].refereeShortName);
@@ -264,6 +319,10 @@ export class CoachingGamePage {
       // save the coaching
       this.saveCoaching();
     }
+  }
+
+  makeNotEmpty(value:string, defaultValue:string):string {
+    return value && value.trim().length > 0 ?  value : defaultValue;
   }
 
   sendCoaching() {

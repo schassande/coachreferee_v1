@@ -63,7 +63,14 @@ export class SkillProfileEditPage {
   }
 
   saveSkillProfile(event) {
-    this.skillProfileService.save(this.skillProfile).map((response: ResponseWithData<SkillProfile>) => this.navCtrl.pop()).subscribe();
+    this.skillProfileService.save(this.skillProfile)
+      .map((response: ResponseWithData<SkillProfile>) => {
+        this.navCtrl.pop();
+        return response;
+      }).subscribe(
+        (data)=>console.log("Profil " + this.skillProfile.name + " saved: " + JSON.stringify(data)), 
+        (err)=>console.log("Error when saving Profil " + this.skillProfile.name + ": " + JSON.stringify(err))
+        );
   }
 
   deleteSkillProfile(event) {

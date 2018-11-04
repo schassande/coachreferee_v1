@@ -56,11 +56,11 @@ export class LocalDatabaseService {
         return Observable.fromPromise(
             this.storage.get(tableName).then((md: ModifiableData<D>) => {
                 if (md) {
-                    let val: D = md.unmodified.get(id);
+                    let val: D = md.unmodified.get(Number(id));
                     if (!val) {
-                        val = md.modified.get(id);
+                        val = md.modified.get(Number(id));
                     }
-                    return val;
+                    return val ? val : null;
                 } else {
                     return null;
                 }

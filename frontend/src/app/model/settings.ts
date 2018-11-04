@@ -7,6 +7,8 @@ export interface LocalAppSettings {
     serverUrl: string;
     minNetworkConnectionForSyncho: NetworkConnection;
     lastUserId: number;
+    applicationVersion?: string;
+    apiKey?: string;
 }
 export type NetworkConnection = 'UNKNOWN' | 'NONE'| '3G' | '4G' | 'WIFI' | 'WIRED';
 

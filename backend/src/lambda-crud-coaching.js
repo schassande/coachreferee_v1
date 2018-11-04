@@ -1,5 +1,5 @@
 'use strict';
-const crud = require('common/crud');
+const crud = require('./common/crud.js');
 const baseTableName = 'coaching';
 
 
@@ -62,6 +62,17 @@ const checkItem = function(item, responseHelper) {
  */
 const adjustStoredItem = function(itemToStore, existingItem, responseHelper) {
     itemToStore.dataStatus = 'CLEAN';
+    if (itemToStore.referees) {
+        itemToStore.referees.forEach(referee => {
+            if (referee && referee.positiveFeedbacks) {
+                referee.positiveFeedbacks.forEach((posFeed) => {
+                    if (!posFeed.description) {
+                        posFeed.description = posFeed.skillName;
+                    }
+                });
+            }
+        });
+    }
     return itemToStore; // no modification before storing the item
 };
 

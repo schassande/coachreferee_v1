@@ -1,3 +1,4 @@
+import { BookmarkService } from './../../app/service/BookmarkService';
 import { RefereeEditPage } from './../referee-edit/referee-edit';
 import { CoachingEditPage } from './../coaching-edit/coaching-edit';
 import { EmailService } from './../../app/service/EmailService';
@@ -34,11 +35,13 @@ export class RefereeViewPage {
     public coachingService: CoachingService,
     public connectedUserService: ConnectedUserService,
     public loadingCtrl: LoadingController,
+    public bookmarkService:BookmarkService,
     public emailService: EmailService) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RefereePage');
+    this.bookmarkService.clearContext();
     const referee:Referee = this.navParams.get('referee');
     if (referee) {
       this.setReferee(referee);
@@ -72,11 +75,21 @@ export class RefereeViewPage {
   private setReferee(referee: Referee) {
     console.log("RefereeView.setReferee(" + referee + ")");
     this.referee = referee;
+    this.bookmarkPage();
     this.coachingService.getCoachingByReferee(this.referee.id).subscribe((response: ResponseWithData<Coaching[]>) => {
       this.errorfindCoachings = response.error;
       this.coachings = response.data;
     });
   }
+
+  private bookmarkPage() {
+    this.bookmarkService.addBookmarkEntry({ 
+      id: 'referee' + this.referee.id, 
+      label: 'Referee ' + this.referee.shortName, 
+      component: RefereeViewPage, 
+      parameter : { id: this.referee.id } });
+  }
+
   public editReferee() {
     this.navCtrl.push(RefereeEditPage, {referee: this.referee, refereeId: this.referee.id });
   }

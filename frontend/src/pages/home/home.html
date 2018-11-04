@@ -1,16 +1,14 @@
 <ion-header>
     <ion-navbar>
-        <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
         <ion-title>Home {{getShortName()}}</ion-title>
+        <ion-buttons end><button ion-button menuToggle ion-button icon-only><ion-icon name="menu"></ion-icon></button></ion-buttons>
     </ion-navbar>
 </ion-header>
 <ion-content padding>
     <div class="welcome">Welcome to Referee coaching application !</div>
-    <ion-list>
+    <ion-list *ngIf="connected">
         <button ion-item detail-push class="menu-entry" [navPush]="coachingNewPage">Coach a game</button>
-        <button ion-item detail-push class="menu-entry" [navPush]="homePage">Report</button>
+        <button ion-item detail-push class="menu-entry" [navPush]="assessmentListPage">Assess a referee</button>
         <button ion-item detail-push class="menu-entry" [navPush]="refereeListPage">Referees</button>
         <button ion-item detail-push class="menu-entry" [navPush]="skillProfilePage">Profiles n skills</button>
         <button ion-item detail-push class="menu-entry" [navPush]="proPage">PROs</button>

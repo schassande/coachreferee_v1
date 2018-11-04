@@ -28,7 +28,7 @@ exports.handler = (event, context, callback) => {
     // Use case for authentification with email and password
     let body = JSON.parse(event.body);
 
-    if (body && body.email && body.password) {
+    if (body && body.email) {
         docClient.query({
             TableName: tableName,
             KeyConditionExpression: 'email = :email',
@@ -57,7 +57,7 @@ exports.handler = (event, context, callback) => {
                     user.password = '';
                     user.token = token;
                     user.authorizationToken = token;
-                    done(null, { statusCode: '200', body: JSON.stringify(user) });
+                    done(null, { data: user });
                 }
             }
         });

@@ -3,6 +3,7 @@
 const dynamodb = require('serverless-dynamodb-client');
 const docClient = dynamodb.doc; // return an instance of new AWS.DynamoDB.DocumentClient()
 
+const responseHelperLib = require('../common/response-helper');
 const commonDb = require('../common/common-db');
 
 const ul = require('./lib-user');
@@ -15,11 +16,25 @@ exports.handler = (event, context, callback) => {
     docClient.scan({ TableName: tableName }, (err, data) => {
         if (err) {
             console.log('Error during user get operation: ' + err);
-            responseHelper.fail(err);
+            responseHelper.fail({ data: null, error: err });
 
         } else {
-            console.log('Found users: ' + JSON.stringify(data));
-            responseHelper.success(data);
+            let users = data.Items;
+            if (users) {
+                users = users.map(function(user) {
+                    return {
+                        id: user.id,
+                        email: user.email,
+                        shortName: user.shortName,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        profile: user.profile,
+                        photo: user.photo
+                    };
+                });
+            }
+            console.log('Found users: ' + JSON.stringify(users));
+            responseHelper.success({ data: users });
         }
     });
 };

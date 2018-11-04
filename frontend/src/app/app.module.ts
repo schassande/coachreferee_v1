@@ -1,3 +1,5 @@
+import { BookmarkService } from './service/BookmarkService';
+import { AssessRefereePage } from './../pages/assess-referee/assess-referee';
 import { BrowserModule }          from '@angular/platform-browser';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { ErrorHandler, NgModule } from '@angular/core';
@@ -17,22 +19,25 @@ import { HttpModule }             from '../../node_modules/@angular/http';
 
 import { MyApp }                    from './app.component';
 
+import { AppSettingsService }       from './service/AppSettingsService';
 import { AssessmentService }        from './service/AssessmentService';
 import { CoachingService }          from './service/CoachingService';
+import { ConnectedUserService }     from './service/ConnectedUserService';
+import { EmailService }             from './service/EmailService';
+import { LocalDatabaseService }     from './service/LocalDatabaseService';
 import { PROService }               from './service/PROService';
 import { RefereeService }           from './service/RefereeService';
 import { SkillProfileService }      from './service/SkillProfileService';
-import { ConnectedUserService }     from './service/ConnectedUserService';
-import { LocalDatabaseService }     from './service/LocalDatabaseService';
 import { SynchroService }           from './service/SynchroService';
-import { AppSettingsService }       from './service/AppSettingsService';
 import { UserService }              from './service/UserService';
-import { EmailService }             from './service/EmailService';
+import { VersionService }           from './service/VersionService';
 
 import { HomePage }                 from '../pages/home/home';
 import { SettingsPage }             from '../pages/settings/settings';
 import { UserSelectionPage }        from '../pages/user-selection/user-selection';
 import { UserEditPage }             from '../pages/user-edit/user-edit';
+import { AssessmentEditPage }       from './../pages/assessment-edit/assessment-edit';
+import { AssessmentListPage }       from './../pages/assessment-list/assessment-list';
 import { CoachingEditPageModule }   from '../pages/coaching-edit/coaching-edit.module';
 import { CoachingGamePageModule }   from '../pages/coaching-game/coaching-game.module';
 import { CoachingListPageModule }   from '../pages/coaching-list/coaching-list.module';
@@ -55,13 +60,14 @@ import { CoachingPositiveFeedbackEditPageModule }     from './../pages/coaching-
     HomePage,
     UserEditPage,
     UserSelectionPage,
+    AssessmentListPage, AssessmentEditPage, AssessRefereePage,
     SettingsPage
   ],
   imports: [
     BrowserModule,
     HttpModule,
     CoachingEditPageModule, CoachingGamePageModule, CoachingListPageModule, CoachingPositiveFeedbackEditPageModule, CoachingImprovmentFeedbackEditPageModule,
-    ProListPageModule, ProEditPageModule,
+    ProListPageModule, ProEditPageModule, 
     RefereeListPageModule, RefereeEditPageModule, RefereeViewPageModule, RefereeSelectPageModule,
     SkillProfileEditPageModule, SkillProfileListPageModule, SkillSetEditPageModule, SkillEditPageModule,
     IonicModule.forRoot(MyApp),
@@ -73,6 +79,7 @@ import { CoachingPositiveFeedbackEditPageModule }     from './../pages/coaching-
     HomePage,
     UserEditPage,
     UserSelectionPage,
+    AssessmentListPage, AssessmentEditPage, AssessRefereePage,
     SettingsPage
   ],
   providers: [
@@ -98,6 +105,8 @@ import { CoachingPositiveFeedbackEditPageModule }     from './../pages/coaching-
     PROService,
     CoachingService,
     AssessmentService,
+    VersionService,
+    BookmarkService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

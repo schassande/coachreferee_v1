@@ -1,5 +1,5 @@
 'use strict';
-const crud = require('common/crud');
+const crud = require('./common/crud.js');
 const baseTableName = 'pro';
 
 

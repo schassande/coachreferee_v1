@@ -22,12 +22,27 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
         protected localDatabaseService: LocalDatabaseService,
         protected synchroService: SynchroService,
         protected http: Http
-    ) {}
+    ) {
+        this.loadModifiedData();
+    }
 
     public getResourceUrlPath(): string {
         return '/' + this.getLocalStoragePrefix();
     }
     
+    private loadModifiedData() {
+        this.localAll().subscribe((response:ResponseWithData<D[]>) => {
+            if (response.data) {
+                response.data.forEach((data:D) => {
+                    if (data.dataStatus != 'CLEAN') {
+                        //console.log('RemotePersistentDataService[' + this.getServiceId() + "].loadModifiedData(): remind " + data.id);
+                        this.synchroService.remind(data, this).subscribe(); 
+                    }
+                })
+            }
+        });
+    }
+
     // ============================= //
     // CRUD Interface implementation //
     // ============================= //
@@ -41,7 +56,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
                 return online ? this.remoteGet(id) : this.localGet(id);
             });
     }
-    private localGet(id: number, obs: Observable<any> = Observable.of('')): Observable<ResponseWithData<D>> {
+    public localGet(id: number, obs: Observable<any> = Observable.of('')): Observable<ResponseWithData<D>> {
         console.log('RemotePersistentDataService[' + this.getServiceId() + "].localGet(" + id + ")");
         return obs.flatMap(() => this.localDatabaseService.get<D>(this.getLocalStoragePrefix(), id))
             .map( (data:D) => { 
@@ -49,14 +64,18 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             })
             .catch(err => { return Observable.of( { data: null, error: err} ) });
     }
-    private remoteGet(id: number, obs: Observable<any> = Observable.of('')): Observable<ResponseWithData<D>> {
+    protected remoteGet(id: number, obs: Observable<any> = Observable.of('')): Observable<ResponseWithData<D>> {
         console.log('RemotePersistentDataService[' + this.getServiceId() + "].remoteGet(" + id + ")");
         return this.remoteAfterHttp(
             obs.flatMap(() => this.appSettingsService.get())
             .flatMap( (localAppSettings: LocalAppSettings) => {
-                return this.http.get(`${localAppSettings.serverUrl}/${this.getResourceUrlPath}/${id}`, 
-                    this.connectedUserService.getRequestOptions());
+                return this.http.get(`${localAppSettings.serverUrl}${this.getResourceUrlPath()}${this.getUrlPathOfGet(id)}`, 
+                    this.connectedUserService.getRequestOptions(localAppSettings));
             }));
+    }
+
+    public getUrlPathOfGet(id: number) {
+        return '/' + id;
     }
 
     public clear(): Observable<Response> {
@@ -88,18 +107,23 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     private remoteSave(data: D, obs: Observable<any> = Observable.of('')): Observable<ResponseWithData<D>> {
         console.log('RemotePersistentDataService[' + this.getServiceId() + "].remoteSave(" + data.id + ")");
         return this.remoteAfterHttp(
-            obs.flatMap(() => this.appSettingsService.get())
-            .flatMap( (localAppSettings: LocalAppSettings) => {
-                return this.http.post(`${localAppSettings.serverUrl}/${this.getResourceUrlPath}`, data, 
-                    this.connectedUserService.getRequestOptions());
+            obs
+            .flatMap(() => this.appSettingsService.get())
+            .flatMap((localAppSettings: LocalAppSettings) => {
+                return this.http.post(`${localAppSettings.serverUrl}${this.getResourceUrlPath()}`, data, 
+                    this.connectedUserService.getRequestOptions(localAppSettings));
             }));
     }
     private localSave(data: D, obs: Observable<any> = Observable.of('')): Observable<ResponseWithData<D>> {
         console.log('RemotePersistentDataService[' + this.getServiceId() + "].localSave(" + data.id + ")");
         return obs
-            .map(() => { 
-                //console.log('1-RemotePersistentDataService' + this.getServiceId() + ".localSave(" + JSON.stringify(data) + ")");
-                this.synchroService.remind(data, this); 
+            .flatMap(() => { 
+                if (data.dataStatus == 'CLEAN') {
+                    return Observable.of(data);
+                } else {
+                    //console.log('1-RemotePersistentDataService' + this.getServiceId() + ".localSave(" + JSON.stringify(data) + ")");
+                    return this.synchroService.remind(data, this); 
+                }
             })
             .flatMap(() => {
                 //console.log('2-RemotePersistentDataService' + this.getServiceId() + ".localSave(" + JSON.stringify(data) + ")");
@@ -110,21 +134,43 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     }
 
     public all(): Observable<ResponseWithData<D[]>> {
-        return this.syncIfOnline()
-            .flatMap((online:boolean) => {
-                return online ? this.remoteAll() : this.localAll();
+        return this.syncIfOnline().flatMap((online:boolean) => {
+            return this.localAll().flatMap( (res:ResponseWithData<D[]>) => {
+                if (online) {
+                    return this.remoteAll()
+                        .map((resRemote:ResponseWithData<D[]>) => {
+                            return this.mergeLocalNRemote(res, resRemote);
+                        });
+                } else {
+                    return Observable.of(res);
+                }
             });
+        });
+    }
+    private mergeLocalNRemote(res:ResponseWithData<D[]>, resRemote:ResponseWithData<D[]>):ResponseWithData<D[]> {
+        if (resRemote.data) {
+            //retain remote data wich are not already in local
+            res.data = res.data.concat(
+                resRemote.data
+                    .filter((remoteData) => remoteData && res.data.filter( 
+                        (localData) => localData && remoteData && localData.id == remoteData.id).length === 0)
+            );
+        }
+        return res;
     }
     private remoteAll(obs: Observable<any> = Observable.of('')): Observable<ResponseWithData<D[]>> {
         console.log('RemotePersistentDataService[' + this.getServiceId() + "].remoteAll()");
         return this.remoteAfterHttpMulti(
             obs.flatMap(() => this.appSettingsService.get())
             .flatMap( (localAppSettings: LocalAppSettings) => {
-                return this.http.get(`${localAppSettings.serverUrl}/${this.getResourceUrlPath}`, 
-                    this.connectedUserService.getRequestOptions());
+                return this.http.get(`${localAppSettings.serverUrl}${this.getResourceUrlPath()}`, 
+                    this.connectedUserService.getRequestOptions(localAppSettings)).map( (response:any) => {
+                        console.log('RemotePersistentDataService[' + this.getServiceId() + "].remoteAll() response=" + JSON.stringify(response));
+                        return response;
+                    });
             }));
     }
-    private localAll(obs: Observable<any> = Observable.of('')): Observable<ResponseWithData<D[]>> {
+    public localAll(obs: Observable<any> = Observable.of('')): Observable<ResponseWithData<D[]>> {
         console.log('RemotePersistentDataService[' + this.getServiceId() + "].localAll()");
         return obs.flatMap(() => this.localDatabaseService.getModifiableData<D>(this.getLocalStoragePrefix()))
             .map( (md:ModifiableData<D>) => {
@@ -148,10 +194,15 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     }
     private remoteDelete(id: number, obs: Observable<any> = Observable.of('')): Observable<ResponseWithData<D>> {
         console.log('RemotePersistentDataService[' + this.getServiceId() + "].remoteDelete(" + id + ")");
-        return null; // TODO
+        return this.remoteAfterHttp(
+            obs.flatMap(() => this.appSettingsService.get())
+            .flatMap( (localAppSettings: LocalAppSettings) => {
+                return this.http.delete(`${localAppSettings.serverUrl}${this.getResourceUrlPath()}/${id}`, 
+                    this.connectedUserService.getRequestOptions(localAppSettings));
+            }));
     }
     private localDelete(id: number, obs: Observable<any> = Observable.of('')): Observable<ResponseWithData<D>> {
-        console.log('RemotePersistentDataService[' + this.getServiceId() + "].localDelete(" + id + ")");
+        //console.log('RemotePersistentDataService[' + this.getServiceId() + "].localDelete(" + id + ")");
         return obs
         .flatMap(() => this.localDatabaseService.get<D>(this.getLocalStoragePrefix(), id))
         .flatMap( (data:D) => {
@@ -172,17 +223,28 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
                 data.lastUpdate = new Date();
 
                 // Remind in synchro service that element is removed
-                this.synchroService.remind(data, this);
+                return this.synchroService.remind(data, this)
+                    .flatMap(() => {
+                        //mark element as deleted in local storage
+                        return this.localDatabaseService.markAsDeleted(this.getLocalStoragePrefix(), data)
+                            .map((d) => { return { data: data, error: null}; });
+                    })
 
-                //mark element as deleted in local storage
-                return this.localDatabaseService.markAsDeleted(this.getLocalStoragePrefix(), data)
-                    .map((d) => { return { data: data, error: null}; });
 
             }
             return Observable.of({ data: data, error: null}); 
         })
         .catch(err => { return Observable.of( { data: null, error: err} ) });
     }
+    private localClean(id: number, obs: Observable<any> = Observable.of('')): Observable<ResponseWithData<D>> {
+        return obs
+        .flatMap(() => this.localDatabaseService.get<D>(this.getLocalStoragePrefix(), id))
+        .flatMap( (data:D) => {
+            return this.localDatabaseService.remove(this.getLocalStoragePrefix(), data)
+                .map(d => { return { data: d, error: null}; });
+        });
+    }
+
 
     public update(id: number, updater: PersistentDataUpdater<D>):Observable<ResponseWithData<D>> {
         return this.get(id)
@@ -218,46 +280,74 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     }
     public abstract getPriority(): number;
 
-    public sync(datas: D[]): Observable<ResponseWithData<D>[]> {
-        return Observable.forkJoin(datas.map(data => this.remoteSave(data, Observable.empty())));
+    public sync(datas: D[], obs:Observable<any>=Observable.of('')): Observable<any> {
+        datas.map(data => {
+            if (data.dataStatus == 'NEW' || data.dataStatus == 'DIRTY') {
+                obs = this.remoteSave(data, obs)
+                    .flatMap((response:ResponseWithData<D>) => {
+                        console.log("Sync: After remoteSave " + this.getLocalStoragePrefix() + '(' + data.id + "): response=" + JSON.stringify(response));
+                        if (response.error && response.error.error) {
+                            return Observable.of(response);
+                        } else {
+                            return this.localSave(this.adjustBeforeSyncBack(response.data, data));
+                        }
+                    });
+
+            } else if (data.dataStatus == 'REMOVED') {
+                obs = this.remoteDelete(data.id, obs)
+                    .flatMap((response:ResponseWithData<D>) => {
+                        return this.localClean(response.data.id);
+                    });
+
+            }
+        });
+        return obs;
     }
 
-
+    protected adjustBeforeSyncBack(dataNew:D, dataOld:D) {
+        return dataNew;
+    }
+    
     // =============== //
     // Private methods //
     // =============== //
 
-    private syncIfOnline(): Observable<boolean> {
+    protected syncIfOnline(): Observable<boolean> {
         return this.synchroService.isOnline()
-        .map((online:boolean) => {
-            let obs: Observable<any> = Observable.empty();
-            if (online) {
-                // device is online
-                if (this.synchroService.hasDataToSynchronize()) {
-                    // there is data to synchronize before to get data
-                    obs.flatMap(() => this.synchroService.synchroize());
-                }
+        .flatMap((online:boolean) => {
+            if (online && this.synchroService.hasDataToSynchronize()) {
+                console.log('RemotePersistentDataService[' + this.getServiceId() + "].syncIfOnline(): Online && There is data to synchronize.");
+                // Online && there is data to synchronize before to get data
+                return this.synchroService.synchronize()
+                    .flatMap(() => Observable.of(online));
+            } else {
+                //console.log('RemotePersistentDataService[' + this.getServiceId() + "].syncIfOnline(): No synchronization (online=" + online + ").");
+                return Observable.of(online);
             }
-            return online;
         });
     }
 
-    private remoteAfterHttp(obs:Observable<HttpResponse>): Observable<ResponseWithData<D>> {
+    protected remoteAfterHttp(obs:Observable<HttpResponse>): Observable<ResponseWithData<D>> {
         return obs.map(res => {
             let json = res.json();
-            return { data: json.data, error: { errorCode: json.errorCode, error: null}};
+            //console.log('RemotePersistentDataService[' + this.getServiceId() + '].remoteAfterHttp()\n\tHttp response= ' + JSON.stringify(json, null, 2));
+            return { data: json, error: { errorCode: json.errorCode, error: null}};
         })
         .catch(err => {
-            return Observable.of({data: null, error : { error: err, errorCode: 0}});
+            console.log('RemotePersistentDataService[' + this.getServiceId() + '].remoteAfterHttp()\n\tHttp Err= ' + JSON.stringify(err, null, 2));
+            return Observable.of({data: null, error : { error: err, errorCode: err.status}});
         });
     }
-    private remoteAfterHttpMulti(obs:Observable<HttpResponse>): Observable<ResponseWithData<D[]>> {
+    protected remoteAfterHttpMulti(obs:Observable<HttpResponse>): Observable<ResponseWithData<D[]>> {
+        //console.log('RemotePersistentDataService[' + this.getServiceId() + "].remoteAfterHttpMulti()");
         return obs.map(res => {
             let json = res.json();
-            return { data: json.data, error: { errorCode: json.errorCode, error: null}};
+            //console.log('\tHttp response= ' + JSON.stringify(json, null, 2));
+            return { data: json, error: { errorCode: json.errorCode, error: null}};
         })
         .catch(err => {
-            return Observable.of({data: null, error : { error: err, errorCode: 0}});
+            console.log('RemotePersistentDataService[' + this.getServiceId() + '].remoteAfterHttpMulti()\tHttp Err= ' + JSON.stringify(err, null, 2));
+            return Observable.of({data: null, error : { error: err, errorCode: err.status}});
         });
     }
 }

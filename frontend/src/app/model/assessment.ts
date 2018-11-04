@@ -1,12 +1,12 @@
 import { GameCategory, GameLevel } from './game';
 import { PersistentData } from './common';
-import { Skill } from './skill';
 
 export interface Evaluation {
     competent: boolean;
     comment: string;
 }
-export interface SkillEvaluation extends Skill, Evaluation {
+export interface SkillEvaluation extends Evaluation {
+    skillName: string;
 }
 export interface SkillSetEvaluation extends Evaluation {
     skillSetName: string;
@@ -14,6 +14,7 @@ export interface SkillSetEvaluation extends Evaluation {
 }
 export interface SkillProfileEvaluation extends Evaluation {
     profileId: number;
+    profileName: string;
     skillSetEvaluation: SkillSetEvaluation[];
 }
 
@@ -27,4 +28,5 @@ export interface Assessment extends SkillProfileEvaluation, PersistentData {
     gameSpeed: GameLevel;
     gameSkill: GameLevel;
     refereeId: number;
+    refereeShortName: string;
 }

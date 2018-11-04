@@ -1,5 +1,10 @@
 page-coaching-game {}
 
+.segment-button.activated,
+.segment-button.segment-activated {
+    background-color: gold;
+}
+
 .buttonReferee {
     width: 30%;
     text-align: center;
@@ -34,4 +39,9 @@ ion-toolbar {
 
 .feedbackTxt {
     white-space: pre-wrap;
+}
+
+.badge-warning {
+    font-weight: bold;
+    color: red;
 }

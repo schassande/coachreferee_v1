@@ -8,6 +8,7 @@
 
     <ion-navbar>
         <ion-title>Settings</ion-title>
+        <ion-buttons end><button ion-button menuToggle ion-button icon-only><ion-icon name="menu"></ion-icon></button></ion-buttons>
     </ion-navbar>
 
 </ion-header>
@@ -20,14 +21,18 @@
             <ion-input type="text" [(ngModel)]="settings.serverUrl"></ion-input>
         </ion-item>
         <ion-item>
+            <ion-label fixed>API Key</ion-label>
+            <ion-input type="text" [(ngModel)]="settings.apiKey"></ion-input>
+        </ion-item>
+        <ion-item>
             <ion-label>Network for synchro</ion-label>
             <ion-select [(ngModel)]="settings.minNetworkConnectionForSyncho">
-                <ion-option value="UNKNOWN">UNKNOWN</ion-option>
-                <ion-option value="NONE">NONE</ion-option>
+                <ion-option value="NONE">Off Line only</ion-option>
                 <ion-option value="3G">3G</ion-option>
                 <ion-option value="4G">4G</ion-option>
                 <ion-option value="WIFI">Wifi</ion-option>
                 <ion-option value="WIRED">Wired</ion-option>
+                <ion-option value="UNKNOWN">Local dev</ion-option>
             </ion-select>
         </ion-item>
     </ion-list>

@@ -140,10 +140,7 @@ functions:
           private: true
           integration: lambda-proxy
           authorizer:    # An AWS API Gateway custom authorizer function
-            name: authorizer # The name of the authorizer function (must be in this service)
-            resultTtlInSeconds: 0
-            identitySource: method.request.header.Authorization
-            identityValidationExpression: '^Bearer [-0-9a-zA-z\.]*$'
+            name: authorizer-passthrough # The name of the authorizer function (must be in this service)
 
 
 ##############################################################
@@ -540,7 +537,7 @@ resources:
         TableName: ${self:service}_assessment_${self:custom.stage}
         AttributeDefinitions:
           - AttributeName: id
-            AttributeType: S
+            AttributeType: N
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -554,7 +551,7 @@ resources:
         TableName: ${self:service}_coaching_${self:custom.stage}
         AttributeDefinitions:
           - AttributeName: id
-            AttributeType: S
+            AttributeType: N
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -568,7 +565,7 @@ resources:
         TableName: ${self:service}_pro_${self:custom.stage}
         AttributeDefinitions:
           - AttributeName: id
-            AttributeType: S
+            AttributeType: N
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -582,7 +579,7 @@ resources:
         TableName: ${self:service}_referee_${self:custom.stage}
         AttributeDefinitions:
           - AttributeName: id
-            AttributeType: S
+            AttributeType: N
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -596,7 +593,7 @@ resources:
         TableName: ${self:service}_skillprofile_${self:custom.stage}
         AttributeDefinitions:
           - AttributeName: id
-            AttributeType: S
+            AttributeType: N
         KeySchema:
           - AttributeName: id
             KeyType: HASH

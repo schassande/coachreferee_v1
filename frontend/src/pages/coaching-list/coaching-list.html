@@ -7,7 +7,7 @@
 <ion-header>
     <ion-navbar>
         <ion-title>Choose a game to coach</ion-title>
-        <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
+        <ion-buttons end><button ion-button menuToggle ion-button icon-only><ion-icon name="menu"></ion-icon></button></ion-buttons>
     </ion-navbar>
 </ion-header>
 
@@ -22,7 +22,7 @@
             <ion-item *ngFor="let coaching of coachingList.coachings" [ngClass]="{'past' : isPast(coaching)}">
                 <button ion-item (click)="coachingSelected($event, coaching)" style="border: none;" [ngClass]="{'past' : isPast(coaching)}"> 
                 {{getCoachingDate(coaching)}} {{coaching.timeSlot}}: Field {{coaching.field}}, {{coaching.gameCategory}}<br>
-                Referees: {{coaching.referees[0].refereeShortName}}, {{coaching.referees[1].refereeShortName}}, {{coaching.referees[2].refereeShortName}}
+                Referees: <span *ngFor="let referee of coaching.referees; last as isLast">{{referee.refereeShortName}}<span *ngIf="!isLast">, </span></span>
             </button>
                 <ion-icon item-end name="trash" (click)="deleteCoaching(coaching)"></ion-icon>
             </ion-item>

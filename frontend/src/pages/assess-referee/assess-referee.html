@@ -1,0 +1,33 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Assess <span *ngIf="referee">{{referee.shortName}}</span></ion-title>
+        <ion-buttons end><button ion-button menuToggle ion-button icon-only><ion-icon name="menu"></ion-icon></button></ion-buttons>
+    </ion-navbar>
+</ion-header>
+<ion-content *ngIf="profile && assessment" padding>
+    <ion-list>
+        <ion-item-group *ngFor="let skillSet of profile.skillSets; index as skillSetIdx" style="margin-top: 20px;">
+            <ion-item-divider color="light">
+                {{skillSet.name}} <span *ngIf="skillSet.required">*</span>
+                <span item-end>({{requirementToString(skillSet.requirement)}})</span>
+                <ion-icon item-end name="star" isActive="{{assessment.skillSetEvaluation[skillSetIdx].competent}}"></ion-icon>
+            </ion-item-divider>
+            <ion-item *ngFor="let skill of skillSet.skills; index as skillIdx">
+                <ion-label>{{skill.name}} <span *ngIf="skill.required">*</span></ion-label>
+                <ion-checkbox color="secondary" checked="false" [(ngModel)]="assessment.skillSetEvaluation[skillSetIdx].skillEvaluations[skillIdx].competent" (ionChange)="updateSKillCompetency(skillSetIdx, skillIdx)"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+                <ion-textarea placeholder="Comment about {{skillSet.name}}" rows="1" [(ngModel)]="assessment.skillSetEvaluation[skillSetIdx].description"></ion-textarea>
+            </ion-item>
+        </ion-item-group>
+        <ion-item-group style="margin-top: 20px;">
+            <ion-item-divider color="light">
+                Conclusion <span item-end>({{requirementToString(profile.requirement)}})</span>
+                <ion-icon item-end name="star" [isActive]="assessment.competent"></ion-icon>
+            </ion-item-divider>
+            <ion-item>
+                <ion-textarea placeholder="Evaluation Comment" rows="3" [(ngModel)]="assessment.description"></ion-textarea>
+            </ion-item>
+        </ion-item-group>
+    </ion-list>
+</ion-content>

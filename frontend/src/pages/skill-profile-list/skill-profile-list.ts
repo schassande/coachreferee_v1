@@ -37,9 +37,10 @@ export class SkillProfileListPage {
   }
   private searchSkillProfile() {
     this.skillProfileService.all().subscribe((response: ResponseWithData<SkillProfile[]>) => {
-      if (response.error) {
+      if (response.error && response.error.errorCode)  {
         console.error(response.error);
       }
+      console.log("searchSkillProfile: found " + JSON.stringify(response, null, 2));
       this.skillProfiles = response.data;
     });
   }

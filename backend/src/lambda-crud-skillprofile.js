@@ -1,5 +1,5 @@
 'use strict';
-const crud = require('common/crud');
+const crud = require('./common/crud.js');
 const baseTableName = 'skillprofile';
 
 /**
@@ -31,6 +31,12 @@ const checkItem = function(item, responseHelper) {
  */
 const adjustStoredItem = function(itemToStore, existingItem, responseHelper) {
     itemToStore.dataStatus = 'CLEAN';
+    if (!itemToStore.requirement) {
+        itemToStore.requirement = 'ALL_REQUIRED';
+    }
+    if (!itemToStore.description) {
+        itemToStore.description = itemToStore.name;
+    }
     return itemToStore; // no modification before storing the item
 };
 

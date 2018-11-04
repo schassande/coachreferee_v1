@@ -40,7 +40,7 @@ exports.build = (event, context, callback) => {
     const getCallerEmail = function() {
         return this.event.requestContext.authorizer.email;
     };
-    obj.getCallerIEmail = getCallerEmail;
+    obj.getCallerEmail = getCallerEmail;
 
     const getCallerId = function() {
         return this.event.requestContext.authorizer.id;

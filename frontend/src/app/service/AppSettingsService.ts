@@ -1,6 +1,6 @@
 import { User } from './../model/user';
 import { Observable } from 'rxjs/Rx';
-import { LocalAppSettings } from './../model/settings';
+import { LocalAppSettings, NetworkConnection } from './../model/settings';
 import { Storage } from '@ionic/storage';
 import { Injectable } from '@angular/core';
 import { LocalSingletonDataService } from './LocalSingletonDataService';
@@ -18,7 +18,7 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
                 let result: LocalAppSettings = las;
                 if (!result) {
                     result = {
-                        serverUrl: '',
+                        serverUrl: ' https://1eyhctd9mb.execute-api.eu-west-1.amazonaws.com/dev',
                         minNetworkConnectionForSyncho: 'NONE',
                         lastUserId: 0
                     }
@@ -31,6 +31,24 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
     public setLastUser(user: User) {
         this.get().subscribe((setting: LocalAppSettings) => {
             setting.lastUserId = user.id;
+            this.save(setting).subscribe();
+        });
+    }
+    public setMinNetworkConnectionForSyncho(minNetworkConnectionForSyncho:NetworkConnection) {
+        this.get().subscribe((setting: LocalAppSettings) => {
+            setting.minNetworkConnectionForSyncho = minNetworkConnectionForSyncho;
+            this.save(setting).subscribe();
+        });
+    }
+    public setServerUrl(serverUrl:string) {
+        this.get().subscribe((setting: LocalAppSettings) => {
+            setting.serverUrl = serverUrl;
+            this.save(setting).subscribe();
+        });
+    }
+    public setApplicationVersion(applicationVersion:string) {
+        this.get().subscribe((setting: LocalAppSettings) => {
+            setting.applicationVersion = applicationVersion;
             this.save(setting).subscribe();
         });
     }

@@ -1,3 +1,4 @@
+import { ConnectedUserService } from './ConnectedUserService';
 import { LocalAppSettings } from './../model/settings';
 import { AppSettingsService } from './AppSettingsService';
 import { SyncService } from './SyncService';
@@ -21,16 +22,31 @@ export class SynchroService {
      * key : sync service id.
      */
     private persistentDatasToSynchronize: Map<string,PersistentDatasToSynchronize<any>> = new Map<string,PersistentDatasToSynchronize<any>>();
+    
 
     private synchronizing = false;
-    private syncEvent: EventEmitter<number> = new EventEmitter<number>();
+    private syncEvent: EventEmitter<SyncEvent> = new EventEmitter<SyncEvent>();
+    private connected:boolean = false;
 
     constructor(
         private network: Network, 
-        private appSettingsService: AppSettingsService) {
+        private appSettingsService: AppSettingsService,
+        private connectedUserService: ConnectedUserService) {
+        this.network.onConnect().subscribe(() => { 
+            this.connected = true;
+            console.log('SyncrhoService: Network connected!'); 
+            this.tryToSynchronize().subscribe(); // try to synchronize local database with the remote server
+        });
+        this.network.onDisconnect().subscribe(() => { 
+            this.connected = false;
+            console.log('SyncrhoService: Network Disconnected!'); 
+        });
 
-        this.network.onConnect().subscribe(() => { console.log('network connected!'); });
-        this.network.onDisconnect().subscribe(() => { console.log('network Disconnected!'); });
+        this.connectedUserService.$userConnectionEvent.subscribe(() => {
+            if (this.connectedUserService.isConnected()) {
+                this.tryToSynchronize().subscribe(); // try to synchronize local database with the remote server
+            }
+        })
     }
 
 
@@ -39,45 +55,59 @@ export class SynchroService {
      * @param data is the persistent data to synchronize later.
      * @param syncService is the service to use to synchronize the persistent data.
      */
-    public forget<D extends PersistentData>(data: D, syncService: SyncService<D>): boolean {
+    public forget<D extends PersistentData>(data: D, syncService: SyncService<D>): Observable<D> {
+        let obs:Observable<D>;
         if (this.synchronizing) {
-            return false;
-        }
-        let pdts:PersistentDatasToSynchronize<D> = this.persistentDatasToSynchronize.get(syncService.getServiceId())
-        if (pdts === null) {
-            return true;
-        }
-        const idx = pdts.datas.findIndex((d) => data.id === d.id);
-        if (idx < 0) {
-            return false;
+            // Wait the end of the synchronisation
+            obs = this.syncEvent.asObservable().flatMap(() => Observable.of(data));
         } else {
-            // update the modified persistent data
-            pdts.datas = pdts.datas.slice(idx, 1);
+            obs = Observable.of(data);
         }
+        return obs.map((data:D) => {
+            let pdts:PersistentDatasToSynchronize<D> = this.persistentDatasToSynchronize.get(syncService.getServiceId())
+            if (pdts === null) {
+                return null;
+            }
+            const idx = pdts.datas.findIndex((d) => data.id === d.id);
+            if (idx < 0) {
+                return null;
+            } else {
+                // update the modified persistent data
+                pdts.datas = pdts.datas.slice(idx, 1);
+                return data;
+            }
+        });
     }
-        /**
+    /**
      * Store/Remind a persistent data to synchronize later.
      * @param data is the persistent data to synchronize later.
      * @param syncService is the service to use to synchronize the persistent data.
      */
-    public remind<D extends PersistentData>(data: D, syncService: SyncService<D>): boolean {
+    public remind<D extends PersistentData>(data: D, syncService: SyncService<D>): Observable<D> {
+        let obs:Observable<D>;
         if (this.synchronizing) {
-            return false;
-        }
-        let pdts:PersistentDatasToSynchronize<D> = this.persistentDatasToSynchronize.get(syncService.getServiceId())
-        if (!pdts) {
-            pdts = { syncService: syncService, datas: [] }
-            this.persistentDatasToSynchronize.set(syncService.getServiceId(), pdts);
-        }
-        //console.log('SynchroService.remind(' + data.id + '): pdts=' + JSON.stringify(pdts));
-        const idx = pdts.datas.findIndex((d) => data.id === d.id);
-        if (idx < 0) {
-            // add new persistent data
-            pdts.datas.push(data);
+            // Wait the end of the synchronisation
+            obs = this.syncEvent.asObservable().flatMap(() => Observable.of(data));
         } else {
-            // update the modified persistent data
-            pdts.datas[idx] = data;
+            obs = Observable.of(data);
         }
+        return obs.map((data:D) => {
+            let pdts:PersistentDatasToSynchronize<D> = this.persistentDatasToSynchronize.get(syncService.getServiceId())
+            if (!pdts) {
+                pdts = { syncService: syncService, datas: [] }
+                this.persistentDatasToSynchronize.set(syncService.getServiceId(), pdts);
+            }
+            //console.log('SynchroService.remind(' + data.id + '): pdts=' + JSON.stringify(pdts));
+            const idx = pdts.datas.findIndex((d) => data.id === d.id);
+            if (idx < 0) {
+                // add new persistent data
+                pdts.datas.push(data);
+            } else {
+                // update the modified persistent data
+                pdts.datas[idx] = data;
+            }
+            return data;
+        });
     }
 
     /**
@@ -85,36 +115,32 @@ export class SynchroService {
      */
     public isOnline(): Observable<boolean> {
         return this.appSettingsService.get().flatMap( (localAppSettings: LocalAppSettings) => {
-            return Observable.of(false);
-            /*
             //console.log('SynchroService.isOnline(): localAppSettings.minNetworkConnectionForSyncho=' + localAppSettings.minNetworkConnectionForSyncho);
-            if (localAppSettings.minNetworkConnectionForSyncho === 'NONE') {
+            if (!localAppSettings.minNetworkConnectionForSyncho || localAppSettings.minNetworkConnectionForSyncho === 'NONE') {
                 // always offline 
-                //console.log('SynchroService.isOnline(): =>FALSE');
                 return Observable.of(false);
             } else {
                 // check the current network connection
                 return this.getNetworkConnection().map((networkConnection:NetworkConnection) => {
-                    //console.log('SynchroService.isOnline(): networkConnection=' + networkConnection);
-                    const orderedNetworkConnection: NetworkConnection[] = ['UNKNOWN', 'NONE', '3G', '4G', 'WIFI', 'WIRED'];
+                    const orderedNetworkConnection: NetworkConnection[] = ['NONE', 'UNKNOWN', '3G', '4G', 'WIFI', 'WIRED'];
                     const ncIdx = orderedNetworkConnection.indexOf(networkConnection);
                     const minNcIdx = orderedNetworkConnection.indexOf(localAppSettings.minNetworkConnectionForSyncho);
-                    const online = ncIdx >= 2 && ncIdx >= minNcIdx;
-                    //console.log('SynchroService.isOnline(): =>' + online);
+                    const online = ncIdx >= 1 && ncIdx >= minNcIdx;
+                    console.log('SynchroService.isOnline(): networkConnection=' + networkConnection + ' => online=' + online);
                     return online;
                 });
             }
-            */
         });
     }
 
     /**
      * @return a boolean value indicating if there is data to synchronize.
      */
-    public hasDataToSynchronize(): boolean {
+    public hasDataToSynchronize(serviceId:string=null): boolean {
         let hasDataToSynchronize: boolean = false;
         this.persistentDatasToSynchronize.forEach( (pdts:PersistentDatasToSynchronize<any>) => { 
-            hasDataToSynchronize = hasDataToSynchronize || pdts.datas.length > 0;
+            hasDataToSynchronize = hasDataToSynchronize 
+                || ((serviceId == null || serviceId == pdts.syncService.getServiceId()) && pdts.datas.length > 0 );
         });
         return hasDataToSynchronize;
     }
@@ -122,28 +148,80 @@ export class SynchroService {
     /**
      * Launches the data synchronisation.
      */
-    public synchroize<D extends PersistentData>(): Observable<any> {
+    public synchronize<D extends PersistentData>(serviceId:string=null): Observable<any> {
         if (this.synchronizing) {
             return Observable.from(this.syncEvent);
         }
+        const event:SyncEvent = { total: 0, synchronized: 0, elements: [] };
         this.synchronizing = true;
+        // Step 1 : transform Map to array
         let pdtss: PersistentDatasToSynchronize<D>[] = [];
+
         this.persistentDatasToSynchronize.forEach((pdts:PersistentDatasToSynchronize<D>) => {
-            pdtss.push(pdts);
+            if (serviceId == null || serviceId == pdts.syncService.getServiceId()) {
+                pdtss.push(pdts);
+            }
         });
+        //Forget data to sync
+        this.persistentDatasToSynchronize.clear();
+
+        console.log('SynchroService.synchronize(): ' + pdtss.length + ' data to synchronize');
+        // Step 2 : sort the array by priority
         pdtss = pdtss.sort((pdts1: PersistentDatasToSynchronize<D>, pdts2: PersistentDatasToSynchronize<D>) => 
             pdts1.syncService.getPriority() - pdts2.syncService.getPriority());
-        let obs: Observable<any>[] = [];
+        
+        // Step 3: chain/concat observable
+        let obs: Observable<any> = Observable.of('');
         pdtss.forEach((pdts) => {
-            obs.push(pdts.syncService.sync(pdts.datas));
+            pdts.syncService.getServiceId();
+            obs = pdts.syncService.sync(pdts.datas, obs);
         });
-        return Observable.concat(obs).do(value => {         
-            this.syncEvent.emit(0);
+        
+        return obs.map(value => {         
+            console.log('SynchroService.synchronize(): end of synchronization '+ value);
+            this.syncEvent.emit(event);
             this.synchronizing = false;
             return value;
         });
     }
 
+    public tryToSynchronize(loginRequired:boolean = true, serviceId:string=null): Observable<any> {
+        if (this.synchronizing) {
+            console.log('SynchroService.tryToSynchronize: Already synchronising.');
+            return Observable.of('');
+        } else if (loginRequired && !this.connectedUserService.isLogin()) {
+            console.log('SynchroService.tryToSynchronize: User is not login.');
+            return Observable.of('');
+        } else if (!this.hasDataToSynchronize(serviceId)) {
+            console.log('SynchroService.tryToSynchronize: No data to synchronize.');
+            return Observable.of('');
+        } else {
+            console.log('SynchroService.tryToSynchronize: There is data to synchronize.');
+            return this.isOnline().flatMap((online) => {
+                if (!online) {
+                    console.log('SynchroService.tryToSynchronize: There is data to synchronize BUT not enough network.');
+                }
+                return online ? this.synchronize(serviceId) : Observable.of('');
+            });
+        }
+    }
+    public trySynchronizeWithoutLogin(serviceId:string) {
+        if (this.synchronizing) {
+            console.log('Already synchronising.');
+            return Observable.empty();
+        } else if (!this.hasDataToSynchronize()) {
+            console.log('No data to synchronize.');
+            return Observable.empty();
+        } else {
+            console.log('There is data to synchronize.');
+            return this.isOnline().flatMap((online) => {
+                if (!online) {
+                    console.log('There is data to synchronize BUT not enough network.');
+                }
+                return online ? this.synchronize() : Observable.empty();
+            });
+        }
+    }
     /**
      * @return an observable indicating the network connection status.
      */
@@ -176,3 +254,17 @@ interface PersistentDatasToSynchronize<D extends PersistentData> {
     /** The persistent data to synchronize. */
     datas: D[];
 }
+
+interface SyncEvent {
+    total: number;
+    synchronized: number;
+    elements: SyncElement[]
+}
+
+interface SyncElement {
+    service: string;
+    size: number;
+    synchronized: number; 
+}
+
+

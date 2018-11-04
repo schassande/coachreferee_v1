@@ -8,11 +8,12 @@
 
     <ion-navbar>
         <ion-title>Referee <span *ngIf="referee">{{referee.shortName}}</span></ion-title>
+        <ion-buttons end><button ion-button menuToggle ion-button icon-only><ion-icon name="menu"></ion-icon></button></ion-buttons>
     </ion-navbar>
 
 </ion-header>
-<ion-content padding>
-    <ion-list *ngIf="referee">
+<ion-content padding *ngIf="referee">
+    <ion-list>
         <ion-item *ngIf="referee.photo && referee.photo.url">
             <img src="{{referee.photo.url}}">
         </ion-item>
@@ -140,7 +141,7 @@
             <button ion-item (click)="coachingSelected($event, coaching)" style="border: none;">
                 {{coaching.competition}}<br>
                 {{coachingService.getCoachingDateAsString(coaching)}} {{coaching.timeSlot}}: Field {{coaching.field}}, {{coaching.gameCategory}}<br>
-                Referees: {{coaching.referees[0].refereeShortName}}, {{coaching.referees[1].refereeShortName}}, {{coaching.referees[2].refereeShortName}}
+                Referees: <span *ngFor="let referee of coaching.referees; last as isLast">{{referee.refereeShortName}}<span *ngIf="!isLast">, </span></span>
             </button>
         </ion-item>
     </ion-list>

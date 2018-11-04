@@ -67,7 +67,7 @@ exports.handler = (event, context, callback) => {
             //create only normal user
             body.profile = 'user';
         }
-
+        body.dataStatus = 'CLEAN';
         console.log("Store user=" + JSON.stringify(body, null, 2));
         docClient.put({ TableName: tableName, Item: body }, (err, res) => {
             if (err) {
@@ -77,7 +77,7 @@ exports.handler = (event, context, callback) => {
                 console.log('User ' + (existingUser ? 'updated' : 'created'));
                 //hide the password in the response
                 body.password = null;
-                responseHelper.success({ statusCode: '200', body: JSON.stringify(body) });
+                responseHelper.success({ data: body, error: null });
             }
         });
     });

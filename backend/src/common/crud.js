@@ -12,13 +12,13 @@ exports.getItem = (event, context, callback, baseTableName, filterItem) => {
 
     const id = event.pathParameters['id'];
     if (!id) {
-        responseHelper.fail("GET ${baseTableName} ${id}: Missing id field");
+        responseHelper.fail("GET " + baseTableName + "(" + id + "): Missing id field");
         return;
     }
-    console.log("GET ${baseTableName} ${id}");
+    console.log("GET " + baseTableName + "(" + id + ")");
 
     docClient.get({ TableName: tableName, Key: { id: id } }, (err, data) => {
-        const existingItem = data.Item && data.Item.id ? data.Item : null;
+        const existingItem = data && data.Item && data.Item.id ? data.Item : null;
         if (err) {
             console.log("GET ${baseTableName} ${id}: Error during execution: " + err);
             responseHelper.fail(err);
@@ -47,19 +47,19 @@ exports.getItems = (event, context, callback, baseTableName, filterItem) => {
 
     docClient.scan({ TableName: tableName }, (err, data) => {
         if (err) {
-            console.log("GET ${baseTableName}: Error during operation: " + err);
+            console.log("GET all " + baseTableName + ": Error during operation: " + err);
             responseHelper.fail(err);
 
         } else {
-            console.log("GET ${baseTableName}: " + JSON.stringify(data));
+            console.log("GET " + baseTableName + ": " + JSON.stringify(data));
             if (filterItem) {
                 let filteredItems = data.Items.map((item) => {
                     return filterItem(item, responseHelper);
                 });
-                console.log("GET ${baseTableName}: ${filteredItems.length} items found after filtering.");
+                console.log("GET all " + baseTableName + ": " + filteredItems.length + " items found after filtering.");
                 responseHelper.success(filteredItems);
             } else {
-                responseHelper.success(data);
+                responseHelper.success(data.Items);
             }
         }
     });
@@ -72,7 +72,7 @@ exports.saveItem = (event, context, callback, baseTableName, checkItem, getItemO
     let id = body.id;
 
     //check parameters
-    console.log("POST ${baseTableName} ${id}: body=" + JSON.stringify(body, null, 2));
+    console.log("POST " + baseTableName + "(" + id + "): body=" + JSON.stringify(body, null, 2));
     if (!id) {
         responseHelper.fail('ERROR: Missing id field in body');
         return;
@@ -85,15 +85,15 @@ exports.saveItem = (event, context, callback, baseTableName, checkItem, getItemO
     let itemToStore = body;
 
     docClient.get({ TableName: tableName, Key: { id: id } }, (err, data) => {
-        const existingItem = data.Item && data.Item.id ? data.Item : null;
-        console.log("POST ${baseTableName} ${id}: Existing item=" + JSON.stringify(existingItem, null, 2));
+        const existingItem = data && data.Item && data.Item.id ? data.Item : null;
+        console.log("POST " + baseTableName + "(" + id + "): Existing item=" + JSON.stringify(existingItem, null, 2));
         if (existingItem) { //update situation
 
             //Check authorization
             let allowToUodate = !getItemOwner || (getItemOwner(body, responseHelper) == responseHelper.getCallerId());
             if (!allowToUodate) {
-                console.log("POST ${baseTableName} ${id}: ERROR: Not authorized to update the resource");
-                responseHelper.failStatus("POST ${baseTableName} ${id}: Not authorized to update the resource", '403');
+                console.log("POST " + baseTableName + "(" + id + "): ERROR: Not authorized to update the resource");
+                responseHelper.failStatus("POST " + baseTableName + "(" + id + "): Not authorized to update the resource", '403');
                 return;
             }
 
@@ -110,13 +110,13 @@ exports.saveItem = (event, context, callback, baseTableName, checkItem, getItemO
         if (adjustStoredItem) {
             itemToStore = adjustStoredItem(itemToStore, existingItem, responseHelper);
         }
-        console.log("Store user=" + JSON.stringify(itemToStore, null, 2));
+        console.log((existingItem ? 'Update ' : 'Create ') + baseTableName + "=" + JSON.stringify(itemToStore, null, 2));
         docClient.put({ TableName: tableName, Item: itemToStore }, (err, res) => {
             if (err) {
-                console.log("POST ${baseTableName} ${id}: ERROR: Error during operation: " + err);
+                console.log("POST " + baseTableName + "(" + id + "): ERROR: Error during operation: " + err);
                 responseHelper.fail(err);
             } else {
-                console.log("POST ${baseTableName} ${id}: item " + (existingUser ? 'updated' : 'created'));
+                console.log("POST " + baseTableName + "(" + id + "): item " + (existingItem ? 'updated' : 'created'));
                 let itemToReturn = itemToStore;
                 if (adjustReturnedItem) {
                     itemToReturn = adjustReturnedItem(itemToReturn, responseHelper);
@@ -140,7 +140,7 @@ exports.removeItem = (event, context, callback, baseTableName, isAllowedToRemove
 
     docClient.get({ TableName: tableName, Key: { id: id } }, (err, data) => {
         const existingItem = data.Item && data.Item.id ? data.Item : null;
-        console.log("DEL ${baseTableName} ${id}: existing item=" + JSON.stringify(existingItem, null, 2));
+        console.log("DEL " + baseTableName + "(" + id + "): existing item=" + JSON.stringify(existingItem, null, 2));
         if (existingItem) {
             if (isAllowedToRemove(existingItem, responseHelper)) {
                 //remove the existing user
