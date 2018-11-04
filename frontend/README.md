@@ -19,6 +19,8 @@ $ npm install
 4) Your mobile device should be in Dev mode
 
 run `d:\Profiles\schassande\AppData\Local\Android\Sdk\platform-tools\adb -a` to know if your device is reconignzed by Windows
+adb devices -l
+
 To deploy on you mobile device `$ ionic cordova run android`
 
 ## 2 - Development
