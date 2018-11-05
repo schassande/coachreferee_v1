@@ -23,6 +23,7 @@ adb devices -l
 
 To deploy on you mobile device `$ ionic cordova run android`
 
+
 ## 2 - Development
 
 The `doc` sub directory contains documentation about development.
@@ -32,4 +33,23 @@ The `doc` sub directory contains documentation about development.
 - add comments in + to positive and improve feedback
 - add menu entry to go to current coaching
 - add link to game definition in page coaching game
+
+## Packaging
+
+### Creation de build ionic
+ionic cordova build android --prod --release
+
+### Creation d'une cle (si pas deja fait)
+keytool -genkey -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias sebastien
+
+### Signer le jar
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ../../my-release-key.jks platforms/android/build/outputs/apk/release/android-release-unsigned.apk sebastien
+password: 22n77scb
+
+### aligner
+D:\Profiles\schassande\AppData\Local\Android\Sdk\build-tools\28.0.1\zipalign -v 4 platforms\android\build\outputs\apk\release\android-release-unsigned.apk RefCoach.apk
+
+### Verifier
+D:\Profiles\schassande\AppData\Local\Android\Sdk\build-tools\28.0.1\apksigner verify RefCoach.apk
+
 

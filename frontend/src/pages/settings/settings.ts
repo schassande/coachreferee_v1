@@ -28,8 +28,6 @@ import { EmailService }         from '../../app/service/EmailService';
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
-
-@IonicPage()
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings.html',
