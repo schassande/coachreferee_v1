@@ -1,7 +1,7 @@
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { ResponseWithData } from './../../app/service/response';
 import { UserService } from './../../app/service/UserService';
-import { User } from './../../app/model/user';
+import { User, COUNTRIES, CONSTANTES } from './../../app/model/user';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
@@ -20,6 +20,7 @@ import { NavController, NavParams } from 'ionic-angular';
 export class UserEditPage {
   user: User;
   error: any;
+  constantes=CONSTANTES;
 
   constructor(
     public navCtrl: NavController, 
@@ -53,7 +54,6 @@ export class UserEditPage {
       firstName: '',
       lastName: '',
       shortName: '',
-      birthday: new Date(1977, 11, 22),
       country: '',
       email: '',
       gender: 'M',

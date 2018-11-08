@@ -2,7 +2,7 @@ import { ConnectedUserService } from './../../app/service/ConnectedUserService';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { ResponseWithData } from './../../app/service/response';
 import { RefereeService } from './../../app/service/RefereeService';
-import { Referee } from './../../app/model/user';
+import { Referee, CONSTANTES } from './../../app/model/user';
 import { Component } from '@angular/core';
 import { IonicPage, NavParams, LoadingController } from 'ionic-angular';
 import { NavController } from 'ionic-angular';
@@ -22,6 +22,8 @@ import { NavController } from 'ionic-angular';
 export class RefereeEditPage {
   referee: Referee;
   error: any;
+  constantes=CONSTANTES;
+
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
     public refereeService: RefereeService,
@@ -49,7 +51,6 @@ export class RefereeEditPage {
           firstName: '',
           lastName: '',
           shortName: '',
-          birthday: new Date(1987, 10, 22),
           country: '',
           email: '',
           gender: 'M',

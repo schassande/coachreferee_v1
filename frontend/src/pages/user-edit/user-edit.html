@@ -43,12 +43,7 @@
         <ion-item>
             <ion-label>Country</ion-label>
             <ion-select [(ngModel)]="user.country">
-                <ion-option value="Australia">Australia</ion-option>
-                <ion-option value="Austria">Austria</ion-option>
-                <ion-option value="England">England</ion-option>
-                <ion-option value="France">France</ion-option>
-                <ion-option value="Germany">Germany</ion-option>
-                <ion-option value="Scotland">Scotland</ion-option>
+                <ion-option *ngFor="let country of constantes.countries" value="{{country[0]}}">{{country[1]}}</ion-option>
             </ion-select>
         </ion-item>
         <ion-item>
@@ -65,10 +60,7 @@
         <ion-item>
             <ion-label>Speaking languages</ion-label>
             <ion-select [(ngModel)]="user.speakingLanguages" multiple="true">
-                <ion-option value="FR">Francais</ion-option>
-                <ion-option value="EN">English</ion-option>
-                <ion-option value="DE">Deush</ion-option>
-                <ion-option value="ES">Spanish</ion-option>
+                <ion-option *ngFor="let lang of constantes.languages" value="{{lang[0]}}">{{lang[1]}}</ion-option>
             </ion-select>
         </ion-item>
     </ion-list>

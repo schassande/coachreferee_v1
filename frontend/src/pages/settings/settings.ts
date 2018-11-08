@@ -94,7 +94,6 @@ export class SettingsPage {
     if (importObj.users) {
       importObj.users.forEach((elem:User) => {
         //re create Date object avec serialisation
-        elem.birthday = new Date(elem.birthday);
         elem.creationDate = new Date(elem.creationDate);
         elem.lastUpdate = new Date(elem.lastUpdate);
         obs.push(this.userService.save(elem));
@@ -102,7 +101,6 @@ export class SettingsPage {
     }         
     if (importObj.referees) {
       importObj.referees.forEach((elem:Referee) => {
-        elem.birthday = new Date(elem.birthday);
         elem.creationDate = new Date(elem.creationDate);
         elem.lastUpdate = new Date(elem.lastUpdate);
         obs.push(this.refereeService.save(elem));
