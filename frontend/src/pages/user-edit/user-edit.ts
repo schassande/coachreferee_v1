@@ -1,9 +1,10 @@
+import { ConnectedUserService } from './../../app/service/ConnectedUserService';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { ResponseWithData } from './../../app/service/response';
 import { UserService } from './../../app/service/UserService';
 import { User, CONSTANTES } from './../../app/model/user';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, LoadingController } from 'ionic-angular';
 
 /**
  * Generated class for the UserNewPage page.
@@ -19,13 +20,15 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class UserEditPage {
   user: User;
-  error: any;
+  error: string[] = [];
   constantes=CONSTANTES;
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
     public userService: UserService,
+    public connectedUserService: ConnectedUserService,
+    public loadingCtrl: LoadingController,
     public camera:Camera) {
   }
 
@@ -35,10 +38,19 @@ export class UserEditPage {
       const userId = this.navParams.get('userId');
       if (userId) {
         this.userService.get(userId).subscribe((res:ResponseWithData<User>) => {
-          this.user = res.data;
-          console.log('load user: ', this.user);
-          this.ensureDataSharing();
-          this.error = res.error;
+          if (res.error) {
+            const loader = this.loadingCtrl.create({
+              content: "Problem to load referee informaion ...",
+              duration: 3000
+            });
+            loader.present().then(() => {
+              this.connectedUserService.navBackOrRoot(this.navCtrl);
+            });
+          } else {
+            this.user = res.data;
+            console.log('load user: ', this.user);
+            this.ensureDataSharing();
+          }
         });
       } else {
         this.initReferee();
@@ -108,26 +120,36 @@ export class UserEditPage {
   }
   isValid():boolean {
     this.error = [];
-    if (this.isValidString(this.user.firstName)) {
-      this.error.push(('Invalid FirstName'))
+    if (!this.isValidString(this.user.firstName, 3, 15)) {
+      this.error.push(('Invalid first name: 3 to 15 chars'));
     }
-    return
+    if (!this.isValidString(this.user.lastName, 3, 15)) {
+      this.error.push(('Invalid last name: 3 to 15 chars'));
+    }
+    if (!this.isValidString(this.user.shortName, 3, 5)) {
+      this.error.push(('Invalid short name: 3 to 5 chars'));
+    }
+    if (!this.isValidString(this.user.email, 5, 50)) {
+      this.error.push(('Invalid email: 5 to 50 chars'));
+    }
+    return this.error.length == 0;
   }
-  isValidString(str:string):boolean {
-    return str && str.trim().length >0
+  isValidString(str:string, minimalLength:number = 0, maximalLength:number = 100):boolean {
+    return str && str.trim().length >= minimalLength && str.trim().length <= maximalLength;
   }
 
   public newUser(event) {
-    this.userService.save(this.user).subscribe((response: ResponseWithData<User>) => {
-      this.error = response.error;
-      if (this.error) {
-        console.log('Error when saving new user: ' + this.error);
-      } else {
-        this.user = response.data;
-        console.log('Saved user: ', this.user);
-        this.navCtrl.pop();
-      }
-    });
+    if (this.isValid()) {
+      this.userService.save(this.user).subscribe((response: ResponseWithData<User>) => {
+        if (response.error) {
+          this.error.push('Error when saving the user info: ' + this.error);
+        } else {
+          this.user = response.data;
+          console.log('Saved user: ', this.user);
+          this.navCtrl.pop();
+        }
+      });
+    }
   }
   
   getPicture() {

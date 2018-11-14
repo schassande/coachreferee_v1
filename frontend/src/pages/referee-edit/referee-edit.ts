@@ -21,7 +21,7 @@ import { NavController } from 'ionic-angular';
 })
 export class RefereeEditPage {
   referee: Referee;
-  error: any;
+  error: string[];
   constantes=CONSTANTES;
 
   constructor(public navCtrl: NavController, 
@@ -70,6 +70,26 @@ export class RefereeEditPage {
     }
   }
 
+  isValid():boolean {
+    this.error = [];
+    if (!this.isValidString(this.referee.firstName, 3, 15)) {
+      this.error.push(('Invalid first name: 3 to 15 chars'));
+    }
+    if (!this.isValidString(this.referee.lastName, 3, 15)) {
+      this.error.push(('Invalid last name: 3 to 15 chars'));
+    }
+    if (!this.isValidString(this.referee.shortName, 3, 5)) {
+      this.error.push(('Invalid short name: 3 to 5 chars'));
+    }
+    if (!this.isValidString(this.referee.email, 5, 50)) {
+      this.error.push(('Invalid email: 5 to 50 chars'));
+    }
+    return this.error.length == 0;
+  }
+  isValidString(str:string, minimalLength:number = 0, maximalLength:number = 100):boolean {
+    return str && str.trim().length >= minimalLength && str.trim().length <= maximalLength;
+  }
+
   private setRefereeId(id: number) {
     console.log("RefereeView.setRefereeId(" + id + ")");
     this.refereeService.get(id).subscribe((response: ResponseWithData<Referee>) => {
@@ -93,15 +113,16 @@ export class RefereeEditPage {
   }
 
   public newReferee(event) {
-    this.refereeService.save(this.referee).subscribe((response: ResponseWithData<Referee>) => {
-      this.error = response.error;
-      if (this.error) {
-        console.log('Error when saving new user: ' + this.error);
-      } else {
-        this.referee = response.data;
-        this.navCtrl.pop();
-      }
-    });
+    if (this.isValid()) {
+        this.refereeService.save(this.referee).subscribe((response: ResponseWithData<Referee>) => {
+        if (response.error) {
+          this.error.push('Error when saving new user: ' + this.error);
+        } else {
+          this.referee = response.data;
+          this.navCtrl.pop();
+        }
+      });
+    }
   }
 
   getPicture() {

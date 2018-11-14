@@ -18,19 +18,31 @@
         </ion-item>
         <ion-item>
             <ion-label fixed>First name</ion-label>
-            <ion-input type="text" [(ngModel)]="user.firstName" min="3" max="15"></ion-input>
+            <ion-input type="text" [(ngModel)]="user.firstName" id="firstName" name="firstName" min="3" max="15" #firstName="ngModel" required></ion-input>
+        </ion-item>
+        <ion-item no-lines *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="alert alert-danger">
+            <div *ngIf="firstName.errors.required">A value is required.</div>
         </ion-item>
         <ion-item>
             <ion-label fixed>Last name</ion-label>
-            <ion-input type="text" [(ngModel)]="user.lastName" min="3" max="15"></ion-input>
+            <ion-input type="text" [(ngModel)]="user.lastName" id="lastName" name="lastName" min="3" max="15" #lastName="ngModel" required></ion-input>
+        </ion-item>
+        <ion-item no-lines *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="alert alert-danger">
+            <div *ngIf="lastName.errors.required">A value is required.</div>
         </ion-item>
         <ion-item>
             <ion-label fixed>Short Name</ion-label>
-            <ion-input type="text" [(ngModel)]="user.shortName" min="3" max="5"></ion-input>
+            <ion-input type="text" [(ngModel)]="user.shortName" id="shortName" name="shortName" min="3" max="5" #shortName="ngModel" required></ion-input>
+        </ion-item>
+        <ion-item no-lines *ngIf="shortName.invalid && (shortName.dirty || shortName.touched)" class="alert alert-danger">
+            <div *ngIf="shortName.errors.required">A value is required.</div>
         </ion-item>
         <ion-item>
             <ion-label fixed>Email</ion-label>
-            <ion-input type="text" [(ngModel)]="user.email" min="3" max="30"></ion-input>
+            <ion-input type="text" [(ngModel)]="user.email" id="email" name="email" min="3" max="30" #email="ngModel" required></ion-input>
+        </ion-item>
+        <ion-item no-lines *ngIf="email.invalid && (email.dirty || email.touched)" class="alert alert-danger">
+            <div *ngIf="email.errors.required">A value is required.</div>
         </ion-item>
         <ion-item>
             <ion-label fixed>Password</ion-label>
@@ -124,6 +136,11 @@
             </ion-row>
         </ion-grid>
     </form>
-
-    <button ion-button secondary (click)="newUser($event)" style="width: 100%;" class="greenButton">Save</button>
+    <div round *ngIf="error.length > 0" class="alert alert-danger">
+        Please fix the following problem(s):
+        <ul>
+            <li *ngFor="let er of error">{{er}}</li>
+        </ul>
+    </div>
+    <button ion-button secondary (click)="newUser($event)" style="width: 100%;" class="greenButton" [disabled]="firstName.invalid && lastName.invalid">Save</button>
 </ion-content>

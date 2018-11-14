@@ -4,11 +4,16 @@ import { Sharing } from "../app/model/privacy";
 
 @Component({
     selector: 'sharing-comp',
-    template: `<ion-segment class="sharingSegment" [(ngModel)]="value">
+    template: `<ion-segment class="sharingSegment" [(ngModel)]="value" *ngIf="!readonly">
                     <ion-segment-button class="sharingYes" value="YES"  ><ion-icon name="checkmark"></ion-icon></ion-segment-button>
                     <ion-segment-button class="sharingLimit"  value="LIMIT"><ion-icon name="help"></ion-icon></ion-segment-button>
                     <ion-segment-button class="sharingNo"  value="NO"   ><ion-icon name="close"></ion-icon></ion-segment-button>
-                </ion-segment>`,
+                </ion-segment>
+                <div *ngIf="readonly">
+                    <span *ngIf="value == 'YES'"><ion-icon name="checkmark"></ion-icon></span>
+                    <span *ngIf="value == 'LIMIT'"><ion-icon name="help"></ion-icon></span>
+                    <span *ngIf="value == 'NO'"><ion-icon name="close"></ion-icon></span>
+                </div>`,
     providers: [ { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SharingComponent), multi: true } ],
     styles: [`
     .sharingSegment .segment-button { 
@@ -36,6 +41,8 @@ export class SharingComponent implements ControlValueAccessor {
     public name: string;
     @Input('value') 
     public val: Sharing;
+    @Input()
+    public readonly: boolean = false;
 
     // Both onChange and onTouched are functions. Set default function doing NOP
     private onChange: any = () => { };
