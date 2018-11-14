@@ -113,8 +113,8 @@ export class CoachingService extends RemotePersistentDataService<Coaching>{
         if (!coaching.date) {
             coaching.date = new Date();
         }
-        coaching.date.setDate(Number.parseInt(elements[0]));
-        coaching.date.setMonth(Number.parseInt(elements[1]));
+        coaching.date.setFullYear(Number.parseInt(elements[0]));
+        coaching.date.setMonth(Number.parseInt(elements[1])-1);
         coaching.date.setDate(Number.parseInt(elements[2]));
     }
 

@@ -26,7 +26,7 @@
                             <ion-item>
                                 <ion-label stacked>Date:</ion-label>
                                 <ion-input *ngIf="readonly" type="text" [(ngModel)]="date" readonly="true" style="text-align: center;"></ion-input>
-                                <ion-datetime *ngIf="!readonly" displayFormat="YYYY-MM-DD" [(ngModel)]="date" style="text-align: center;"></ion-datetime>
+                                <ion-datetime *ngIf="!readonly" displayFormat="YYYY-MM-DD" pickerFormat="YYYY-MM-DD" [(ngModel)]="date" style="text-align: center;"></ion-datetime>
                             </ion-item>
                         </ion-col>
                         <ion-col col-4>
