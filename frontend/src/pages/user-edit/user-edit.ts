@@ -1,7 +1,7 @@
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { ResponseWithData } from './../../app/service/response';
 import { UserService } from './../../app/service/UserService';
-import { User, COUNTRIES, CONSTANTES } from './../../app/model/user';
+import { User, CONSTANTES } from './../../app/model/user';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
@@ -36,12 +36,32 @@ export class UserEditPage {
       if (userId) {
         this.userService.get(userId).subscribe((res:ResponseWithData<User>) => {
           this.user = res.data;
+          console.log('load user: ', this.user);
+          this.ensureDataSharing();
           this.error = res.error;
         });
       } else {
         this.initReferee();
       }
-    } 
+    } else {
+      console.log('load user: ', this.user);
+      this.ensureDataSharing();
+    }
+  }
+
+  private ensureDataSharing() {
+    if (!this.user.dataSharingAgreement) {
+      console.log("Add dataSharingAgreement field to the existing user.")
+      this.user.dataSharingAgreement = {
+        personnalInfoSharing: 'YES',
+        photoSharing: 'YES',
+        refereeAssessmentSharing: 'YES',
+        refereeCoachingInfoSharing: 'YES',
+        coachAssessmentSharing: 'YES',
+        coachCoachingInfoSharing: 'YES',
+        coachProSharing: 'NO'
+      };
+    }
   }
 
   public initReferee() {
@@ -54,8 +74,8 @@ export class UserEditPage {
       firstName: '',
       lastName: '',
       shortName: '',
-      country: '',
-      email: '',
+      country: CONSTANTES.countries[0][0],
+      email: '@',
       gender: 'M',
       mobilePhones: [ ],
       photo: {
@@ -74,10 +94,29 @@ export class UserEditPage {
       password: '',
       token: null,
       defaultCompetition: '',
-      defaultGameCatory: 'OPEN'
+      defaultGameCatory: 'OPEN',
+      dataSharingAgreement: {
+        personnalInfoSharing: 'YES',
+        photoSharing: 'YES',
+        refereeAssessmentSharing: 'YES',
+        refereeCoachingInfoSharing: 'YES',
+        coachAssessmentSharing: 'YES',
+        coachCoachingInfoSharing: 'YES',
+        coachProSharing: 'NO'
+      }
     };
-  
   }
+  isValid():boolean {
+    this.error = [];
+    if (this.isValidString(this.user.firstName)) {
+      this.error.push(('Invalid FirstName'))
+    }
+    return
+  }
+  isValidString(str:string):boolean {
+    return str && str.trim().length >0
+  }
+
   public newUser(event) {
     this.userService.save(this.user).subscribe((response: ResponseWithData<User>) => {
       this.error = response.error;
@@ -85,7 +124,7 @@ export class UserEditPage {
         console.log('Error when saving new user: ' + this.error);
       } else {
         this.user = response.data;
-        console.log('New user: ' + this.user);
+        console.log('Saved user: ', this.user);
         this.navCtrl.pop();
       }
     });

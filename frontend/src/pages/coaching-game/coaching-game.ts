@@ -9,7 +9,7 @@ import { UserService }                        from '../../app/service/UserServic
 import { ResponseWithData }                   from '../../app/service/response';
 import { CoachingService }                    from '../../app/service/CoachingService';
 import { BookmarkService, Bookmark }          from '../../app/service/BookmarkService';
-import { Referee }                            from '../../app/model/user';
+import { Referee, User }                            from '../../app/model/user';
 import { CoachingImprovmentFeedbackEditPage } from '../coaching-improvment-feedback-edit/coaching-improvment-feedback-edit';
 import { CoachingPositiveFeedbackEditPage }   from '../coaching-positive-feedback-edit/coaching-positive-feedback-edit';
 import { Coaching, PositiveFeedback, Feedback } from '../../app/model/coaching';
@@ -34,6 +34,10 @@ export class CoachingGamePage {
   id2referee: Map<number, Referee> = new Map<number, Referee>();
   refereesLoaded = false;
   currentPeriod: number = 1;
+  coachingCoach:string = '';
+  coachingOwner:boolean = true;
+  readonly:boolean = false;
+  appCoach:User;
 
   @ViewChild(Segment) segment :Segment;
 
@@ -50,12 +54,20 @@ export class CoachingGamePage {
   }
 
   ionViewDidLoad() {
+    this.appCoach = this.connectedUserService.getCurrentUser();    
     this.bookmarkService.clearContext();
     this.loadCoaching().subscribe((response: ResponseWithData<Coaching>) => {
         this.coaching = this.clean(response.data); 
+        this.computeCoachingValues();
         this.loadingReferees();
         this.bookmarkPage();
       });
+  }
+
+  computeCoachingValues() {
+    this.coachingOwner =  this.coaching.coachId == this.appCoach.id;
+    this.coachingCoach = (this.coachingOwner ? 'me' : 'another coach');
+    this.readonly = !this.coachingOwner || this.coaching.closed;        
   }
 
   private clean(coaching:Coaching):Coaching {
@@ -193,11 +205,13 @@ export class CoachingGamePage {
       { 
         feedback: positiveFeedback,
         index: index, 
+        readonly: this.readonly,
         callback :  this.callbackPositiveFeedback.bind(this) 
       });
   }
 
   public callbackPositiveFeedback(feedback:PositiveFeedback, index:number = -1) {
+    if (this.readonly) { return }
     if (feedback.skillName.length == 0) {
       if (index >= 0) {
         //remove it
@@ -240,12 +254,9 @@ export class CoachingGamePage {
       feedback: feedback,
       feedbackIndex: -1,
       refereeIndex: this.currentRefereeIdx,
+      readonly: this.readonly,
       callback :  this.callbackFeedback.bind(this),
-      referees : [
-        this.coaching.referees[0].refereeShortName,
-        this.coaching.referees[1].refereeShortName,
-        this.coaching.referees[2].refereeShortName
-      ]
+      referees :  this.coaching.referees.map((ref) => ref.refereeShortName)
     });
   }
 
@@ -279,16 +290,14 @@ export class CoachingGamePage {
         feedback: feedback,
         feedbackIndex: idx, 
         refereeIndex: this.currentRefereeIdx,
+        readonly: this.readonly,
         callback :  this.callbackFeedback.bind(this),
-        referees : [
-          this.coaching.referees[0].refereeShortName,
-          this.coaching.referees[1].refereeShortName,
-          this.coaching.referees[2].refereeShortName
-        ],
+        referees : this.coaching.referees.map((ref) => ref.refereeShortName),
       });
   }
 
   public callbackFeedback(feedback:Feedback, refereeIndex: number = this.currentRefereeIdx, feedbackIndex:number = -1) {
+    if (this.readonly) { return }
     if (feedback.problemShortDesc.length == 0) {
       if (feedbackIndex >= 0) {
         console.log('Remove feedback \'', feedback.problemShortDesc, '\'/', feedbackIndex, 

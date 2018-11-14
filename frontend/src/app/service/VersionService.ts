@@ -1,3 +1,4 @@
+import { ModifiableData } from './LocalDatabaseService';
 import { Injectable }           from '@angular/core';
 import { Storage }              from '@ionic/storage';
 import { Observable }           from 'rxjs/Rx';
@@ -8,7 +9,7 @@ import { AppSettingsService }   from './AppSettingsService';
 @Injectable()
 export class VersionService {
 
-    private applicationVersion = '1.0.0';
+    private applicationVersion = '1.1.0';
 
     constructor(
         protected appSettingsService: AppSettingsService,
@@ -30,11 +31,13 @@ export class VersionService {
             
                 // initial to 1.0.0
                 if (!local.applicationVersion) {
-                    this.migrateInitialTo1_0_0();
+                    local.applicationVersion = this.migrateInitialTo100();
                 }
 
-                //1.0.0 to ...
-
+                //1.0.0 to ... 1.1.0
+                if (local.applicationVersion == '1.0.0') {
+                    local.applicationVersion = this.migrateInitialFrom100To110();
+                }
 
                 // finally store the new version locally
                 console.log(`Set locally new version to ${this.applicationVersion}`);
@@ -48,7 +51,7 @@ export class VersionService {
     /**
      * Applies changes in the local databases from the initial version to version 1.0.0
      */
-    private migrateInitialTo1_0_0(): void {
+    private migrateInitialTo100(): string {
         console.log("Migrating from Inital version to version 1.0.0");
         // Step 1: table renaming
         const tableNaming: string[][] = [
@@ -59,6 +62,17 @@ export class VersionService {
         tableNaming.forEach( (tn:string[]) => {
             this.renameTable(tn[0], tn[1]);
         });
+        return '1.0.0';
+    }
+
+    /**
+     * Applies changes in the local databases from the version 1.0.0 to version 1.1.0
+     */
+    private migrateInitialFrom100To110(): string {
+        //TODO sharing
+        this.setNewFieldInTable('coaching', 'closed', false);
+        
+        return '1.1.0';
     }
 
 
@@ -79,6 +93,40 @@ export class VersionService {
                     this.storage.remove(oldTableName);
                 });
             }
+        });
+    }
+
+
+    private setNewFieldInTable(tableName:string, fieldName:string, defaultValue) {
+        this.storage.get(tableName).then((md:ModifiableData<any>) => {
+            if (md) {
+                md.modified.forEach((obj) => this.setNewFieldInObject(obj, fieldName, defaultValue));
+                md.removed.forEach((obj) => this.setNewFieldInObject(obj, fieldName, defaultValue));
+                md.unmodified.forEach((obj) => this.setNewFieldInObject(obj, fieldName, defaultValue));
+                this.storage.set(tableName, md);
+            }
+        })
+    }
+
+    private setNewFieldInObject(obj, fieldPath:string, defaultValue) {
+        if (!obj || !fieldPath || fieldPath.length == 0) {
+            console.log("ERROR VersionService.setNewFieldInObject(", obj, fieldPath, defaultValue, "): invalid parameter.")
+            return;
+        }
+        let currentObj:any = obj;
+        fieldPath.split('.').forEach((fieldName:string, idx:number, names:string[]) => {
+            if (!currentObj[fieldName]) {
+                //Current field name is not defined.
+                if (idx == names.length -1) {
+                    // It is the last element => set the default value
+                    currentObj[fieldName] = defaultValue;
+                } else {
+                    // It is an intermediate node => set an empty document.
+                    currentObj[fieldName] = {};
+                }
+            }
+            // recurse
+            currentObj = currentObj[fieldName];
         });
     }
 }

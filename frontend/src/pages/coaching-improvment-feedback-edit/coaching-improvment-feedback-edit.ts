@@ -24,6 +24,7 @@ export class CoachingImprovmentFeedbackEditPage {
   callback:any;
   referees: string[];
   refereeIndex:number;
+  readonly:boolean= false;
 
   searchInput:string;
   showProList: boolean = false;
@@ -44,6 +45,7 @@ export class CoachingImprovmentFeedbackEditPage {
     this.callback = this.navParams.get('callback');
     this.referees = this.navParams.get('referees');
     this.refereeIndex = this.navParams.get('refereeIndex');
+    this.readonly = this.navParams.get('readonly');
   }
   
   ionViewWillLeave() {

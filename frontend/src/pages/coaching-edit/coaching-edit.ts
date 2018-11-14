@@ -28,6 +28,10 @@ import { User, Referee } from '../../app/model/user';
 export class CoachingEditPage {
 
   coaching: Coaching = null;
+  coachingCoach:string = '';
+  coachingOwner:boolean = true;
+  readonly:boolean = false;
+  appCoach:User;
   id2referee: Map<number, Referee> = new Map<number, Referee>();
   refereesLoaded:boolean = false;
 
@@ -42,16 +46,26 @@ export class CoachingEditPage {
   }
 
   ionViewDidLoad() {
+    this.appCoach = this.connectedUserService.getCurrentUser();    
     this.loadCoaching().subscribe((response: ResponseWithData<Coaching>) => {
       this.coaching = response.data; 
       if (this.coaching) {
+        this.computeCoachingValues();
         this.loadingReferees();
       } else {
         this.initCoaching();
       }
     });
-    
   }
+  switchLockCoaching() {
+    this.coaching.closed = !this.coaching.closed;
+    this.computeCoachingValues();
+    this.coachingService.save(this.coaching).subscribe();
+  }
+  get closed() {
+    return this.coaching.closed
+  }
+
   private loadCoaching():Observable<ResponseWithData<Coaching>> {
     const coaching:Coaching = this.navParams.get('coaching');
     const coachingId = this.navParams.get('coachingId');
@@ -61,24 +75,32 @@ export class CoachingEditPage {
   }
 
   initCoaching() {
-    let coach: User = this.connectedUserService.getCurrentUser();    
     this.coaching = {
         id: 0,
         version: 0,
         creationDate : new Date(),
         lastUpdate : new Date(),
         dataStatus: 'NEW',
-        competition: coach.defaultCompetition,
+        competition: this.appCoach.defaultCompetition,
         field: '1',
         date : new Date(),
         timeSlot: this.computeTimeSlot(new Date()),
-        coachId: coach.id,
+        coachId: this.appCoach.id,
         gameCategory: 'OPEN',
         gameSpeed: 'Medium',
         gameSkill: 'Medium',
-        referees : []
-      }
+        referees : [],
+        closed: false
+      };
+    this.computeCoachingValues();
   }
+
+  computeCoachingValues() {
+    this.coachingOwner =  this.coaching.coachId == this.appCoach.id;
+    this.coachingCoach = (this.coachingOwner ? 'me' : 'another coach');
+    this.readonly = !this.coachingOwner || this.coaching.closed;        
+  }
+
   private loadingReferees() {
     this.coachingService.loadingReferees(this.coaching, this.id2referee).subscribe(() => {
       this.refereesLoaded = true;
@@ -143,10 +165,14 @@ export class CoachingEditPage {
   }
 
   coach(event) {
-    this.coachingService.save(this.coaching)
-      .map((response: ResponseWithData<Coaching>) => {
-        this.navCtrl.push(CoachingGamePage, { coachingId: response.data.id, coaching: response.data });
-      }).subscribe();
+    if (this.coaching.closed) {
+      this.navCtrl.push(CoachingGamePage, { coachingId: this.coaching.id, coaching: this.coaching });
+    } else {
+      this.coachingService.save(this.coaching)
+        .map((response: ResponseWithData<Coaching>) => {
+          this.navCtrl.push(CoachingGamePage, { coachingId: response.data.id, coaching: response.data });
+        }).subscribe();
+    }
   }
 
   sendCoaching() {

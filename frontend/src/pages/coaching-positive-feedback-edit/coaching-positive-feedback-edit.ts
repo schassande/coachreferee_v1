@@ -19,6 +19,7 @@ export class CoachingPositiveFeedbackEditPage {
   feedback:PositiveFeedback;
   index:number= -1;
   callback:any;
+  readonly:boolean = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
@@ -27,11 +28,11 @@ export class CoachingPositiveFeedbackEditPage {
     this.feedback = this.navParams.get('feedback');
     this.index = this.navParams.get('index');
     this.callback = this.navParams.get('callback');
+    this.readonly = this.navParams.get('readonly');
   }
   
   ionViewWillLeave() {
     if (this.callback && this.feedback.skillName) {
-      console.log('call callback');
       this.callback(this.feedback, this.index);
     }
   }

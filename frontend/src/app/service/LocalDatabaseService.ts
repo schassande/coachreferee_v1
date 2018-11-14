@@ -87,13 +87,19 @@ export class LocalDatabaseService {
                 switch(data.dataStatus) {
                     case 'CLEAN': 
                         md.unmodified.set(data.id, data); 
+                        md.modified.delete(data.id);
+                        md.removed.delete(data.id);
                         break;
                     case 'REMOVED': 
                         md.removed.set(data.id, data); 
+                        md.modified.delete(data.id);
+                        md.unmodified.delete(data.id);
                         break;
                     case 'NEW': 
                     case 'DIRTY': 
                         md.modified.set(data.id, data); 
+                        md.removed.delete(data.id);
+                        md.unmodified.delete(data.id);
                         break;
                 }
                 return this.storage.set(tableName, md);

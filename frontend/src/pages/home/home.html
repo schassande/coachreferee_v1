@@ -1,19 +1,21 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>Home {{getShortName()}}</ion-title>
+        <ion-title>
+            <span ion-start style="text-align: center;"><img src="assets/imgs/logo.png" height="30" /></span> Referee Coaching App </ion-title>
         <ion-buttons end><button ion-button menuToggle ion-button icon-only><ion-icon name="menu"></ion-icon></button></ion-buttons>
     </ion-navbar>
 </ion-header>
-<ion-content padding>
-    <div class="welcome">Welcome to Referee coaching application !</div>
+<ion-content>
+    <div *ngIf="connected" color="light" style="text-align: right; font-size: 0.8em; margin-top: 10px;">Connected as {{getShortName()}}.</div>
     <ion-list *ngIf="connected">
-        <button ion-item detail-push class="menu-entry" [navPush]="coachingNewPage">Coach a game</button>
-        <button ion-item detail-push class="menu-entry" [navPush]="assessmentListPage">Assess a referee</button>
-        <button ion-item detail-push class="menu-entry" [navPush]="refereeListPage">Referees</button>
-        <button ion-item detail-push class="menu-entry" [navPush]="skillProfilePage">Profiles n skills</button>
-        <button ion-item detail-push class="menu-entry" [navPush]="proPage">PROs</button>
-        <button ion-item detail-push class="menu-entry" [navPush]="settingsPage">Settings</button>
-        <button ion-item detail-push class="menu-entry" (click)="gotToMyAccount()" *ngIf="this.connectedUserService.isConnected()">My account</button>
-        <button ion-item detail-push class="menu-entry" [navPush]="userSelectionPage">Change of account</button>
+        <button ion-item class="menu-entry" [navPush]="coachingNewPage">Coach a game</button>
+        <button ion-item class="menu-entry" [navPush]="assessmentListPage">Assess a referee</button>
+        <button ion-item class="menu-entry" [navPush]="refereeListPage">Referees</button>
+        <button ion-item class="menu-entry" [navPush]="skillProfilePage">Profiles n skills</button>
+        <button ion-item class="menu-entry" [navPush]="proPage">PROs</button>
+        <button ion-item class="menu-entry" [navPush]="settingsPage">Settings</button>
+        <button ion-item class="menu-entry" (click)="gotToMyAccount()" *ngIf="this.connectedUserService.isConnected()">My account</button>
+        <button ion-item class="menu-entry" [navPush]="userSelectionPage">Change of account</button>
     </ion-list>
+    <div style="text-align: center; margin-top: 10px;"><img src="assets/imgs/logo.png" height="150" /></div>
 </ion-content>

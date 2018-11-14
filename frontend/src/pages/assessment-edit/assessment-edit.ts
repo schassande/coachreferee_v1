@@ -13,7 +13,7 @@ import { UserService }              from './../../app/service/UserService';
 import { ConnectedUserService }     from './../../app/service/ConnectedUserService';
 import { SkillProfileService }      from './../../app/service/SkillProfileService';
 import { Referee, User }            from './../../app/model/user';
-import { Assessment, SkillProfileEvaluation, SkillSetEvaluation, SkillEvaluation }               from './../../app/model/assessment';
+import { Assessment, SkillSetEvaluation } from './../../app/model/assessment';
 
 import { RefereeSelectPage }        from '../referee-select/referee-select';
 

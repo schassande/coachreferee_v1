@@ -1,3 +1,5 @@
+import { FormsModule } from '@angular/forms';
+import { SharingComponent } from './../pages/sharing-component';
 import { BookmarkService } from './service/BookmarkService';
 import { AssessRefereePage } from './../pages/assess-referee/assess-referee';
 import { BrowserModule }          from '@angular/platform-browser';
@@ -16,7 +18,6 @@ import { ScreenOrientation }      from '@ionic-native/screen-orientation';
 import { Toast }                  from '@ionic-native/toast';
 import { FilePath }               from '@ionic-native/file-path';
 import { HttpModule }             from '../../node_modules/@angular/http';
-
 import { MyApp }                    from './app.component';
 
 import { AppSettingsService }       from './service/AppSettingsService';
@@ -61,10 +62,10 @@ import { CoachingPositiveFeedbackEditPageModule }     from './../pages/coaching-
     UserEditPage,
     UserSelectionPage,
     AssessmentListPage, AssessmentEditPage, AssessRefereePage,
-    SettingsPage
+    SettingsPage, SharingComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule, FormsModule,
     HttpModule,
     CoachingEditPageModule, CoachingGamePageModule, CoachingListPageModule, CoachingPositiveFeedbackEditPageModule, CoachingImprovmentFeedbackEditPageModule,
     ProListPageModule, ProEditPageModule, 

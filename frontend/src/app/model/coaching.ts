@@ -40,6 +40,7 @@ export interface Coaching extends PersistentData {
     gameCategory: GameCategory;
     gameSpeed: GameLevel;
     gameSkill: GameLevel;
+    closed?: boolean;
     referees : {
         refereeId: number;
         refereeShortName: string;

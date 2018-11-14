@@ -50,7 +50,7 @@ export class HomePage {
   }
   public getShortName(): String {
     return this.connected 
-      ? '(' + this.connectedUserService.getCurrentUser().shortName + ')'
+      ? this.connectedUserService.getCurrentUser().shortName
       : '';
   }
   ionViewDidLoad() {    
