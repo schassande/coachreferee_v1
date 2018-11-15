@@ -28,7 +28,7 @@
                 </ion-item>
                 <ion-item>
                     <ion-label fixed>First name</ion-label>
-                    <ion-input type="text" [(ngModel)]="referee.firstName" id="firstName" name="firstName" min="3" max="15" #firstName="ngModel" required autofocus  tabindex="1"></ion-input>
+                    <ion-input type="text" [(ngModel)]="referee.firstName" id="firstName" name="firstName" min="3" max="15" #firstName="ngModel" required autofocus tabindex="1"></ion-input>
                 </ion-item>
                 <ion-item no-lines *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="alert alert-danger">
                     <div *ngIf="firstName.errors.required">A value is required.</div>

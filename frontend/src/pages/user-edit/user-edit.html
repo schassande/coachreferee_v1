@@ -7,7 +7,6 @@
 <ion-header>
     <ion-navbar>
         <ion-title>Account Edition</ion-title>
-        <ion-buttons end><button ion-button menuToggle ion-button icon-only><ion-icon name="menu"></ion-icon></button></ion-buttons>
     </ion-navbar>
 </ion-header>
 <ion-content *ngIf="user">
@@ -153,4 +152,5 @@
         </ul>
     </div>
     <button ion-button secondary (click)="newUser($event)" style="width: 100%;" class="greenButton" [disabled]="firstName.invalid && lastName.invalid">Save</button>
+</ion-content>n-button secondary (click)="newUser($event)" style="width: 100%;" class="greenButton" [disabled]="firstName.invalid && lastName.invalid">Save</button>
 </ion-content>
