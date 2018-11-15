@@ -1,6 +1,7 @@
 import { CoachDataSharingAgreement, RefereeDataSharingAgreement } from './privacy';
 import { PersistentData } from './common';
 import { GameCategory } from './game';
+import { getValueFromFormat } from 'ionic-angular/umd/util/datetime-util';
 
 export type RefereeCoachLevel = 'NONE' | 'EURO_0' | 'EURO_1' | 'EURO_2' | 'EURO_3' |'EURO_4' |'EURO_5' | 'NZ_1' | 'NZ_2' | 'NZ_3' |'NZ_4' |'AUS_1' | 'AUS_2' | 'AUS_3';
 export const REFEREE_COACH_LEVELS = [ 'NONE' , 'EURO_0' , 'EURO_1' , 'EURO_2' , 'EURO_3' ,'EURO_4' ,'EURO_5' , 'NZ_1' , 'NZ_2' , 'NZ_3' ,'NZ_4' ,'AUS_1' , 'AUS_2' , 'AUS_3' ];

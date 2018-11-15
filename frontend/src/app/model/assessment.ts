@@ -29,4 +29,5 @@ export interface Assessment extends SkillProfileEvaluation, PersistentData {
     gameSkill: GameLevel;
     refereeId: number;
     refereeShortName: string;
+    closed?: boolean;
 }

@@ -17,7 +17,7 @@ import { Sharing } from "../app/model/privacy";
     providers: [ { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SharingComponent), multi: true } ],
     styles: [`
     .sharingSegment .segment-button { 
-        background-color: lightblue;
+        /* background-color: lightblue; */
         color: black;
         border: none;
     }

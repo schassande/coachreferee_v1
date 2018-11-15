@@ -13,137 +13,31 @@
 
 </ion-header>
 <ion-content padding *ngIf="referee">
-    <ion-list>
-        <ion-item *ngIf="referee.photo && referee.photo.url">
+    <div>
+        <div *ngIf="referee.photo && referee.photo.url">
             <img src="{{referee.photo.url}}">
-        </ion-item>
-        <ion-item>
-            {{referee.firstName}} {{referee.lastName}}
-        </ion-item>
-        <ion-item>
-            <ion-label>Country</ion-label>
-            <ion-select [(ngModel)]="referee.country">
-                <ion-option value="AUS">AUS</ion-option>
-                <ion-option value="Austria">Austria</ion-option>
-                <ion-option value="Belgium">Belgium</ion-option>
-                <ion-option value="England">England</ion-option>
-                <ion-option value="France">France</ion-option>
-                <ion-option value="Germany">Germany</ion-option>
-                <ion-option value="Guernesey">Guernesey</ion-option>
-                <ion-option value="Ireland">Ireland</ion-option>
-                <ion-option value="Italy">Italy</ion-option>
-                <ion-option value="Jersey">Jersey</ion-option>
-                <ion-option value="Japan">Japan</ion-option>
-                <ion-option value="Luxembourg">Luxembourg</ion-option>
-                <ion-option value="Netherlands">Netherlands</ion-option>
-                <ion-option value="Portugal">Portugal</ion-option>
-                <ion-option value="Scotland">Scotland</ion-option>
-                <ion-option value="Singapore">Singapore</ion-option>
-                <ion-option value="Spain">Spain</ion-option>
-                <ion-option value="switzerland">switzerland</ion-option>
-                <ion-option value="Wales">Wales</ion-option>
-            </ion-select>
-        </ion-item>
-        <ion-item>
-            <ion-label>Gender</ion-label>
-            <ion-select [(ngModel)]="referee.gender">
-                <ion-option value="F">Female</ion-option>
-                <ion-option value="M">Male</ion-option>
-            </ion-select>
-        </ion-item>
-        <ion-item-group>
-            <ion-item-divider color="light">Referee</ion-item-divider>
-            <ion-item>
-                <ion-label>Referee Level</ion-label>
-                <ion-select [(ngModel)]="referee.referee.refereeLevel">
-                    <ion-option value="EURO_0">EURO - L0</ion-option>
-                    <ion-option value="EURO_1">EURO - L1</ion-option>
-                    <ion-option value="EURO_2">EURO - L2</ion-option>
-                    <ion-option value="EURO_3">EURO - L3</ion-option>
-                    <ion-option value="EURO_4">EURO - L4</ion-option>
-                    <ion-option value="EURO_5">EURO - L5</ion-option>
-                    <ion-option value="NZ_1">NZ - L1</ion-option>
-                    <ion-option value="NZ_2">NZ - L2</ion-option>
-                    <ion-option value="NZ_3">NZ - L3</ion-option>
-                    <ion-option value="NZ_4">NZ - L4</ion-option>
-                    <ion-option value="AUS_1">AUS - L1</ion-option>
-                    <ion-option value="AUS_2">AUS - L2</ion-option>
-                    <ion-option value="AUS_3">AUS - L3</ion-option>
-                    <ion-option value="AUS_4">AUS - L4</ion-option>
-                    <ion-option value="AUS_5">AUS - L5</ion-option>
-                    <ion-option value="AUS_6">AUS - L6</ion-option>
-                </ion-select>
-            </ion-item>
-            <ion-item>
-                <ion-label>Referee category</ion-label>
-                <ion-select [(ngModel)]="referee.referee.refereeCategory">
-                    <ion-option value="OPEN">Open</ion-option>
-                    <ion-option value="SENIOR">Senior</ion-option>
-                </ion-select>
-            </ion-item>
-            <ion-item>
-                <ion-label>Looking for upgrade?</ion-label>
-                <ion-select [(ngModel)]="referee.referee.nextRefereeLevel">
-                    <ion-option value="">No</ion-option>
-                    <ion-option value="EURO_0">EURO - L0</ion-option>
-                    <ion-option value="EURO_1">EURO - L1</ion-option>
-                    <ion-option value="EURO_2">EURO - L2</ion-option>
-                    <ion-option value="EURO_3">EURO - L3</ion-option>
-                    <ion-option value="EURO_4">EURO - L4</ion-option>
-                    <ion-option value="EURO_5">EURO - L5</ion-option>
-                    <ion-option value="NZ_1">NZ - L1</ion-option>
-                    <ion-option value="NZ_2">NZ - L2</ion-option>
-                    <ion-option value="NZ_3">NZ - L3</ion-option>
-                    <ion-option value="NZ_4">NZ - L4</ion-option>
-                    <ion-option value="AUS_1">AUS - L1</ion-option>
-                    <ion-option value="AUS_2">AUS - L2</ion-option>
-                    <ion-option value="AUS_3">AUS - L3</ion-option>
-                    <ion-option value="AUS_4">AUS - L4</ion-option>
-                    <ion-option value="AUS_5">AUS - L5</ion-option>
-                    <ion-option value="AUS_6">AUS - L6</ion-option>
-                </ion-select>
-            </ion-item>
-            <ion-item>
-                <ion-label>Referee coach Level</ion-label>
-                <ion-select [(ngModel)]="referee.refereeCoach.refereeCoachLevel">
-                    <ion-option value="NONE">None</ion-option>
-                    <ion-option value="EURO_1">EURO - L1</ion-option>
-                    <ion-option value="EURO_2">EURO - L2</ion-option>
-                    <ion-option value="EURO_3">EURO - L3</ion-option>
-                    <ion-option value="EURO_4">EURO - L4</ion-option>
-                    <ion-option value="EURO_5">EURO - L5</ion-option>
-                    <ion-option value="AUS_1">AUS - L1</ion-option>
-                    <ion-option value="AUS_2">AUS - L2</ion-option>
-                    <ion-option value="AUS_3">AUS - L3</ion-option>
-                </ion-select>
-            </ion-item>
-        </ion-item-group>
-        <ion-item>
-            <ion-label fixed>Mobile phones</ion-label>
-            <ion-input type="phone" [(ngModel)]="referee.mobilePhones" [readonly]="false"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label>Speaking languages</ion-label>
-            <ion-select [(ngModel)]="referee.speakingLanguages" multiple="true">
-                <ion-option value="EN">English</ion-option>
-                <ion-option value="FR">French</ion-option>
-                <ion-option value="DE">Deutsch</ion-option>
-                <ion-option value="ES">Spanish</ion-option>
-                <ion-option value="IT">Italian</ion-option>
-                <ion-option value="PO">Portuguese</ion-option>
-            </ion-select>
-        </ion-item>
-    </ion-list>
-    <button ion-button (click)="editReferee($event)" style="width: 100%; margin-bottom: 20px;">Edit</button>
+        </div>
+        <div>{{referee.firstName}} {{referee.lastName}} from {{refereeCountry}}</div>
+        <ul>
+            <li>Contact: {{referee.mobilePhones}}, {{referee.email}}</li>
+            <li>Speaking languages : <span *ngFor="let lg of refereeLanguage">{{lg}}</span></li>
+            <li>Gender: {{referee.gender}}</li>
+            <li>Referee Level: {{referee.referee.refereeLevel}}</li>
+            <li>Referee category: {{referee.referee.refereeCategory}}</li>
+            <li>Looking for upgrade?: {{referee.referee.nextRefereeLevel}}</li>
+            <li>Referee coach Level: {{referee.refereeCoach.refereeCoachLevel}}</li>
+        </ul>
+        <div style="text-align: right;" padding>
+            <button ion-button round (click)="editReferee($event)" style="margin-bottom: 20px;">Edit</button>
+        </div>
+    </div>
     <ion-list *ngIf="coachings">
         <ion-item-divider color="light">Coachings ({{coachings.length}})</ion-item-divider>
-        <ion-item *ngFor="let coaching of coachings">
-            <button ion-item (click)="coachingSelected($event, coaching)" style="border: none;">
-                {{coaching.competition}}<br>
-                {{coachingService.getCoachingDateAsString(coaching)}} {{coaching.timeSlot}}: Field {{coaching.field}}, {{coaching.gameCategory}}<br>
-                Referees: <span *ngFor="let referee of coaching.referees; last as isLast">{{referee.refereeShortName}}<span *ngIf="!isLast">, </span></span>
-            </button>
+        <ion-item *ngFor="let coaching of coachings" (click)="coachingSelected($event, coaching)" style="border: none;">
+            {{coaching.competition}}<br> {{coachingService.getCoachingDateAsString(coaching)}} {{coaching.timeSlot}}: Field {{coaching.field}}, {{coaching.gameCategory}}<br> Referees: <span *ngFor="let referee of coaching.referees; last as isLast">{{referee.refereeShortName}}<span *ngIf="!isLast">, </span></span>
         </ion-item>
+        <div style="text-align: right;" padding>
+            <button ion-button round (click)="sendCoachings($event)"><ion-icon name="send"></ion-icon></button>
+        </div>
     </ion-list>
-    <button ion-button (click)="sendCoachings($event)" style="width: 100%;">Email all coachings</button>
 </ion-content>

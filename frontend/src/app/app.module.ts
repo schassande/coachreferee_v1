@@ -1,3 +1,5 @@
+import { ToolService } from './service/ToolService';
+import { RefereeEditPage } from './../pages/referee-edit/referee-edit';
 import { FormsModule } from '@angular/forms';
 import { SharingComponent } from './../pages/sharing-component';
 import { BookmarkService } from './service/BookmarkService';
@@ -46,7 +48,6 @@ import { ProListPageModule }        from '../pages/pro-list/pro-list.module';
 import { ProEditPageModule }        from '../pages/pro-edit/pro-edit.module';
 import { RefereeSelectPageModule }  from '../pages/referee-select/referee-select.module';
 import { RefereeViewPageModule }    from '../pages/referee-view/referee-view.module';
-import { RefereeEditPageModule }    from '../pages/referee-edit/referee-edit.module';
 import { RefereeListPageModule }    from '../pages/referee-list/referee-list.module';
 import { SkillSetEditPageModule }     from '../pages/skill-set-edit/skill-set-edit.module';
 import { SkillProfileListPageModule } from '../pages/skill-profile-list/skill-profile-list.module';
@@ -62,14 +63,14 @@ import { CoachingPositiveFeedbackEditPageModule }     from './../pages/coaching-
     UserEditPage,
     UserSelectionPage,
     AssessmentListPage, AssessmentEditPage, AssessRefereePage,
-    SettingsPage, SharingComponent
+    SettingsPage, SharingComponent, RefereeEditPage
   ],
   imports: [
     BrowserModule, FormsModule,
     HttpModule,
     CoachingEditPageModule, CoachingGamePageModule, CoachingListPageModule, CoachingPositiveFeedbackEditPageModule, CoachingImprovmentFeedbackEditPageModule,
     ProListPageModule, ProEditPageModule, 
-    RefereeListPageModule, RefereeEditPageModule, RefereeViewPageModule, RefereeSelectPageModule,
+    RefereeListPageModule, RefereeViewPageModule, RefereeSelectPageModule,
     SkillProfileEditPageModule, SkillProfileListPageModule, SkillSetEditPageModule, SkillEditPageModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot({ name: '__myDb', driverOrder : [ 'indexeddb', 'websql', 'sqlite']}),
@@ -81,7 +82,7 @@ import { CoachingPositiveFeedbackEditPageModule }     from './../pages/coaching-
     UserEditPage,
     UserSelectionPage,
     AssessmentListPage, AssessmentEditPage, AssessRefereePage,
-    SettingsPage
+    SettingsPage, RefereeEditPage
   ],
   providers: [
     Network,
@@ -108,6 +109,7 @@ import { CoachingPositiveFeedbackEditPageModule }     from './../pages/coaching-
     AssessmentService,
     VersionService,
     BookmarkService,
+    ToolService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

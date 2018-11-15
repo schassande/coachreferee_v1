@@ -57,6 +57,9 @@ export class CoachingListPage {
     return this.coachingService.getCoachingDateAsString(coaching);
   }
 
+  getRefereeShortNames(coaching: Coaching) {
+    return coaching.referees.map((ref) => ref.refereeShortName).join(", ");
+  }
   public newCoaching(): void {
     this.navCtrl.push(CoachingEditPage);
   }
@@ -70,7 +73,8 @@ export class CoachingListPage {
   public deleteCoaching(coaching: Coaching) {
     let alert = this.alertCtrl.create({
       title: 'Confirm Deletion',
-      message: 'Do you reaaly want to delete the coaching ' + coaching.id +  '?',
+      message: 'Do you reaaly want to delete the coaching <br><b>' + this.getCoachingDate(coaching) + ':' + coaching.timeSlot  
+        + ', Field ' + coaching.field + ' with ' + this.getRefereeShortNames(coaching) + '</b> ?',
       buttons: [
         { text: 'Cancel', role: 'cancel'},
         { 

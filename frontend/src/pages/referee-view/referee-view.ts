@@ -1,3 +1,5 @@
+import { ToolService } from './../../app/service/ToolService';
+import { CONSTANTES } from './../../app/model/user';
 import { BookmarkService } from './../../app/service/BookmarkService';
 import { RefereeEditPage } from './../referee-edit/referee-edit';
 import { CoachingEditPage } from './../coaching-edit/coaching-edit';
@@ -27,6 +29,9 @@ export class RefereeViewPage {
   referee: Referee;
   coachings: Coaching[];
   errorfindCoachings: any;
+  refereeLanguage: string[];
+  refereeCountry: string;
+  
   
   constructor(
     public navCtrl: NavController, 
@@ -36,7 +41,8 @@ export class RefereeViewPage {
     public connectedUserService: ConnectedUserService,
     public loadingCtrl: LoadingController,
     public bookmarkService:BookmarkService,
-    public emailService: EmailService) {
+    public emailService: EmailService,
+    public toolService: ToolService) {
   }
 
   ionViewDidLoad() {
@@ -75,6 +81,8 @@ export class RefereeViewPage {
   private setReferee(referee: Referee) {
     console.log("RefereeView.setReferee(" + referee + ")");
     this.referee = referee;
+    this.refereeCountry = this.toolService.getValue(CONSTANTES.countries, this.referee.country);
+    this.refereeLanguage = this.toolService.getValues(CONSTANTES.languages, this.referee.speakingLanguages);
     this.bookmarkPage();
     this.coachingService.getCoachingByReferee(this.referee.id).subscribe((response: ResponseWithData<Coaching[]>) => {
       this.errorfindCoachings = response.error;

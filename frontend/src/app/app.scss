@@ -35,3 +35,7 @@ ion-title {
 .toolbar-background {
     background: color($colors, background);
 }
+
+.listItemButton .item-inner {
+    border: none !important;
+}

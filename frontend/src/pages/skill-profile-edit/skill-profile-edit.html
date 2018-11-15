@@ -7,7 +7,7 @@
 <ion-header>
 
     <ion-navbar>
-        <ion-title>Skill Profile Edition</ion-title>
+        <ion-title>Referee level edition</ion-title>
         <ion-buttons end><button ion-button menuToggle ion-button icon-only><ion-icon name="menu"></ion-icon></button></ion-buttons>
     </ion-navbar>
 
@@ -38,7 +38,7 @@
                 <ion-icon item-end name="trash" (click)="deleteSkillSet(skillSet)"></ion-icon>
             </ion-item>
             <ion-item>
-                <ion-input item-content type="text" placeholder="Enter a name of set of skills" [(ngModel)]="skillSetName"></ion-input>
+                <ion-input item-content type="text" placeholder="Enter a name of a new set of skills" [(ngModel)]="skillSetName"></ion-input>
                 <button ion-button item-end (click)="newSkillSet($event)" [disabled]="!skillSetName" class="greenButton">+</button>
             </ion-item>
         </ion-item-group>

@@ -36,10 +36,24 @@
             </ion-select>
         </ion-item>
     </ion-list>
-    <button ion-button (click)="saveSettings($event)" style="width: 100%;" class="greenButton">Save settings</button>
-    <button ion-button (click)="exportData($event)" style="width: 100%;">Export data</button>
-    <button ion-button (click)="importData($event)" style="width: 100%;">Import data</button>
-    <button ion-button (click)="resettData($event)" style="width: 100%;" class="redButton">Reset data</button>
+    <ion-grid no-padding item-content>
+        <ion-row style="text-align: center; margin-top: 10px;">
+            <ion-col offset-1 col-4>
+                <button ion-button round (click)="exportData($event)" style="width: 100%;">Export</button>
+            </ion-col>
+            <ion-col offset-2 col-4>
+                <button ion-button round (click)="importData($event)" style="width: 100%;">Import</button>
+            </ion-col>
+        </ion-row>
+        <ion-row style="text-align: center; margin-top: 10px;">
+            <ion-col offset-1 col-4>
+                <button ion-button round (click)="resettData($event)" style="width: 100%;" class="redButton">Reset</button>
+            </ion-col>
+            <ion-col offset-2 col-4>
+                <button ion-button round (click)="saveSettings($event)" style="width: 100%;" class="greenButton">Save</button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
     <p *ngFor="let m of msg" class="message">{{m}}</p>
     <div color="light" style="text-align: center; font-size: 0.8em; margin-top: 10px;">The author of application is Sebastien Chassande-Barrioz.</div>
 </ion-content>

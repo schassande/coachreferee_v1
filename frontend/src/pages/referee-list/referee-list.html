@@ -21,7 +21,7 @@
     <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionInput)="onSearchBarInput($event)"></ion-searchbar>
     <ion-list>
         <ion-item *ngFor="let referee of referees">
-            <button ion-item (click)="refereeSelected($event, referee)">
+            <button ion-item (click)="refereeSelected($event, referee)" class="listItemButton">
                 <ion-icon   item-start *ngIf="!referee.photo || !referee.photo.url" name="person"></ion-icon>
                 <ion-avatar item-start *ngIf="referee.photo && referee.photo.url"><img src="{{referee.photo.url}}"></ion-avatar>
                 {{referee.shortName}}<br>

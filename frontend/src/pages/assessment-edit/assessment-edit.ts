@@ -24,11 +24,15 @@ import { RefereeSelectPage }        from '../referee-select/referee-select';
 export class AssessmentEditPage {
 
   assessment: Assessment = null;
+  assessmentCoach: string = '';
+  assessmentOwner:boolean = true;
+  readonly:boolean = false;
   id2referee: Map<number, Referee> = new Map<number, Referee>();
   refereesLoaded:boolean = false;
   profiles: SkillProfile[];
   assessmentValid: boolean = false;
   profileId: number;
+  appCoach:User;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
@@ -42,14 +46,17 @@ export class AssessmentEditPage {
   }
 
   ionViewDidLoad() {
+    this.appCoach = this.connectedUserService.getCurrentUser();    
     this.loadAssessment()
       .flatMap((response: ResponseWithData<Assessment>) => {
         this.assessment = response.data; 
+        this.computeAssessmentValues();
         //load profiles
         return this.skillProfileService.all().map((response: ResponseWithData<SkillProfile[]>) => {this.profiles = response.data;});
       }).map(() => {
         if (this.assessment) {
           this.profileId = this.assessment.profileId;
+          this.assessment.coachId
           // load referees
           this.updateAssessmentValid();
           return this.assessmentService.loadingReferees(this.assessment, this.id2referee).map(() => {
@@ -63,9 +70,25 @@ export class AssessmentEditPage {
       }).subscribe(() => {});
   }
 
+  computeAssessmentValues() {
+    if (this.assessment) {
+      this.assessmentOwner =  this.assessment.coachId == this.appCoach.id;
+      this.assessmentCoach = (this.assessmentOwner ? 'me' : 'another coach');
+      this.readonly = !this.assessmentOwner || this.assessment.closed;        
+    }
+  }
+
+  switchLockCoaching() {
+    if (this.assessmentValid) {
+      this.assessment.closed = !this.assessment.closed;
+      this.computeAssessmentValues();
+      this.adjustFromProfile();
+      this.assessmentService.save(this.assessment).subscribe();
+    }
+  }
+
   public updateAssessmentValid() {
     this.assessmentValid = this.assessment &&  this.profileId && this.assessment.refereeId && true;
-    console.log("assessmentValid=", this.assessmentValid);
   }
   private loadAssessment():Observable<ResponseWithData<Assessment>> {
     const assessment:Assessment = this.navParams.get('assessment');
@@ -97,7 +120,8 @@ export class AssessmentEditPage {
         profileId: 0,
         profileName: '-',
         skillSetEvaluation: [],
-        competent: false
+        competent: false,
+        closed: false
       }
   }
 
@@ -130,7 +154,9 @@ export class AssessmentEditPage {
   set date(dateStr: string) {
     this.assessmentService.setStringDate(this.assessment, dateStr);
   }
-
+  get closed() {
+    return this.assessment.closed
+  }
   searchReferee(idx: number) {
     const callbackRefereeSelected = function(referee:Referee) {
       console.log("Selected referee (" + idx + ', ' + referee.id + ')');

@@ -111,8 +111,8 @@ export class AssessmentService extends RemotePersistentDataService<Assessment>{
         if (!assessment.date) {
             assessment.date = new Date();
         }
-        assessment.date.setDate(Number.parseInt(elements[0]));
-        assessment.date.setMonth(Number.parseInt(elements[1]));
+        assessment.date.setFullYear(Number.parseInt(elements[0]));
+        assessment.date.setMonth(Number.parseInt(elements[1])-1);
         assessment.date.setDate(Number.parseInt(elements[2]));
     }
 

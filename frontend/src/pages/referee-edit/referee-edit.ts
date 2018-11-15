@@ -4,7 +4,7 @@ import { ResponseWithData } from './../../app/service/response';
 import { RefereeService } from './../../app/service/RefereeService';
 import { Referee, CONSTANTES } from './../../app/model/user';
 import { Component } from '@angular/core';
-import { IonicPage, NavParams, LoadingController } from 'ionic-angular';
+import { NavParams, LoadingController } from 'ionic-angular';
 import { NavController } from 'ionic-angular';
 
 /**
@@ -13,8 +13,6 @@ import { NavController } from 'ionic-angular';
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
-
-@IonicPage()
 @Component({
   selector: 'page-referee-edit',
   templateUrl: 'referee-edit.html',
@@ -42,7 +40,7 @@ export class RefereeEditPage {
       if (id) {
         this.setRefereeId(id);
       } else {
-        this.referee = {
+        this.setReferee({
           id: 0,
           version: 0,
           creationDate : new Date(),
@@ -64,9 +62,27 @@ export class RefereeEditPage {
           },
           refereeCoach: {
               refereeCoachLevel: 'NONE'
+          },
+          dataSharingAgreement: {
+            personnalInfoSharing: 'YES',
+            photoSharing: 'YES',
+            refereeAssessmentSharing: 'YES',
+            refereeCoachingInfoSharing: 'YES'
           }
-        };
+        });
       }
+    }
+  }
+
+  private ensureDataSharing() {
+    if (!this.referee.dataSharingAgreement) {
+      console.log("Add dataSharingAgreement field to the existing referee.")
+      this.referee.dataSharingAgreement = {
+        personnalInfoSharing: 'YES',
+        photoSharing: 'YES',
+        refereeAssessmentSharing: 'YES',
+        refereeCoachingInfoSharing: 'YES'
+      };
     }
   }
 
@@ -110,6 +126,7 @@ export class RefereeEditPage {
   private setReferee(referee: Referee) {
     console.log("RefereeView.setReferee(" + referee + ")");
     this.referee = referee;
+    this.ensureDataSharing();
   }
 
   public newReferee(event) {

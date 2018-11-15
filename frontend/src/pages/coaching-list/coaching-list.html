@@ -20,9 +20,9 @@
         <ion-item-group style="margin-top: 20px;" *ngFor="let coachingList of coachingLists">
             <ion-item-divider color="light">{{coachingList.day}}</ion-item-divider>
             <ion-item *ngFor="let coaching of coachingList.coachings" [ngClass]="{'past' : isPast(coaching)}">
-                <button ion-item (click)="coachingSelected($event, coaching)" style="border: none;" [ngClass]="{'past' : isPast(coaching)}"> 
+                <button ion-item (click)="coachingSelected($event, coaching)" style="border: none;" [ngClass]="{'past' : isPast(coaching)}" class="listItemButton"> 
                 {{getCoachingDate(coaching)}} {{coaching.timeSlot}}: Field {{coaching.field}}, {{coaching.gameCategory}}<br>
-                Referees: <span *ngFor="let referee of coaching.referees; last as isLast">{{referee.refereeShortName}}<span *ngIf="!isLast">, </span></span>
+                Referees: {{getRefereeShortNames(coaching)}}
             </button>
                 <ion-icon item-end name="trash" (click)="deleteCoaching(coaching)"></ion-icon>
             </ion-item>

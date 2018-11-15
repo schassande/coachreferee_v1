@@ -10,7 +10,7 @@ import { Toast }              from '@ionic-native/toast';
 import { FileChooser }        from '@ionic-native/file-chooser';
 import { Observable }         from 'rxjs/Rx';
 import { Component }          from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { UserService }          from '../../app/service/UserService';
 import { SkillProfileService }  from '../../app/service/SkillProfileService';
 import { PROService }           from '../../app/service/PROService';
@@ -149,7 +149,7 @@ export class SettingsPage {
   
       alert.addInput({type: 'checkbox', label: 'Users',           value: 'users',           checked: true});
       alert.addInput({type: 'checkbox', label: 'Referees',        value: 'referees',        checked: true});
-      alert.addInput({type: 'checkbox', label: 'Skill Profiles',  value: 'skillProfiles',   checked: true});
+      alert.addInput({type: 'checkbox', label: 'Levels',          value: 'skillProfiles',   checked: true});
       alert.addInput({type: 'checkbox', label: 'PROs'     ,       value: 'pros',            checked: true});
       alert.addInput({type: 'checkbox', label: 'Coachings',       value: 'coachings',       checked: true});
       alert.addInput({type: 'checkbox', label: 'Assessments',     value: 'assessments',     checked: true});
@@ -170,8 +170,7 @@ export class SettingsPage {
               // console.log('Exported data: ', str);
               const fileName = `referee_coach_${new Date().getTime()}.json`;
               const path = this.file.dataDirectory;
-              const fullFileName = path + fileName;
-              //console.log('Writing file: ' + fullFileName);
+              //console.log('Writing file: ' + path + fileName);
               this.file.writeFile(path, fileName, str, {replace: true})
                 .then((fe:FileEntry) => {
                   // console.log('Write OK', fe);

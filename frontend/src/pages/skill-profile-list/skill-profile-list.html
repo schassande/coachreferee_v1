@@ -7,7 +7,7 @@
 <ion-header>
 
     <ion-navbar>
-        <ion-title>Skill Profiles</ion-title>
+        <ion-title>Referee levels</ion-title>
         <ion-buttons end><button ion-button menuToggle ion-button icon-only><ion-icon name="menu"></ion-icon></button></ion-buttons>
     </ion-navbar>
 
@@ -20,7 +20,7 @@
     </ion-fab>
     <ion-list>
         <ion-item *ngFor="let skillProfile of skillProfiles">
-            <button ion-item (click)="skillProfileSelected($event, skillProfile)" style="border: none;">
+            <button ion-item (click)="skillProfileSelected($event, skillProfile)" class="listItemButton">
               {{skillProfile.name}}
             </button>
             <ion-icon item-end name="trash" (click)="deleteSkillProfile(skillProfile)"></ion-icon>
