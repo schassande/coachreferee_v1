@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs';
-import { ResponseWithData } from './../../app/service/response';
 import { SkillSet, Skill } from './../../app/model/skill';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';

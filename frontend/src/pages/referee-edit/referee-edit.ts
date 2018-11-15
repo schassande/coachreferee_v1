@@ -97,15 +97,21 @@ export class RefereeEditPage {
     if (!this.isValidString(this.referee.shortName, 3, 5)) {
       this.error.push(('Invalid short name: 3 to 5 chars'));
     }
-    if (!this.isValidString(this.referee.email, 5, 50)) {
-      this.error.push(('Invalid email: 5 to 50 chars'));
-    }
     return this.error.length == 0;
   }
   isValidString(str:string, minimalLength:number = 0, maximalLength:number = 100):boolean {
     return str && str.trim().length >= minimalLength && str.trim().length <= maximalLength;
   }
 
+  updateShortName() {
+    if (this.isValidString(this.referee.firstName, 3) 
+      && this.isValidString(this.referee.lastName, 3)
+      && (!this.referee.shortName || this.referee.shortName.trim().length === 0)) {
+        this.referee.shortName = this.referee.firstName.charAt(0).toUpperCase() 
+          + this.referee.lastName.charAt(0).toUpperCase()
+          + this.referee.lastName.charAt(this.referee.lastName.length-1).toUpperCase();
+    }
+  }
   private setRefereeId(id: number) {
     console.log("RefereeView.setRefereeId(" + id + ")");
     this.refereeService.get(id).subscribe((response: ResponseWithData<Referee>) => {

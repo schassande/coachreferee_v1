@@ -28,14 +28,14 @@
                 </ion-item>
                 <ion-item>
                     <ion-label fixed>First name</ion-label>
-                    <ion-input type="text" [(ngModel)]="referee.firstName" id="firstName" name="firstName" min="3" max="15" #firstName="ngModel" required autofocus tabindex="1"></ion-input>
+                    <ion-input type="text" [(ngModel)]="referee.firstName" id="firstName" name="firstName" min="3" max="15" #firstName="ngModel" required autofocus tabindex="1" (change)="updateShortName()"></ion-input>
                 </ion-item>
                 <ion-item no-lines *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="alert alert-danger">
                     <div *ngIf="firstName.errors.required">A value is required.</div>
                 </ion-item>
                 <ion-item>
                     <ion-label fixed>Last name</ion-label>
-                    <ion-input type="text" [(ngModel)]="referee.lastName" id="lastName" name="lastName" min="3" max="15" #lastName="ngModel" required tabindex="2"></ion-input>
+                    <ion-input type="text" [(ngModel)]="referee.lastName" id="lastName" name="lastName" min="3" max="15" #lastName="ngModel" required tabindex="2" (change)="updateShortName()"></ion-input>
                 </ion-item>
                 <ion-item no-lines *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="alert alert-danger">
                     <div *ngIf="lastName.errors.required">A value is required.</div>
@@ -62,10 +62,7 @@
                 </ion-item>
                 <ion-item>
                     <ion-label fixed>Email</ion-label>
-                    <ion-input type="text" [(ngModel)]="referee.email" id="email" name="email" min="3" max="30" #email="ngModel" required></ion-input>
-                </ion-item>
-                <ion-item no-lines *ngIf="email.invalid && (email.dirty || email.touched)" class="alert alert-danger">
-                    <div *ngIf="email.errors.required">A value is required.</div>
+                    <ion-input type="text" [(ngModel)]="referee.email" id="email" name="email" min="3" max="30" #email="ngModel"></ion-input>
                 </ion-item>
                 <ion-item>
                     <ion-label fixed>Mobile phones</ion-label>

@@ -1,6 +1,6 @@
 import { ResponseWithData } from './../../app/service/response';
 import { PROService } from './../../app/service/PROService';
-import { PRO, PersistentPRO } from './../../app/model/coaching';
+import { PersistentPRO } from './../../app/model/coaching';
 import { ProEditPage } from './../pro-edit/pro-edit';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';

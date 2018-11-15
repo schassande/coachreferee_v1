@@ -37,7 +37,7 @@
             {{coaching.competition}}<br> {{coachingService.getCoachingDateAsString(coaching)}} {{coaching.timeSlot}}: Field {{coaching.field}}, {{coaching.gameCategory}}<br> Referees: <span *ngFor="let referee of coaching.referees; last as isLast">{{referee.refereeShortName}}<span *ngIf="!isLast">, </span></span>
         </ion-item>
         <div style="text-align: right;" padding>
-            <button ion-button round (click)="sendCoachings($event)"><ion-icon name="send"></ion-icon></button>
+            <button ion-button round (click)="sendCoachings($event)" *ngIf="coachings.length > 0"><ion-icon name="send"></ion-icon></button>
         </div>
     </ion-list>
 </ion-content>

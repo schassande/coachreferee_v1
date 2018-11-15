@@ -1,4 +1,3 @@
-import { UserService } from './UserService';
 import { LocalAppSettings } from './../model/settings';
 import { AppSettingsService } from './AppSettingsService';
 import { Injectable, EventEmitter } from '@angular/core';
