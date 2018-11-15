@@ -17,27 +17,20 @@
     <ion-list *ngIf="feedback">
         <ion-item>
             <ion-label fixed>Skill name:</ion-label>
-            <ion-input type="text" [(ngModel)]="feedback.skillName" [readonly]="readonly"></ion-input>
+            <ion-input type="text" [(ngModel)]="feedback.skillName" [readonly]="readonly" tabindex="1" autofocus></ion-input>
         </ion-item>
         <ion-item>
             <ion-label fixed>Description:</ion-label>
-            <ion-textarea placeholder="Enter a description of positive feedback" rows="3" [(ngModel)]="feedback.description" [readonly]="readonly"></ion-textarea>
+            <ion-textarea placeholder="Enter a description of positive feedback" rows="5" tabindex="2" [(ngModel)]="feedback.description" [readonly]="readonly"></ion-textarea>
         </ion-item>
         <ion-item>
-            <ion-grid no-padding item-content>
-                <ion-row>
-                    <ion-col col-6>
-                        <ion-label stacked>Period:</ion-label>
-                        <ion-input type="number" [(ngModel)]="feedback.period" [readonly]="readonly"></ion-input>
-                    </ion-col>
-
-                    <ion-col col-6>
-                        <ion-label stacked>Deliver:</ion-label>
-                        <ion-input *ngIf="readonly" type="text" [(ngModel)]="feedback.deliver" [readonly]="readonly"></ion-input>
-                        <ion-toggle *ngIf="!readonly" [(ngModel)]="feedback.deliver"></ion-toggle>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
+            <ion-label>Period:</ion-label>
+            <ion-input type="number" [(ngModel)]="feedback.period" [readonly]="readonly" tabindex="3"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Deliver:</ion-label>
+            <ion-input *ngIf="readonly" type="text" [(ngModel)]="feedback.deliver" [readonly]="readonly" tabindex="4"></ion-input>
+            <ion-toggle *ngIf="!readonly" [(ngModel)]="feedback.deliver" tabindex="4"></ion-toggle>
         </ion-item>
     </ion-list>
 </ion-content>

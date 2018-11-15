@@ -11,7 +11,7 @@
 </ion-header>
 <ion-content>
     <ion-list>
-        <ion-searchbar *ngIf="!readonly" [(ngModel)]="searchInput" [showCancelButton]="false" (ionInput)="onSearchBarInput($event)"></ion-searchbar>
+        <ion-searchbar *ngIf="!readonly" [(ngModel)]="searchInput" [showCancelButton]="false" (ionInput)="onSearchBarInput($event)" tabindex="1" autofocus></ion-searchbar>
         <div *ngIf="pros && pros.length === 0" style="text-align: center; font-style: italic">No PRO found.</div>
         <ion-item-group *ngIf="readonly && showProList" style="margin-bottom: 30px; border: 1px solid lightgray;">
             <ion-item-divider color="light">PRO found</ion-item-divider>
@@ -30,19 +30,19 @@
             </ion-item>
             <ion-item>
                 <ion-label fixed>Problem</ion-label>
-                <ion-textarea placeholder="Description of the problem" rows="3" [(ngModel)]="feedback.problem" [readonly]="readonly"></ion-textarea>
+                <ion-textarea placeholder="Description of the problem" rows="3" [(ngModel)]="feedback.problem" [readonly]="readonly" tabindex="2"></ion-textarea>
             </ion-item>
             <ion-item>
                 <ion-label fixed>Remedy</ion-label>
-                <ion-textarea placeholder="Description of the remedy" rows="3" [(ngModel)]="feedback.remedy" [readonly]="readonly"></ion-textarea>
+                <ion-textarea placeholder="Description of the remedy" rows="3" [(ngModel)]="feedback.remedy" [readonly]="readonly" tabindex="3"></ion-textarea>
             </ion-item>
             <ion-item>
                 <ion-label fixed>Outcome</ion-label>
-                <ion-textarea placeholder="Description of the outcome" rows="3" [(ngModel)]="feedback.outcome" [readonly]="readonly"></ion-textarea>
+                <ion-textarea placeholder="Description of the outcome" rows="3" [(ngModel)]="feedback.outcome" [readonly]="readonly" tabindex="4"></ion-textarea>
             </ion-item>
             <ion-item>
                 <ion-label fixed>Skill</ion-label>
-                <ion-input type="text" [(ngModel)]="feedback.skillName" [readonly]="readonly"></ion-input>
+                <ion-input type="text" [(ngModel)]="feedback.skillName" [readonly]="readonly" tabindex="5"></ion-input>
             </ion-item>
         </ion-item-group>
 
@@ -50,21 +50,21 @@
             <ion-item-divider color="light">Feedback</ion-item-divider>
             <ion-item>
                 <ion-label fixed>Apply later</ion-label>
-                <ion-input *ngIf="readonly" type="text" [readonly]="true">{{feedback.appliedLater?'Yes':'No'}}</ion-input>
-                <ion-toggle *ngIf="!readonly" [(ngModel)]="feedback.appliedLater"></ion-toggle>
+                <ion-input *ngIf="readonly" type="text" [readonly]="true" tabindex="6">{{feedback.appliedLater?'Yes':'No'}}</ion-input>
+                <ion-toggle *ngIf="!readonly" [(ngModel)]="feedback.appliedLater" tabindex="6"></ion-toggle>
             </ion-item>
             <ion-item>
                 <ion-label fixed>Priority</ion-label>
-                <ion-input type="number" [(ngModel)]="feedback.priority" [readonly]="readonly"></ion-input>
+                <ion-input type="number" [(ngModel)]="feedback.priority" [readonly]="readonly" tabindex="7"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label fixed>Period</ion-label>
-                <ion-input type="number" [(ngModel)]="feedback.period" [readonly]="readonly"></ion-input>
+                <ion-input type="number" [(ngModel)]="feedback.period" [readonly]="readonly" tabindex="8"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label fixed>Deliver</ion-label>
-                <ion-input *ngIf="readonly" type="text" [readonly]="true">{{feedback.deliver?'Yes':'No'}}</ion-input>
-                <ion-toggle *ngIf="!readonly" [(ngModel)]="feedback.deliver"></ion-toggle>
+                <ion-input *ngIf="readonly" type="text" [readonly]="true" tabindex="9">{{feedback.deliver?'Yes':'No'}}</ion-input>
+                <ion-toggle *ngIf="!readonly" [(ngModel)]="feedback.deliver" tabindex="9"></ion-toggle>
             </ion-item>
         </ion-item-group>
     </ion-list>
