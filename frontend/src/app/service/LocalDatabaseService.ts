@@ -76,34 +76,40 @@ export class LocalDatabaseService {
      */
     public set<D extends PersistentData>(tableName: string, data: D): Observable<D> {
         return Observable.fromPromise(
-            this.storage.get(tableName).then((md: ModifiableData<D>) => {
-                if (!md) {
-                    md = { 
-                        unmodified : new Map<number, D>(), 
-                        modified : new Map<number, D>(), 
-                        removed: new Map<number, D>() 
-                    };
-                }
-                switch(data.dataStatus) {
-                    case 'CLEAN': 
-                        md.unmodified.set(data.id, data); 
-                        md.modified.delete(data.id);
-                        md.removed.delete(data.id);
-                        break;
-                    case 'REMOVED': 
-                        md.removed.set(data.id, data); 
-                        md.modified.delete(data.id);
-                        md.unmodified.delete(data.id);
-                        break;
-                    case 'NEW': 
-                    case 'DIRTY': 
-                        md.modified.set(data.id, data); 
-                        md.removed.delete(data.id);
-                        md.unmodified.delete(data.id);
-                        break;
-                }
-                return this.storage.set(tableName, md);
-            }).then(() => data)
+            this.storage.get(tableName)
+                .then((md: ModifiableData<D>) => {
+                    if (!md) {
+                        //console.log('Create ModifiableData');
+                        md = { 
+                            unmodified : new Map<number, D>(), 
+                            modified : new Map<number, D>(), 
+                            removed: new Map<number, D>() 
+                        };
+                    }
+                    //console.log(data.id, data.dataStatus);
+                    switch(data.dataStatus) {
+                        case 'CLEAN': 
+                            md.unmodified.set(data.id, data); 
+                            md.modified.delete(data.id);
+                            md.removed.delete(data.id);
+                            break;
+                        case 'REMOVED': 
+                            md.removed.set(data.id, data); 
+                            md.modified.delete(data.id);
+                            md.unmodified.delete(data.id);
+                            break;
+                        case 'NEW': 
+                        case 'DIRTY': 
+                            md.modified.set(data.id, data); 
+                            md.removed.delete(data.id);
+                            md.unmodified.delete(data.id);
+                            break;
+                    }
+                    return this.storage.set(tableName, md);
+                }).then(() => {
+                    //this.get(tableName, data.id).subscribe((d) => console.log(d.id, 'saved.'));
+                    return data;
+                })
         );
     }
         

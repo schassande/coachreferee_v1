@@ -1,3 +1,4 @@
+import { LEVELS_EURO } from './levelEuropean';
 import { Coaching, PersistentPRO } from './../../app/model/coaching';
 import { Assessment } from './../../app/model/assessment';
 import { SkillProfile } from './../../app/model/skill';
@@ -90,34 +91,34 @@ export class SettingsPage {
   }
 
   private importDataObjects(importObj:ExportedData) {
-    let obs: Observable<any>[] = [];
+    let obs: Observable<any> = Observable.of('');
     if (importObj.users) {
       importObj.users.forEach((elem:User) => {
         //re create Date object avec serialisation
         elem.creationDate = new Date(elem.creationDate);
         elem.lastUpdate = new Date(elem.lastUpdate);
-        obs.push(this.userService.save(elem));
+        obs = obs.concat(this.userService.save(elem));
       });
     }         
     if (importObj.referees) {
       importObj.referees.forEach((elem:Referee) => {
         elem.creationDate = new Date(elem.creationDate);
         elem.lastUpdate = new Date(elem.lastUpdate);
-        obs.push(this.refereeService.save(elem));
+        obs = obs.concat(this.refereeService.save(elem));
       });
     }      
     if (importObj.skillProfiles) {
       importObj.skillProfiles.forEach((elem:SkillProfile) => {
         elem.creationDate = new Date(elem.creationDate);
         elem.lastUpdate = new Date(elem.lastUpdate);
-        obs.push(this.skillProfileService.save(elem));
+        obs = obs.concat(this.skillProfileService.save(elem));
       });
     } 
     if (importObj.pros) {
       importObj.pros.forEach((elem:PersistentPRO) => {
         elem.creationDate = new Date(elem.creationDate);
         elem.lastUpdate = new Date(elem.lastUpdate);
-        obs.push(this.proService.save(elem));
+        obs = obs.concat(this.proService.save(elem));
       });
     }
     if (importObj.coachings) {
@@ -125,7 +126,7 @@ export class SettingsPage {
         elem.date = new Date(elem.date);
         elem.creationDate = new Date(elem.creationDate);
         elem.lastUpdate = new Date(elem.lastUpdate);
-        obs.push(this.coachingService.save(elem));
+        obs = obs.concat(this.coachingService.save(elem));
       });
     }
     if (importObj.assessments) {
@@ -133,14 +134,23 @@ export class SettingsPage {
         elem.date = new Date(elem.date);
         elem.creationDate = new Date(elem.creationDate);
         elem.lastUpdate = new Date(elem.lastUpdate);
-        obs.push(this.assessmentService   .save(elem))
+        obs = obs.concat(this.assessmentService.save(elem))
       });
     }
-    Observable.forkJoin(obs).subscribe(() => {
-      this.msg.push(obs.length + ' data imported.')
-      this.toast.showShortCenter(obs.length + ' data imported.').subscribe();
-      console.log(obs.length + ' data imported.');
+    obs.subscribe(() => {
+      this.msg.push('Data imported.')
+      //this.toast.showShortCenter(obs.length + ' data imported.').subscribe();
+      console.log('Data imported.');
     })
+  }
+
+  importLevelsEuro() {
+    let obs: Observable<any> = Observable.of('');
+    LEVELS_EURO.forEach((elem) => {
+      const e = elem;
+      obs = obs.concat(this.skillProfileService.save(e).map(() => { console.log(e.id + ' imported.'); }));
+    });
+    obs.subscribe(() => { console.log('Data imported.'); });
   }
 
   public exportData() {
@@ -210,5 +220,4 @@ export class SettingsPage {
     });
     alert.present();
   }
-
 }

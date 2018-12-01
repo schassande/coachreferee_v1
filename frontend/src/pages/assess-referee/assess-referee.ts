@@ -29,6 +29,7 @@ export class AssessRefereePage {
 
   assessment: Assessment;
   profile: SkillProfile;
+  openedGroups: boolean[] = [];
   referee: Referee;
   id2referee: Map<number, Referee> = new Map<number, Referee>();
   refereesLoaded = false;
@@ -56,6 +57,13 @@ export class AssessRefereePage {
       ? Observable.of({data : this.assessment, error: null}) 
       : this.assessmentService.get(assessmentId).map((response: ResponseWithData<Assessment>) => { this.assessment = response.data; return response; });
   }
+  isGroupShown(skillSetIdx): boolean {
+    return this.openedGroups[skillSetIdx];
+  }
+  toggleGroup(skillSetIdx) {
+    this.openedGroups[skillSetIdx] = !this.openedGroups[skillSetIdx];
+    //console.log('toggleGroup', skillSetIdx, this.openedGroups[skillSetIdx]);
+  }
   private loadReferee() {
     return this.assessmentService.loadingReferees(this.assessment, this.id2referee)
       .map(() => this.referee = this.id2referee.get(this.assessment.refereeId));
@@ -64,6 +72,7 @@ export class AssessRefereePage {
     return this.skillProfileService.get(this.assessment.profileId)
       .map((response: ResponseWithData<SkillProfile>) => {
         this.profile = response.data;
+        this.openedGroups = this.profile.skillSets.map((skillSet, idx)=> !this.assessment.skillSetEvaluation[idx].competent);
       });
   }
   private bookmarkPage() {

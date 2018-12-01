@@ -119,6 +119,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
         return obs
             .flatMap(() => { 
                 if (data.dataStatus == 'CLEAN') {
+                    //console.log('1-RemotePersistentDataService' + this.getServiceId() + ".localSave(" + JSON.stringify(data) + ") CLEAN");
                     return Observable.of(data);
                 } else {
                     //console.log('1-RemotePersistentDataService' + this.getServiceId() + ".localSave(" + JSON.stringify(data) + ")");

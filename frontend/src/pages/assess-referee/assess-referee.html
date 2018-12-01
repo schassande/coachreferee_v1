@@ -5,29 +5,40 @@
     </ion-navbar>
 </ion-header>
 <ion-content *ngIf="profile && assessment" padding>
-    <ion-list>
-        <ion-item-group *ngFor="let skillSet of profile.skillSets; index as skillSetIdx" style="margin-top: 20px;">
-            <ion-item-divider color="light">
-                {{skillSet.name}} <span *ngIf="skillSet.required">*</span>
+    <div>
+        <div [ngStyle]="{ 
+            'width': '100%', 
+            'text-align': 'center', 
+            'padding': '20px 0', 
+            'color': profile.color, 
+            'background-color': profile.backgroundColor 
+        }">{{profile.name}}</div>
+
+        <div *ngFor="let skillSet of profile.skillSets; index as skillSetIdx" style="margin-top: 20px;">
+            <ion-item-divider color="primary" (click)="toggleGroup(skillSetIdx)">
+                <ion-icon name="{{ isGroupShown(skillSetIdx) ? 'remove' : 'add'}}"></ion-icon>
+                <span innerHTML="{{skillSet.name}}"></span> <span *ngIf="skillSet.required">*</span>
                 <span item-end>({{requirementToString(skillSet.requirement)}})</span>
-                <ion-icon item-end name="star" isActive="{{assessment.skillSetEvaluation[skillSetIdx].competent}}"></ion-icon>
+                <ion-icon item-end name="star" [ngStyle]="{ color: assessment.skillSetEvaluation[skillSetIdx].competent ? 'yellow' : 'white' }"></ion-icon>
             </ion-item-divider>
-            <ion-item *ngFor="let skill of skillSet.skills; index as skillIdx">
-                <ion-label>{{skill.name}} <span *ngIf="skill.required">*</span></ion-label>
-                <ion-checkbox color="secondary" checked="false" [(ngModel)]="assessment.skillSetEvaluation[skillSetIdx].skillEvaluations[skillIdx].competent" (ionChange)="updateSKillCompetency(skillSetIdx, skillIdx)"></ion-checkbox>
-            </ion-item>
-            <ion-item>
+            <div *ngIf="isGroupShown(skillSetIdx)">
+                <ion-item *ngFor="let skill of skillSet.skills; index as skillIdx" text-wrap>
+                    <ion-label>
+                        <span innerHTML="{{skill.name}}"></span> <span *ngIf="skill.required">*</span>
+                    </ion-label>
+                    <ion-checkbox item-end color="secondary" checked="false" [(ngModel)]="assessment.skillSetEvaluation[skillSetIdx].skillEvaluations[skillIdx].competent" (ionChange)="updateSKillCompetency(skillSetIdx, skillIdx)"></ion-checkbox>
+                </ion-item>
                 <ion-textarea placeholder="Comment about {{skillSet.name}}" rows="1" [(ngModel)]="assessment.skillSetEvaluation[skillSetIdx].description"></ion-textarea>
-            </ion-item>
-        </ion-item-group>
-        <ion-item-group style="margin-top: 20px;">
-            <ion-item-divider color="light">
+            </div>
+        </div>
+        <div style="margin-top: 20px;">
+            <ion-item-divider color="primary">
                 Conclusion <span item-end>({{requirementToString(profile.requirement)}})</span>
-                <ion-icon item-end name="star" [isActive]="assessment.competent"></ion-icon>
+                <ion-icon item-end name="star" [ngStyle]="{ color: assessment.competent ? 'yellow' : 'white' }"></ion-icon>
             </ion-item-divider>
             <ion-item>
-                <ion-textarea placeholder="Evaluation Comment" rows="3" [(ngModel)]="assessment.description"></ion-textarea>
+                <ion-textarea placeholder="Evaluation Comment" rows="7" [(ngModel)]="assessment.description"></ion-textarea>
             </ion-item>
-        </ion-item-group>
-    </ion-list>
+        </div>
+    </div>
 </ion-content>

@@ -19,4 +19,6 @@ export interface SkillSet extends Defintion {
 export interface SkillProfile extends Defintion, PersistentData {
     skillSets: SkillSet[];
     requirement: EvaluationRequirement;
+    backgroundColor?: string;
+    color?: string;
 }

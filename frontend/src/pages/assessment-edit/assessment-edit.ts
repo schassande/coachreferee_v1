@@ -184,16 +184,20 @@ export class AssessmentEditPage {
     this.emailService.sendEmail({
       to: this.connectedUserService.getCurrentUser().email,
       subject: this.assessmentService.assessmentAsEmailSubject(this.assessment),
-      body: this.assessmentService.assessmentAsEmailBody(this.assessment),
+      body: this.assessmentService.assessmentAsEmailBody(this.assessment, this.getProfile(this.assessment.profileId), 
+        this.appCoach, this.id2referee.get(this.assessment.refereeId)),
       isHtml: true
     });
   }
 
+  private getProfile(profileId): SkillProfile {
+    return this.profiles.filter( (profile) => profileId == profile.id)[0]
+  }
   private adjustFromProfile() {
     if (this.profileId == this.assessment.profileId) {
       return;
     }
-    const profile = this.profiles.filter( (profile) => this.profileId == profile.id)[0];
+    const profile = this.getProfile(this.profileId);
     if (!profile) {
       return;
     }

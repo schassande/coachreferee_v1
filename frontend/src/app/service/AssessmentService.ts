@@ -1,5 +1,6 @@
+import { SkillProfile } from './../model/skill';
 import { RefereeService } from './RefereeService';
-import { Referee } from './../model/user';
+import { Referee, User } from './../model/user';
 import { Observable } from 'rxjs';
 import { ResponseWithData } from './response';
 import { Http } from '@angular/http';
@@ -132,24 +133,35 @@ export class AssessmentService extends RemotePersistentDataService<Assessment>{
     }
 
     
-    public assessmentAsEmailBody(assessment: Assessment): string {
+    public assessmentAsEmailBody(assessment: Assessment, profile:SkillProfile, coach:User, referee: Referee): string {
         let body:string = `
-        <ul>
-          <li> Competition: ${assessment.competition}</li>
-          <li> Referee: ${assessment.refereeShortName}</li>
-          <li> Profile: ${assessment.profileId}</li>
-          <li> Date: ${this.getAssessmentDateAsString(assessment)}</li>
-          <li> Field: ${assessment.field}</li>
-          <li> Time slot: ${assessment.timeSlot}</li>
-          <li> Game category: ${assessment.gameCategory}</li>
-          <li> Game speed: ${assessment.gameSpeed}</li>
-          <li> Game skill: ${assessment.gameSkill}</li>
-        </ul>`;
-        body += `<h2>Referee ${assessment.refereeShortName}</h2>`;
+        <h1 style="text-align: center; padding: 20px; background-color:${profile.backgroundColor}; color:${profile.color}; width: 100%;">${assessment.profileName} referee assessment</h1>
+        <table border="0" style="margin-top: 20px;">
+          <tr><td>Referee</td><td>${referee.firstName} ${referee.lastName} ${assessment.refereeShortName}</td></tr>
+          <tr><td>Referee NTA</td><td>${referee.country}</td></tr>
+          <tr><td>Assessment level</td><td>${assessment.profileName}</td></tr>
+          <tr><td>Referee coach</td><td>${coach.firstName} ${coach.lastName} (${coach.refereeCoach.refereeCoachLevel})</td></tr>
+          <tr><td>Competition</td><td>${assessment.competition}</td></tr>
+          <tr><td>Date</td><td>${this.getAssessmentDateAsString(assessment)}</td></tr>
+          <tr><td>Field</td><td>${assessment.field}</td></tr>
+          <tr><td>Time slot</td><td>${assessment.timeSlot}</td></tr>
+          <tr><td>Game category</td><td>${assessment.gameCategory}</td></tr>
+          <tr><td>Game speed</td><td>${assessment.gameSpeed}</td></tr>
+          <tr><td>Game skill</td><td>${assessment.gameSkill}</td></tr>
+        </table>`;
 
-        
+        assessment.skillSetEvaluation.forEach( (skillSetEval) => {
+            body += `<h2 style="margin-top: 20px;">${skillSetEval.skillSetName}</h2>`;
+            body += `<p>Competent: ${skillSetEval.competent ? 'yes' : 'no'}</p>`
+            body += `<table boder="0">`;
+            skillSetEval.skillEvaluations.forEach( (skillEval) => {
+                body += `<tr><td>${skillEval.skillName}</td><td>${skillEval.competent ? 'yes' : 'no'}</td></tr>`;
+            });
+            body += `</table>`;
+        })
+        body += `<h2 style="margin-top: 20px;">Conclusion</h2>`;
+        body += `<p>${coach.firstName} ${coach.lastName} declares the referee ${assessment.competent ? '' : 'NOT '}competent for the level ${assessment.profileName}.</p>`;
 
-        body += `<h3>Misc</h3>`
         return body;
     }
 
