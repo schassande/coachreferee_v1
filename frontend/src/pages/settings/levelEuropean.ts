@@ -35,7 +35,7 @@ export const LEVELS_EURO: SkillProfile[] = [
 							"proLinks": []
 						},
 						{
-							"name": "Uniform",
+							"name": "Does the referee have an appropriate, clean and tidy uniform?",
 							"description": "Does the referee have an appropriate, clean and tidy uniform?",
 							"required": false,
 							"proLinks": []
@@ -130,12 +130,6 @@ export const LEVELS_EURO: SkillProfile[] = [
 							"name": "Set a consistent 5m and attempt to verbally control players",
 							"description": "Set a consistent 5m and attempt to verbally control players",
 							"required": true,
-							"proLinks": []
-						},
-						{
-							"name": "5th",
-							"description": "Description of 5th",
-							"required": false,
 							"proLinks": []
 						},
 						{
