@@ -273,7 +273,7 @@ export const LEVELS_EURO: SkillProfile[] = [
 						},
 						{
 							"name": "Checked the field and checked the players",
-							"description": "",
+							"description": "Checked the field and checked the players",
 							"required": false,
 							"proLinks": []
 						},
@@ -679,13 +679,7 @@ export const LEVELS_EURO: SkillProfile[] = [
 					"required": true,
 					"skills": [{
 							"name": "Signals – clear and correct, timely and crisp delivery, with authority, correct stance and posture, mainly performed on the run, indicates the mark quickly, brief verbal instructions/explanations linked to signals to aid understanding",
-							"description": "",
-							"required": false,
-							"proLinks": []
-						},
-						{
-							"name": "",
-							"description": "",
+							"description": "Signals – clear and correct, timely and crisp delivery, with authority, correct stance and posture, mainly performed on the run, indicates the mark quickly, brief verbal instructions/explanations linked to signals to aid understanding",
 							"required": false,
 							"proLinks": []
 						}
@@ -693,7 +687,7 @@ export const LEVELS_EURO: SkillProfile[] = [
 				},
 				{
 					"name": "Refereeing system consistently",
-					"description": "",
+					"description": "Refereeing system consistently",
 					"requirement": "MAJORITY_REQUIRED",
 					"required": true,
 					"skills": [{
@@ -724,7 +718,7 @@ export const LEVELS_EURO: SkillProfile[] = [
 				},
 				{
 					"name": "Rulings consistently",
-					"description": "",
+					"description": "Rulings consistently",
 					"requirement": "MAJORITY_REQUIRED",
 					"required": true,
 					"skills": [{
@@ -901,7 +895,7 @@ export const LEVELS_EURO: SkillProfile[] = [
 					"required": true,
 					"skills": [{
 							"name": "Signals – clear and correct, timely and crisp delivery, with authority, correct stance and posture, mainly performed on the run, indicates the mark quickly, brief verbal instructions/explanations linked to signals to aid understanding",
-							"description": "",
+							"description": "Signals – clear and correct, timely and crisp delivery, with authority, correct stance and posture, mainly performed on the run, indicates the mark quickly, brief verbal instructions/explanations linked to signals to aid understanding",
 							"required": false,
 							"proLinks": []
 						},
@@ -915,7 +909,7 @@ export const LEVELS_EURO: SkillProfile[] = [
 				},
 				{
 					"name": "Refereeing system consistently",
-					"description": "",
+					"description": "Refereeing system consistently",
 					"requirement": "MAJORITY_REQUIRED",
 					"required": true,
 					"skills": [{
@@ -946,7 +940,7 @@ export const LEVELS_EURO: SkillProfile[] = [
 				},
 				{
 					"name": "Rulings consistently",
-					"description": "",
+					"description": "Rulings consistently",
 					"requirement": "MAJORITY_REQUIRED",
 					"required": true,
 					"skills": [{
@@ -1128,7 +1122,7 @@ export const LEVELS_EURO: SkillProfile[] = [
 					"required": true,
 					"skills": [{
 							"name": "Signals – clear and correct, timely and crisp delivery, with authority, correct stance and posture, mainly performed on the run, indicates the mark quickly, brief verbal instructions/explanations linked to signals to aid understanding",
-							"description": "",
+							"description": "Signals – clear and correct, timely and crisp delivery, with authority, correct stance and posture, mainly performed on the run, indicates the mark quickly, brief verbal instructions/explanations linked to signals to aid understanding",
 							"required": false,
 							"proLinks": []
 						},
@@ -1142,7 +1136,7 @@ export const LEVELS_EURO: SkillProfile[] = [
 				},
 				{
 					"name": "Refereeing system consistently",
-					"description": "",
+					"description": "Refereeing system consistently",
 					"requirement": "MAJORITY_REQUIRED",
 					"required": true,
 					"skills": [{
@@ -1173,7 +1167,7 @@ export const LEVELS_EURO: SkillProfile[] = [
 				},
 				{
 					"name": "Rulings consistently",
-					"description": "",
+					"description": "Rulings consistently",
 					"requirement": "MAJORITY_REQUIRED",
 					"required": true,
 					"skills": [{
