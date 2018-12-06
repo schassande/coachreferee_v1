@@ -1,6 +1,6 @@
 import { SkillProfile } from "../../app/model/skill";
 
-export const LEVELS_EURO: SkillProfile[] = [
+export const LEVELS_NZ: SkillProfile[] = [
 	{
 		"id": 2000000000301,
 		"version": 0,

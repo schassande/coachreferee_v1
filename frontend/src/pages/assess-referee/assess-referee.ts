@@ -1,3 +1,5 @@
+import { LoggingService, Logger } from 'ionic-logging-service';
+import { SkillSetEvaluation, SkillEvaluation } from './../../app/model/assessment';
 import { Component }                from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Observable }               from 'rxjs';
@@ -88,16 +90,34 @@ export class AssessRefereePage {
       parameter : { id: this.referee.id } }]);    
   }
   public updateSKillCompetency(skillSetIdx, skillIdx) {
+    //Step 1 : Compute SkillSet competency
+    let missingSkillRequired = this.assessment.skillSetEvaluation[skillSetIdx].skillEvaluations.filter(
+      (skillEval:SkillEvaluation, skillEvalIdx:number) => !skillEval.competent && this.profile.skillSets[skillSetIdx].skills[skillEvalIdx].required).length;
+    if (missingSkillRequired) {
+      // some skill are required for the skill set to be marked as competent
+      this.assessment.skillSetEvaluation[skillSetIdx].competent = false;
+    } else {
+      //count the number of yes
       let yesSkillSet = this.assessment.skillSetEvaluation[skillSetIdx].skillEvaluations.filter((skillEval) => skillEval.competent).length;
+      // compute the competency with regards to the requirement (ALL or MAJORITY)
       this.setCompetent(this.assessment.skillSetEvaluation[skillSetIdx], 
         this.profile.skillSets[skillSetIdx].requirement, 
         yesSkillSet, 
         this.assessment.skillSetEvaluation[skillSetIdx].skillEvaluations.length);
-      let yesProfile = this.assessment.skillSetEvaluation.filter((skillEval) => skillEval.competent).length;
+    }
+
+    //Step 2 : Compute profile competency
+    let missingSkillSetRequired = this.assessment.skillSetEvaluation.filter(
+      (skillSetEval:SkillSetEvaluation, skillSetEvalIdx:number) => !skillSetEval.competent && this.profile.skillSets[skillSetEvalIdx].required).length;
+    if (missingSkillSetRequired) {
+      this.assessment.competent = false;
+    } else {
+      let yesProfile = this.assessment.skillSetEvaluation.filter((skillSetEval) => skillSetEval.competent).length;
       this.setCompetent(this.assessment,  this.profile.requirement, yesProfile, this.assessment.skillSetEvaluation.length);
-      console.log(
-        this.profile.name + "=" + yesProfile + this.assessment.competent
-        + "/" + this.profile.skillSets[skillSetIdx].name + "=" + yesSkillSet + this.assessment.skillSetEvaluation[skillSetIdx].competent
+    }
+    console.log(
+        this.profile.name + "=" + this.assessment.competent
+        + "/" + this.profile.skillSets[skillSetIdx].name + "=" + this.assessment.skillSetEvaluation[skillSetIdx].competent
         + "/" + this.profile.skillSets[skillSetIdx].skills[skillIdx].name  
         + "=" + this.assessment.skillSetEvaluation[skillSetIdx].skillEvaluations[skillIdx].competent);
     }

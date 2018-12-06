@@ -27,6 +27,7 @@ export class AssessmentListPage {
   assessments: Assessment[];
   assessmentLists: AssessmentList[];
   error: any;
+  searchInput: string;
   
   constructor(
     public navCtrl: NavController, 

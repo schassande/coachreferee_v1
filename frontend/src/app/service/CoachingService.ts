@@ -55,6 +55,16 @@ export class CoachingService extends RemotePersistentDataService<Coaching>{
         }
         return array;
     }
+    public searchCoachings(text: string): Observable<ResponseWithData<Coaching[]>> {
+        return super.filter(super.all(), (coaching: Coaching) => {
+            return this.stringContains(text, coaching.competition)
+                || (coaching.referees[0] && this.stringContains(text, coaching.referees[0].refereeShortName))
+                || (coaching.referees[1] && this.stringContains(text, coaching.referees[1].refereeShortName))
+                || (coaching.referees[2] && this.stringContains(text, coaching.referees[2].refereeShortName))
+                || this.stringContains(text, coaching.field)
+                || this.stringContains(text, this.getCoachingDateAsString(coaching))
+        });
+    }
 
     public compareDate(day1: Date, day2: Date):number {
         //Compare date

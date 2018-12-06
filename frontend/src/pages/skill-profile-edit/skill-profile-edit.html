@@ -16,7 +16,7 @@
 
 <ion-content padding>
     <ion-list *ngIf="skillProfile">
-        <ion-item>
+        <ion-item text-wrap>
             <ion-label fixed>Name</ion-label>
             <ion-input type="text" [(ngModel)]="skillProfile.name"></ion-input>
         </ion-item>
@@ -33,7 +33,7 @@
         </ion-item>
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em;">Sets of skills</ion-item-divider>
-            <ion-item *ngFor="let skillSet of skillProfile.skillSets">
+            <ion-item *ngFor="let skillSet of skillProfile.skillSets" text-wrap>
                 <button ion-item (click)="skillSetSelected($event, skillSet)">{{skillSet.name}}</button>
                 <ion-icon item-end name="trash" (click)="deleteSkillSet(skillSet)"></ion-icon>
             </ion-item>

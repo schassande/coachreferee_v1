@@ -29,7 +29,8 @@ export class CoachingListPage {
   coachings: Coaching[];
   coachingLists: CoachingList[];
   error: any;
-  
+  searchInput: string;
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -42,7 +43,7 @@ export class CoachingListPage {
   }
 
   private searchCoaching() {
-    this.coachingService.all().subscribe((response: ResponseWithData<Coaching[]>) => {
+    this.coachingService.searchCoachings(this.searchInput).subscribe((response: ResponseWithData<Coaching[]>) => {
       this.coachings = this.coachingService.sortCoachings(response.data, true);
       this.coachingLists = this.computeCoachingLists(this.coachings);
       this.error = response.error;

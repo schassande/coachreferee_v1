@@ -55,6 +55,16 @@ export class AssessmentService extends RemotePersistentDataService<Assessment>{
         return array;
     }
 
+    public searchAssessments(text: string): Observable<ResponseWithData<Assessment[]>> {
+        return super.filter(super.all(), (assessment: Assessment) => {
+            return this.stringContains(text, assessment.competition)
+                || this.stringContains(text, assessment.refereeShortName)
+                || this.stringContains(text, assessment.profileName)
+                || this.stringContains(text, assessment.field)
+                || this.stringContains(text, this.getAssessmentDateAsString(assessment))
+        });
+    }
+
     public compareDate(day1: Date, day2: Date):number {
         //Compare date
         let res:number = day1.getFullYear() - day2.getFullYear();

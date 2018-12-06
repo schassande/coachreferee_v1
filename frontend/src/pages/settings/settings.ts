@@ -1,3 +1,5 @@
+import { LEVELS_AUS } from './levelAus';
+import { LEVELS_NZ } from './levelNZ';
 import { LEVELS_EURO } from './levelEuropean';
 import { Coaching, PersistentPRO } from './../../app/model/coaching';
 import { Assessment } from './../../app/model/assessment';
@@ -144,6 +146,15 @@ export class SettingsPage {
     })
   }
 
+  importLevelsAus() {
+    let obs: Observable<any> = Observable.of('');
+    LEVELS_AUS.forEach((elem) => {
+      const e = elem;
+      obs = obs.concat(this.skillProfileService.save(e).map(() => { console.log(e.id + ' imported.'); }));
+    });
+    obs.subscribe(() => { console.log('Data imported.'); });
+  }
+
   importLevelsEuro() {
     let obs: Observable<any> = Observable.of('');
     LEVELS_EURO.forEach((elem) => {
@@ -152,7 +163,14 @@ export class SettingsPage {
     });
     obs.subscribe(() => { console.log('Data imported.'); });
   }
-
+  importLevelsNZ() {
+    let obs: Observable<any> = Observable.of('');
+    LEVELS_NZ.forEach((elem) => {
+      const e = elem;
+      obs = obs.concat(this.skillProfileService.save(e).map(() => { console.log(e.id + ' imported.'); }));
+    });
+    obs.subscribe(() => { console.log('Data imported.'); });
+  }
   public exportData() {
       let alert = this.alertController.create();
       alert.setTitle('Which data do you want to export?');
