@@ -1,4 +1,3 @@
-import { LoggingService, Logger } from 'ionic-logging-service';
 import { SkillSetEvaluation, SkillEvaluation } from './../../app/model/assessment';
 import { Component }                from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
