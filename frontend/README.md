@@ -21,16 +21,6 @@ $ npm install
 
 The `doc` sub directory contains documentation about development.
 
-### 2.1 TODO list
-
-This chapter lists the idea of new features and improvment:
-
-- saved data on central server
-- sharing of referee list
-- sharing of coaching & assessment
-- sharing of PRO
-- style of assessment report
-
 
 ## 3 run the application on your computer
 
