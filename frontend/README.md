@@ -64,6 +64,6 @@ The password is : 22n77scb
 7) Upudate the comments of the version
 8) Click on `Enregistrer` button
 9) Click on `Verifier` button
-10) Click on `Publish` button
+10) Click on `LANCER LE DÉPLOIEMENT EN VERSION PRODUCTION` button
 
 Now the Android will publish your version. It takes time to be visible by all users, approximatively 12 hours.
