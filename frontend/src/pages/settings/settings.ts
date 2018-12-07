@@ -141,7 +141,7 @@ export class SettingsPage {
     }
     obs.subscribe(() => {
       this.msg.push('Data imported.')
-      //this.toast.showShortCenter(obs.length + ' data imported.').subscribe();
+      this.toast.showShortCenter('Data imported.').subscribe();
       console.log('Data imported.');
     })
   }
@@ -152,7 +152,10 @@ export class SettingsPage {
       const e = elem;
       obs = obs.concat(this.skillProfileService.save(e).map(() => { console.log(e.id + ' imported.'); }));
     });
-    obs.subscribe(() => { console.log('Data imported.'); });
+    obs.subscribe(() => { 
+      console.log('Aus levels imported.'); 
+      this.toast.showShortCenter('Aus levels imported.').subscribe();
+    });
   }
 
   importLevelsEuro() {
@@ -161,7 +164,10 @@ export class SettingsPage {
       const e = elem;
       obs = obs.concat(this.skillProfileService.save(e).map(() => { console.log(e.id + ' imported.'); }));
     });
-    obs.subscribe(() => { console.log('Data imported.'); });
+    obs.subscribe(() => { 
+      console.log('Euro level imported.'); 
+      this.toast.showShortCenter('Euro level imported.').subscribe();
+    });
   }
   importLevelsNZ() {
     let obs: Observable<any> = Observable.of('');
@@ -169,7 +175,10 @@ export class SettingsPage {
       const e = elem;
       obs = obs.concat(this.skillProfileService.save(e).map(() => { console.log(e.id + ' imported.'); }));
     });
-    obs.subscribe(() => { console.log('Data imported.'); });
+    obs.subscribe(() => { 
+      console.log('NZ levels imported.'); 
+      this.toast.showShortCenter('NZ levels imported.').subscribe();
+    });
   }
   public exportData() {
       let alert = this.alertController.create();
