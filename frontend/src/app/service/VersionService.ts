@@ -9,7 +9,7 @@ import { AppSettingsService }   from './AppSettingsService';
 @Injectable()
 export class VersionService {
 
-    private applicationVersion = '1.1.0';
+    private applicationVersion = '1.1.3';
 
     constructor(
         protected appSettingsService: AppSettingsService,
