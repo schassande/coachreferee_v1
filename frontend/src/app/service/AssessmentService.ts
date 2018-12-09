@@ -56,13 +56,16 @@ export class AssessmentService extends RemotePersistentDataService<Assessment>{
     }
 
     public searchAssessments(text: string): Observable<ResponseWithData<Assessment[]>> {
-        return super.filter(super.all(), (assessment: Assessment) => {
-            return this.stringContains(text, assessment.competition)
-                || this.stringContains(text, assessment.refereeShortName)
-                || this.stringContains(text, assessment.profileName)
-                || this.stringContains(text, assessment.field)
-                || this.stringContains(text, this.getAssessmentDateAsString(assessment))
-        });
+        const str = text && text.trim().length > 0 ? text.trim() : null;
+        return str 
+            ?  super.filter(super.all(), (assessment: Assessment) => {
+                return this.stringContains(str, assessment.competition)
+                        || this.stringContains(str, assessment.refereeShortName)
+                        || this.stringContains(str, assessment.profileName)
+                        || this.stringContains(str, assessment.field)
+                        || this.stringContains(str, this.getAssessmentDateAsString(assessment))
+                }) 
+            : super.all();
     }
 
     public compareDate(day1: Date, day2: Date):number {
