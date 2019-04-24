@@ -1,6 +1,5 @@
-import { AlertController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { flatMap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -28,7 +27,7 @@ export class UserSelectionPage implements OnInit {
   error;
 
   constructor(
-    private router: Router,
+    private navController: NavController,
     public userService: UserService,
     public connectedUserService: ConnectedUserService,
     public synchroService: SynchroService,
@@ -71,13 +70,13 @@ export class UserSelectionPage implements OnInit {
         }));
       }),
       map(() => {
-        this.router.navigate(['/home']);
+        this.navController.navigateRoot('/home');
       }))
       .subscribe();
   }
 
   public newUser(): void {
-    this.router.navigate(['/user/create']);
+    this.navController.navigateRoot('/user/create');
   }
 
   public deleteUser(user: User) {

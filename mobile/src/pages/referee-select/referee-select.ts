@@ -1,4 +1,3 @@
-import { Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { RefereeEditPage } from './../referee-edit/referee-edit';
 import { ResponseWithData } from './../../app/service/response';

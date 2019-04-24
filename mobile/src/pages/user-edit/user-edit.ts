@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
 import { ConnectedUserService } from './../../app/service/ConnectedUserService';
 import { ResponseWithData } from './../../app/service/response';
 import { UserService } from './../../app/service/UserService';
@@ -24,7 +24,7 @@ export class UserEditPage implements OnInit {
   constantes = CONSTANTES;
 
   constructor(
-    private router: Router,
+    private navController: NavController,
     private route: ActivatedRoute,
     public userService: UserService,
     public connectedUserService: ConnectedUserService,
@@ -43,7 +43,7 @@ export class UserEditPage implements OnInit {
                 duration: 3000
               }).then( (loader) => loader.present())
               .then(() => {
-                this.router.navigate(['/home']);
+                this.navController.navigateRoot('/home');
               });
             } else {
               this.user = res.data;
@@ -154,7 +154,7 @@ export class UserEditPage implements OnInit {
         } else {
           this.user = response.data;
           console.log('Saved user: ', this.user);
-          this.router.navigate(['/home']);
+          this.navController.navigateRoot('/home');
         }
       });
     }

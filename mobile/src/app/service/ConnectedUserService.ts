@@ -2,7 +2,6 @@ import { LocalAppSettings } from './../model/settings';
 import { AppSettingsService } from './AppSettingsService';
 import { Injectable, EventEmitter } from '@angular/core';
 import { User } from './../model/user';
-import { Router } from '@angular/router';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable()
@@ -15,7 +14,7 @@ export class ConnectedUserService {
   public $userConnectionEvent: EventEmitter<User> = new EventEmitter<User>();
 
   constructor(
-      public appSettingsService:  AppSettingsService) {
+      public appSettingsService: AppSettingsService) {
   }
 
   public getRequestOptions(las: LocalAppSettings): {
@@ -36,7 +35,7 @@ export class ConnectedUserService {
         'x-api-key': las.apiKey
       };
       if (this.currentUser && this.currentUser.token) {
-        headers['authorization'] = this.currentUser.token;
+        headers.authorization = this.currentUser.token;
       }
       return { headers : new HttpHeaders(headers), observe: 'body', responseType: 'json' };
   }
@@ -62,16 +61,5 @@ export class ConnectedUserService {
     this.currentUser = null;
     console.log('User disconnected.');
     this.$userConnectionEvent.emit(this.currentUser);
-  }
-
-  public navBackOrRoot(router: Router) {
-    if (router.navigated) {
-      // router.navigate((''))
-    }
-    // if (navCtrl.length() > 1) {
-    //  navCtrl.pop();
-    // } else {
-    //  navCtrl.goToRoot({});
-    // }
   }
 }

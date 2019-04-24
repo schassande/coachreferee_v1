@@ -1,4 +1,3 @@
-import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
 import { ResponseWithData } from './../../app/service/response';
@@ -22,7 +21,6 @@ export class ProListPage implements OnInit {
   searchInput: string;
 
   constructor(
-    private router: Router,
     private navController: NavController,
     public proService: PROService,
     public alertCtrl: AlertController) {

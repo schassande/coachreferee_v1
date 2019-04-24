@@ -1,4 +1,3 @@
-import { Router } from '@angular/router';
 import { AlertController, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { ResponseWithData } from './../../app/service/response';
@@ -19,7 +18,6 @@ export class SkillProfileListPage implements OnInit {
 
   skillProfiles: SkillProfile[];
   constructor(
-    private router: Router,
     private navController: NavController,
     public skillProfileService: SkillProfileService,
     public alertCtrl: AlertController) {

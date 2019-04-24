@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { flatMap, map } from 'rxjs/operators';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { NavController } from '@ionic/angular';
 

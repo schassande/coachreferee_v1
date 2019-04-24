@@ -1,10 +1,8 @@
-import { Router } from '@angular/router';
-import { AssessmentEditPage } from './../assessment-edit/assessment-edit';
 import { ResponseWithData } from './../../app/service/response';
 import { AssessmentService } from './../../app/service/AssessmentService';
 import { Assessment } from './../../app/model/assessment';
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, AlertController } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 
 /**
  * Generated class for the AssessmentListPage page.
@@ -30,7 +28,6 @@ export class AssessmentListPage implements OnInit {
   searchInput: string;
 
   constructor(
-    private router: Router,
     private navController: NavController,
     public assessmentService: AssessmentService,
     public alertCtrl: AlertController) {
@@ -52,7 +49,7 @@ export class AssessmentListPage implements OnInit {
     this.navController.navigateRoot(`/assessment/edit/${assessment.id}`);
   }
 
-  getAssessmentDate (assessment: Assessment) {
+  getAssessmentDate(assessment: Assessment) {
     return this.assessmentService.getAssessmentDateAsString(assessment);
   }
 
