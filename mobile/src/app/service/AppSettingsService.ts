@@ -1,5 +1,5 @@
 import { User } from './../model/user';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LocalAppSettings, NetworkConnection } from './../model/settings';
 import { Storage } from '@ionic/storage';
@@ -8,7 +8,7 @@ import { LocalSingletonDataService } from './LocalSingletonDataService';
 
 @Injectable()
 export class AppSettingsService extends LocalSingletonDataService<LocalAppSettings> {
- 
+
     constructor(storage: Storage) {
         super(storage, 'LocalAppSettings');
     }
@@ -19,10 +19,10 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
                 let result: LocalAppSettings = las;
                 if (!result) {
                     result = {
-                        serverUrl: ' https://1eyhctd9mb.execute-api.eu-west-1.amazonaws.com/dev',
+                        serverUrl: 'https://1eyhctd9mb.execute-api.eu-west-1.amazonaws.com/dev',
                         minNetworkConnectionForSyncho: 'NONE',
                         lastUserId: 0
-                    }
+                    };
                     super.save(result);
                 }
                 return result;
@@ -36,19 +36,19 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
             this.save(setting).subscribe();
         });
     }
-    public setMinNetworkConnectionForSyncho(minNetworkConnectionForSyncho:NetworkConnection) {
+    public setMinNetworkConnectionForSyncho(minNetworkConnectionForSyncho: NetworkConnection) {
         this.get().subscribe((setting: LocalAppSettings) => {
             setting.minNetworkConnectionForSyncho = minNetworkConnectionForSyncho;
             this.save(setting).subscribe();
         });
     }
-    public setServerUrl(serverUrl:string) {
+    public setServerUrl(serverUrl: string) {
         this.get().subscribe((setting: LocalAppSettings) => {
             setting.serverUrl = serverUrl;
             this.save(setting).subscribe();
         });
     }
-    public setApplicationVersion(applicationVersion:string) {
+    public setApplicationVersion(applicationVersion: string) {
         this.get().subscribe((setting: LocalAppSettings) => {
             setting.applicationVersion = applicationVersion;
             this.save(setting).subscribe();
