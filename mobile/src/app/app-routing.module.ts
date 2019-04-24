@@ -59,9 +59,9 @@ const routes: Routes = [
   { path: 'skillprofile/:skillProfileid/skillset/:skillSetIdx', component: SkillSetEditPage, canActivate: [AuthGuard] },
   { path: 'skillprofile/:skillProfileid/skillset/:skillSetIdx/skill/:skillIdx', component: SkillEditPage, canActivate: [AuthGuard] },
 
-  { path: 'user/create', component: UserEditPage, canActivate: [AuthGuard] },
+  { path: 'user/create', component: UserEditPage},
   { path: 'user/edit/:id', component: UserEditPage, canActivate: [AuthGuard] },
-  { path: 'user/select', component: UserSelectionPage, canActivate: [AuthGuard] },
+  { path: 'user/select', component: UserSelectionPage},
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];
 
