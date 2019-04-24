@@ -10,7 +10,7 @@ import { User } from './../../app/model/user';
 import { LocalAppSettings } from './../../app/model/settings';
 import { ResponseWithData } from './../../app/service/response';
 import { flatMap, map } from 'rxjs/operators';
-import { NavController } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 
 
 @Component({
@@ -21,13 +21,16 @@ import { NavController } from '@ionic/angular';
 export class HomePage implements OnInit {
 
   connected = false;
+  showInstallBtn = false;
+  deferredPrompt;
 
   constructor(
       private navController: NavController,
       public userService: UserService,
       public connectedUserService: ConnectedUserService,
       public synchroService: SynchroService,
-      public appSettingsService: AppSettingsService) {
+      public appSettingsService: AppSettingsService,
+      public alertCtrl: AlertController) {
     this.connectedUserService.$userConnectionEvent.subscribe((user: User) => {
       this.connected = user != null;
     });
@@ -41,6 +44,33 @@ export class HomePage implements OnInit {
   ngOnInit() {
     console.log('Home.ionViewDidLoad()');
     this.autoLogin();
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      e.preventDefault();
+      // Stash the event so it can be triggered later on the button event.
+      this.deferredPrompt = e;
+    // Update UI by showing a button to notify the user they can add to home screen
+      this.showInstallBtn = true;
+    });
+    window.addEventListener('appinstalled', (event) => console.log('App installed'));
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      console.log('display-mode is standalone');
+    }
+  }
+  addToHome() {
+    // hide our user interface that shows our button
+    // Show the prompt
+    this.deferredPrompt.prompt();
+    // Wait for the user to respond to the prompt
+    this.deferredPrompt.userChoice
+      .then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the prompt');
+        } else {
+          console.log('User dismissed the prompt');
+        }
+        this.deferredPrompt = null;
+      });
   }
   private autoLogin() {
     this.synchroService.tryToSynchronize(false, this.userService.getLocalStoragePrefix()).pipe(
@@ -84,7 +114,10 @@ export class HomePage implements OnInit {
                   this.navController.navigateRoot('/user/select');
                 } else {
                   console.log('autologin: no users => create an user');
-                  this.navController.navigateRoot('/user/create');
+                  this.alertCtrl.create({
+                    message: 'Welcome to RefCoach app !<br>You have to create an account to use the application.',
+                    buttons: [ { text: 'Ok', handler: () => this.navController.navigateRoot('/user/create') } ]
+                  }).then( (alert) => alert.present() );
                 }
               }),
               map(() => null));

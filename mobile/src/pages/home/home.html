@@ -35,6 +35,9 @@
         <ion-item detail routerLink="/user/select">
             <ion-label class="menu-entry">Change of account</ion-label>
         </ion-item>
+        <ion-item (click)="addToHome()" *ngIf="showInstallBtn">
+            <ion-label class="menu-entry">Install app</ion-label>
+        </ion-item>
     </ion-list>
     <div style="text-align: center; margin-top: 10px;"><img src="assets/imgs/logo.png" height="150" /></div>
 </ion-content>
