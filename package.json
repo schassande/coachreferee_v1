@@ -7,8 +7,8 @@
     "scripts": {
         "noproxy": "set HTTP_PROXY= && set HTTPS_PROXY=",
         "start": "cd mobile && ionic serve",
-        "build": "cd mobile && ionic build --prod",
-        "deploy": "cp mobile/www/* firebase/public"
+        "build": "cd mobile && ionic build --prod --service-worker",
+        "deploy": "cd firebase && firebase deploy"
     },
     "private": true
 }
