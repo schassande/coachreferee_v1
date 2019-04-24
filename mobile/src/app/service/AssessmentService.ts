@@ -122,7 +122,7 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
     public to2Digit(nb: number): string {
         return (nb < 10 ? '0' : '') + nb;
     }
-    public getAssessmentDateAsString (assessment: Assessment) {
+    public getAssessmentDateAsString(assessment: Assessment) {
         return assessment.date.getFullYear()
           + DATE_SEP + this.to2Digit(assessment.date.getMonth() + 1)
           + DATE_SEP + this.to2Digit(assessment.date.getDate());

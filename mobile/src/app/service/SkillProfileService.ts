@@ -8,25 +8,25 @@ import { SkillProfile } from './../model/skill';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
-export class SkillProfileService  extends RemotePersistentDataService<SkillProfile>{
+export class SkillProfileService  extends RemotePersistentDataService<SkillProfile> {
 
     constructor(
         protected appSettingsService: AppSettingsService,
-        protected connectedUserService:ConnectedUserService,
+        protected connectedUserService: ConnectedUserService,
         protected localDatabaseService: LocalDatabaseService,
         protected synchroService: SynchroService,
         protected http: HttpClient
     ) {
         super(appSettingsService, connectedUserService, localDatabaseService, synchroService, http);
     }
-    
+
     getLocalStoragePrefix() {
-        return 'skillprofile'
+        return 'skillprofile';
     }
 
-    getPriority(): number { 
+    getPriority(): number {
         return 3;
     }
 
-    //gestion des skill, SkillSet et SkillProfile
+    // gestion des skill, SkillSet et SkillProfile
 }

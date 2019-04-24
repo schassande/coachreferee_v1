@@ -120,7 +120,7 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
     public to2Digit(nb: number): string {
         return (nb < 10 ? '0' : '') + nb;
     }
-    public getCoachingDateAsString (coaching: Coaching) {
+    public getCoachingDateAsString(coaching: Coaching) {
         return coaching.date.getFullYear()
           + DATE_SEP + this.to2Digit(coaching.date.getMonth() + 1)
           + DATE_SEP + this.to2Digit(coaching.date.getDate());
