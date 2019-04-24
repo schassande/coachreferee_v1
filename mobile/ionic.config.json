@@ -1,0 +1,7 @@
+{
+  "name": "refcoach",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

@@ -1,7 +1,0 @@
-{
-  "name": "RefCoach",
-  "integrations": {
-    "cordova": {}
-  },
-  "type": "ionic-angular"
-}

@@ -1,0 +1,63 @@
+<!--
+  Generated template for the SettingsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="saveSettings()">
+                <ion-icon name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title style="text-align: center;">Account Edition</ion-title>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" menu="main"></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+    <ion-list *ngIf="settings">
+        <ion-item>
+            <ion-label fixed>Server Url</ion-label>
+            <ion-input type="text" [(ngModel)]="settings.serverUrl"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label fixed>API Key</ion-label>
+            <ion-input type="text" [(ngModel)]="settings.apiKey"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Network for synchro</ion-label>
+            <ion-select [(ngModel)]="settings.minNetworkConnectionForSyncho">
+                <ion-select-option value="NONE">Off Line only</ion-select-option>
+                <ion-select-option value="3G">3G</ion-select-option>
+                <ion-select-option value="4G">4G</ion-select-option>
+                <ion-select-option value="WIFI">Wifi</ion-select-option>
+                <ion-select-option value="WIRED">Wired</ion-select-option>
+                <ion-select-option value="UNKNOWN">Local dev</ion-select-option>
+            </ion-select>
+        </ion-item>
+    </ion-list>
+    <div style="text-align: center; margin-top: 10px;">
+        <ion-button shape="round" (click)="exportData()">Export</ion-button>
+        <ion-button shape="round" (click)="importData()">Import</ion-button>
+    </div>
+    <div style="text-align: center; margin-top: 10px;">
+        <ion-button shape="round" (click)="importLevelsAus()">Import Aus Levels</ion-button>
+    </div>
+    <div style="text-align: center; margin-top: 10px;">
+        <ion-button shape="round" (click)="importLevelsEuro()">Import Euro Levels</ion-button>
+    </div>
+    <div style="text-align: center; margin-top: 10px;">
+        <ion-button shape="round" (click)="importLevelsNZ()">Import NZ Levels</ion-button>
+    </div>
+    <div style="text-align: center; margin-top: 10px;">
+        <ion-button shape="round" (click)="resetData()" style="--background:red;">Reset</ion-button>
+        <ion-button shape="round" (click)="saveSettings()" style="--background:green;">Save</ion-button>
+    </div>
+    <p *ngFor="let m of msg" class="message">{{m}}</p>
+    <div color="light" style="text-align: center; font-size: 0.8em; margin-top: 10px;">The author of application is Sebastien Chassande-Barrioz.</div>
+</ion-content>

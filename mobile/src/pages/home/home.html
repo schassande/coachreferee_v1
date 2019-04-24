@@ -1,0 +1,40 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title style="text-align: center;">
+            <span><img src="assets/imgs/logo.png" height="30" /></span> Referee Coaching App
+        </ion-title>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" menu="main"></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <div *ngIf="connected" color="light" style="text-align: right; font-size: 0.8em; margin-top: 10px;">Connected as {{getShortName()}}.</div>
+    <ion-list *ngIf="connected">
+        <ion-item detail routerLink="/coaching/list">
+            <ion-label class="menu-entry">Coach a game</ion-label>
+        </ion-item>
+        <ion-item detail routerLink="/assessment/list">
+            <ion-label class="menu-entry">Assess a referee</ion-label>
+        </ion-item>
+        <ion-item detail routerLink="/referee/list">
+            <ion-label class="menu-entry">Referees</ion-label>
+        </ion-item>
+        <ion-item detail routerLink="/pro/list">
+            <ion-label class="menu-entry">PROs</ion-label>
+        </ion-item>
+        <ion-item detail routerLink="/skillprofile/list">
+            <ion-label class="menu-entry">Referee levels</ion-label>
+        </ion-item>
+        <ion-item detail routerLink="/settings">
+            <ion-label class="menu-entry">Settings</ion-label>
+        </ion-item>
+        <ion-item detail (click)="gotToMyAccount()" *ngIf="this.connectedUserService.isConnected()">
+            <ion-label class="menu-entry">My account</ion-label>
+        </ion-item>
+        <ion-item detail routerLink="/user/select">
+            <ion-label class="menu-entry">Change of account</ion-label>
+        </ion-item>
+    </ion-list>
+    <div style="text-align: center; margin-top: 10px;"><img src="assets/imgs/logo.png" height="150" /></div>
+</ion-content>
