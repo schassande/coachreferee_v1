@@ -1,0 +1,14 @@
+{
+    "name": "refcoach",
+    "version": "0.0.1",
+    "description": "Ref Coach project",
+    "author": "Sebastien Chassande-Barrioz",
+    "homepage": "https://refcoach",
+    "scripts": {
+        "noproxy": "set HTTP_PROXY= && set HTTPS_PROXY=",
+        "start": "cd mobile && ionic serve",
+        "build": "cd mobile && ionic build --prod",
+        "deploy": "cp mobile/www/* firebase/public"
+    },
+    "private": true
+}
