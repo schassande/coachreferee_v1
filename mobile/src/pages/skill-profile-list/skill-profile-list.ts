@@ -37,8 +37,7 @@ export class SkillProfileListPage implements OnInit {
       if (response.error && response.error.errorCode)  {
         console.error(response.error);
       }
-      // console.log('searchSkillProfile: found ' + JSON.stringify(response, null, 2));
-      this.skillProfiles = response.data;
+      this.skillProfiles = response.data.sort((profile1, profile2) => profile1.name.localeCompare(profile2.name));
     });
   }
 
