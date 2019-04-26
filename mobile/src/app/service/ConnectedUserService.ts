@@ -19,28 +19,6 @@ export class ConnectedUserService {
       public appSettingsService: AppSettingsService) {
   }
 
-  public getRequestOptions(las: LocalAppSettings): {
-        headers?: HttpHeaders | {
-            [header: string]: string | string[];
-        };
-        observe?: 'body';
-        params?: HttpParams | {
-            [param: string]: string | string[];
-        };
-        reportProgress?: boolean;
-        responseType?: 'json';
-        withCredentials?: boolean;
-    } {
-      const headers: any = {
-        'Content-Type': 'application/json',
-        version: '1.0',
-        'x-api-key': las.apiKey
-      };
-      if (this.currentUser && this.currentUser.token) {
-        headers.authorization = this.currentUser.token;
-      }
-      return { headers : new HttpHeaders(headers), observe: 'body', responseType: 'json' };
-  }
   public isOnline(): boolean {
     return navigator.onLine;
   }

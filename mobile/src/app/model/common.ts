@@ -17,3 +17,9 @@ export type DataStatus =
     | 'DIRTY' /** The persistent object exists and has been modified locally. */
     | 'REMOVED' /** The persistent object exists but has been removed locally. */
     ;
+/** Object shared with users */
+export interface SharedElement {
+    /** List of users */
+    sharedWith: string[];
+}
+

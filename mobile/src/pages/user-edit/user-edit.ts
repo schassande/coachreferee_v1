@@ -76,6 +76,8 @@ export class UserEditPage implements OnInit {
   public initReferee() {
     this.user = {
       id: null,
+      accountId: null,
+      role: 'USER',
       version: 0,
       creationDate : new Date(),
       lastUpdate : new Date(),

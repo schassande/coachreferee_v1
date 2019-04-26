@@ -1,5 +1,5 @@
 export type Sharing =
-    'NO' /**No sharing */
+    'NO' /** No sharing */
     | 'LIMITED' /* sharing with control */
     | 'YES' /* Sharing allowed */
     ;

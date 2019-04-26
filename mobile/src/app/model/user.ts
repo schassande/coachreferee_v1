@@ -85,15 +85,15 @@ export const CONSTANTES = {
 };
 
 export interface Person extends PersistentData {
-    firstName?: string;
-    lastName?: string;
-    shortName?: string;
-    country?: string;
-    email?: string;
-    gender?: Gender;
-    mobilePhones?: string[];
-    photo?: Photo;
-    speakingLanguages?: string[];
+    firstName: string;
+    lastName: string;
+    shortName: string;
+    country: string;
+    email: string;
+    gender: Gender;
+    mobilePhones: string[];
+    photo: Photo;
+    speakingLanguages: string[];
 }
 
 export interface Referee extends Person {
@@ -108,14 +108,22 @@ export interface Referee extends Person {
     dataSharingAgreement?: RefereeDataSharingAgreement;
 }
 
+export type AppRole = 'USER' | 'PROFILE_ADMIN' | 'ADMIN';
 export interface User extends Referee {
     password?: string;
+    accountId: string;
     token?: string;
     defaultCompetition: string;
     defaultGameCatory: GameCategory;
     dataSharingAgreement?: CoachDataSharingAgreement;
+    role: AppRole;
 }
 
+export interface UserGroup extends PersistentData {
+    name: string;
+    admins: string[];
+    members: string[];
+}
 
 export function getNextRefereeLevel(level: RefereeLevel): RefereeLevel {
     switch (level) {

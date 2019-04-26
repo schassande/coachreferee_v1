@@ -1,5 +1,5 @@
 import { GameCategory, GameLevel } from './game';
-import { PersistentData } from './common';
+import { PersistentData, SharedElement } from './common';
 
 export type Upgradable = 'DNS' | 'DNSE'  | 'No' | 'Possible' | 'Yes';
 
@@ -11,7 +11,8 @@ export interface PRO {
     remedy: string;
     outcome: string;
 }
-export interface PersistentPRO extends PRO, PersistentData {
+export interface PersistentPRO extends PRO, PersistentData, SharedElement {
+    complete: boolean;
 }
 export interface PROLink {
     id: string;
@@ -31,7 +32,7 @@ export interface PositiveFeedback {
     deliver: boolean;
 }
 
-export interface Coaching extends PersistentData {
+export interface Coaching extends PersistentData, SharedElement {
     competition: string;
     date: Date;
     field: string;

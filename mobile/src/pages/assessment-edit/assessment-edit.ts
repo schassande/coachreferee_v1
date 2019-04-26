@@ -133,7 +133,8 @@ export class AssessmentEditPage implements OnInit {
         profileName: '-',
         skillSetEvaluation: [],
         competency: 'NE',
-        closed: false
+        closed: false,
+        sharedWith: []
       };
   }
 

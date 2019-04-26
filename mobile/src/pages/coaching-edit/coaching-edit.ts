@@ -94,7 +94,8 @@ export class CoachingEditPage implements OnInit {
         gameSkill: 'Medium',
         referees : [],
         currentPeriod : 1,
-        closed: false
+        closed: false,
+        sharedWith: []
       };
     this.computeCoachingValues();
   }

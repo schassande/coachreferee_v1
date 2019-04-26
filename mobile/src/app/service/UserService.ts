@@ -14,13 +14,10 @@ import * as firebase from 'firebase/app';
 @Injectable()
 export class UserService  extends RemotePersistentDataService<User> {
 
-    public currentUser: User = null;
-
     constructor(
         private connectedUserService: ConnectedUserService,
         private appSettingsService: AppSettingsService,
         db: AngularFirestore,
-        private http: HttpClient,
         private alertCtrl: AlertController
     ) {
         super(db);
@@ -35,15 +32,22 @@ export class UserService  extends RemotePersistentDataService<User> {
     }
 
     public save(user: User): Observable<ResponseWithData<User>> {
-        const email = user.email;
-        const password = user.password;
-        user.password = null;
-        return from(firebase.auth().createUserWithEmailAndPassword(email, password)).pipe(
-            flatMap(() => super.save(user)),
-            catchError((err) => {
-                return of({ error: err, data: null});
-            }),
-        );
+        if (user.dataStatus === 'NEW') {
+            const password = user.password;
+            user.password = null;
+            return from(firebase.auth().createUserWithEmailAndPassword(user.email, password)).pipe(
+                flatMap((userCred: firebase.auth.UserCredential) => {
+                    // Store in application user datbase the firestore user id
+                    user.accountId = userCred.user.uid;
+                    return super.save(user);
+                }),
+                catchError((err) => {
+                    return of({ error: err, data: null});
+                }),
+            );
+        } else {
+            return super.save(user);
+        }
     }
 
     public login(email: string, password: string): Observable<ResponseWithData<User>> {
