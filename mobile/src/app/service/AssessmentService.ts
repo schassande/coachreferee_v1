@@ -1,4 +1,5 @@
-import { AngularFirestore } from 'angularfire2/firestore';
+import { ConnectedUserService } from './ConnectedUserService';
+import { AngularFirestore, Query } from 'angularfire2/firestore';
 import { SkillProfile } from './../model/skill';
 import { RefereeService } from './RefereeService';
 import { Referee, User } from './../model/user';
@@ -6,7 +7,7 @@ import { ResponseWithData } from './response';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { Assessment } from './../model/assessment';
-import { Observable, of } from 'rxjs';
+import { Observable, of, concat } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const TIME_SLOT_SEP = ':';
@@ -20,7 +21,8 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
 
     constructor(
         db: AngularFirestore,
-        protected refereeService: RefereeService
+        protected refereeService: RefereeService,
+        private connectedUserService: ConnectedUserService
     ) {
         super(db);
     }
@@ -33,18 +35,17 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
     }
 
     getAssessmentByReferee(refereeId: string): Observable<ResponseWithData<Assessment[]>> {
-        return super.all()
-            .pipe(
-                map((rassessments: ResponseWithData<Assessment[]>) => {
-                    if (!rassessments.error) {
-                        rassessments.data = rassessments.data.filter( (assessment: Assessment) => {
-                            // search if the assessment contains the searched referee
-                            return assessment.refereeId === refereeId;
-                        });
-                    }
-                    return rassessments;
-                })
-        );
+        return this.query(this.getBaseQueryMyAssessments().where('refereeId', '==', refereeId), 'default');
+    }
+
+    /** Overide to restrict to the coachings of the user */
+    public all(): Observable<ResponseWithData<Assessment[]>> {
+        return this.query(this.getBaseQueryMyAssessments(), 'default');
+    }
+
+    /** Query basis for coaching limiting access to the coachings of the user */
+    private getBaseQueryMyAssessments(): Query {
+        return this.getCollectionRef().where('coachId', '==', this.connectedUserService.getCurrentUser().id);
     }
     public sortAssessments(assessments: Assessment[], reverse: boolean = false): Assessment[] {
         let array: Assessment[] = assessments.sort(this.compareAssessment.bind(this));
@@ -57,14 +58,14 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
     public searchAssessments(text: string): Observable<ResponseWithData<Assessment[]>> {
         const str = text && text.trim().length > 0 ? text.trim() : null;
         return str
-            ?  super.filter(super.all(), (assessment: Assessment) => {
+            ?  super.filter(this.all(), (assessment: Assessment) => {
                 return this.stringContains(str, assessment.competition)
                         || this.stringContains(str, assessment.refereeShortName)
                         || this.stringContains(str, assessment.profileName)
                         || this.stringContains(str, assessment.field)
                         || this.stringContains(str, this.getAssessmentDateAsString(assessment));
                 })
-            : super.all();
+            : this.all();
     }
 
     public compareDate(day1: Date, day2: Date): number {

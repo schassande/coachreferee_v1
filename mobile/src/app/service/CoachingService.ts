@@ -1,4 +1,5 @@
-import { AngularFirestore } from 'angularfire2/firestore';
+import { ConnectedUserService } from './ConnectedUserService';
+import { AngularFirestore, Query } from 'angularfire2/firestore';
 import { Referee } from './../model/user';
 import { RefereeService } from './RefereeService';
 import { ResponseWithData } from './response';
@@ -16,7 +17,8 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
 
     constructor(
       db: AngularFirestore,
-      protected refereeService: RefereeService
+      protected refereeService: RefereeService,
+      private connectedUserService: ConnectedUserService
     ) {
         super(db);
     }
@@ -30,18 +32,22 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
     }
 
     getCoachingByReferee(refereeId: string): Observable<ResponseWithData<Coaching[]>> {
-        return super.all().pipe(
-            map((rcoachings: ResponseWithData<Coaching[]>) => {
-                if (!rcoachings.error) {
-                    rcoachings.data = rcoachings.data.filter( (coaching: Coaching) => {
-                        // search if the coaching contains the searched referee
-                        return coaching.referees.filter( (ref) => refereeId === ref.refereeId).length > 0;
-                    });
-                }
-                return rcoachings;
-            })
-        );
+      return concat(
+        this.query(this.getBaseQueryMyCoahchings().where('referees[0].refereeId', '==', refereeId), 'default'),
+        this.query(this.getBaseQueryMyCoahchings().where('referees[1].refereeId', '==', refereeId), 'default'),
+        this.query(this.getBaseQueryMyCoahchings().where('referees[2].refereeId', '==', refereeId), 'default'));
     }
+
+    /** Overide to restrict to the coachings of the user */
+    public all(): Observable<ResponseWithData<Coaching[]>> {
+      return this.query(this.getBaseQueryMyCoahchings(), 'default');
+    }
+
+    /** Query basis for coaching limiting access to the coachings of the user */
+    private getBaseQueryMyCoahchings(): Query {
+      return this.getCollectionRef().where('coachId', '==', this.connectedUserService.getCurrentUser().id);
+    }
+
     public sortCoachings(coachings: Coaching[], reverse: boolean = false): Coaching[] {
         let array: Coaching[] = coachings.sort(this.compareCoaching.bind(this));
         if (reverse) {
@@ -49,10 +55,11 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
         }
         return array;
     }
+
     public searchCoachings(text: string): Observable<ResponseWithData<Coaching[]>> {
         const str = text && text.trim().length > 0 ? text.trim() : null;
         return str ?
-            super.filter(super.all(), (coaching: Coaching) => {
+            super.filter(this.all(), (coaching: Coaching) => {
                 return this.stringContains(str, coaching.competition)
                 || (coaching.referees[0] && this.stringContains(str, coaching.referees[0].refereeShortName))
                 || (coaching.referees[1] && this.stringContains(str, coaching.referees[1].refereeShortName))
@@ -60,7 +67,7 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
                 || this.stringContains(str, coaching.field)
                 || this.stringContains(str, this.getCoachingDateAsString(coaching));
             })
-            : super.all();
+            : this.all();
     }
 
     public compareDate(day1: Date, day2: Date): number {
