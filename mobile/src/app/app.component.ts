@@ -1,6 +1,7 @@
+import { AppSettingsService } from './service/AppSettingsService';
 import { Component } from '@angular/core';
 import { Platform, MenuController, NavController } from '@ionic/angular';
-
+import { AngularFirestore } from 'angularfire2/firestore';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { VersionService } from './service/VersionService';
@@ -18,7 +19,9 @@ export class AppComponent {
     private statusBar: StatusBar,
     private versionService: VersionService,
     public bookmarkService: BookmarkService,
-    private menu: MenuController
+    public appSettingsService: AppSettingsService,
+    private menu: MenuController,
+    private firestore: AngularFirestore
   ) {
     this.initializeApp();
   }
@@ -30,6 +33,13 @@ export class AppComponent {
 
       // Migrate local database if required.
       this.versionService.migrate().subscribe();
+      this.appSettingsService.get().subscribe((appSetttings) => {
+        if (appSetttings.forceOffline) {
+          this.firestore.firestore.disableNetwork();
+        } else {
+          this.firestore.firestore.disableNetwork();
+        }
+      });
     });
   }
   route(url: string = '/home') {
