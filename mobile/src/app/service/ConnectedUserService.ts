@@ -11,15 +11,12 @@ export class ConnectedUserService {
   /** The current user */
   private currentUser: User = null;
   private credential: firebase.auth.UserCredential = null;
-  private online = false;
 
   /** The event about user connection */
   public $userConnectionEvent: EventEmitter<User> = new EventEmitter<User>();
 
   constructor(
       public appSettingsService: AppSettingsService) {
-      // const connectedRef = firebase.database.database().ref('.info/connected');
-      // connectedRef.on('value', (snap) => { this.online = snap.val(); });
   }
 
   public getRequestOptions(las: LocalAppSettings): {
@@ -45,7 +42,7 @@ export class ConnectedUserService {
       return { headers : new HttpHeaders(headers), observe: 'body', responseType: 'json' };
   }
   public isOnline(): boolean {
-    return this.online;
+    return navigator.onLine;
   }
   public isConnected(): boolean {
     return this.currentUser && this.currentUser !== null;
