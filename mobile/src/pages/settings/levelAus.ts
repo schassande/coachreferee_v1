@@ -2,11 +2,11 @@ import { SkillProfile } from '../../app/model/skill';
 
 export const LEVELS_AUS: SkillProfile[] = [
         {
-            id: null,
+            id: 'AUS1',
             version: 0,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            dataStatus: 'CLEAN',
+            dataStatus: 'NEW',
             name: 'AUS 1',
             backgroundColor: '#ff6600',
             color: 'white',
@@ -248,11 +248,11 @@ export const LEVELS_AUS: SkillProfile[] = [
 
 
         {
-            id: null,
+            id: 'AUS1',
             version: 0,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            dataStatus: 'CLEAN',
+            dataStatus: 'NEW',
             name: 'AUS 2',
             description: 'AUS - Referee level 2',
             level: 'AUS_2',
@@ -529,11 +529,11 @@ export const LEVELS_AUS: SkillProfile[] = [
 
 
         {
-            id: null,
+            id: 'AUS3',
             version: 0,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            dataStatus: 'CLEAN',
+            dataStatus: 'NEW',
             name: 'AUS 3',
             description: 'AUS - Referee level 3',
             level: 'AUS_3',
@@ -791,11 +791,11 @@ export const LEVELS_AUS: SkillProfile[] = [
 
 
         {
-            id: null,
+            id: 'AUS4',
             version: 0,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            dataStatus: 'CLEAN',
+            dataStatus: 'NEW',
             name: 'AUS 4',
             level: 'AUS_4',
             description: 'AUS - Referee level 4',
@@ -1052,11 +1052,11 @@ export const LEVELS_AUS: SkillProfile[] = [
 
 
         {
-            id: null,
+            id: 'AUS5',
             version: 0,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            dataStatus: 'CLEAN',
+            dataStatus: 'NEW',
             name: 'AUS 5',
             level: 'AUS_5',
             description: 'AUS - Referee level 5',
@@ -1326,11 +1326,11 @@ export const LEVELS_AUS: SkillProfile[] = [
 
 
         {
-            id: null,
+            id: 'AUS6',
             version: 0,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            dataStatus: 'CLEAN',
+            dataStatus: 'NEW',
             name: 'AUS 6',
             level: 'AUS_6',
             description: 'AUS - Referee level 6',

@@ -1,6 +1,7 @@
+import { AngularFirestore } from 'angularfire2/firestore';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 // import { File, FileEntry } from '@ionic-native/file';
 // import { SocialSharing } from '@ionic-native/social-sharing';
@@ -27,7 +28,8 @@ import { ExportedData } from './../../app/model/settings';
 import { LEVELS_AUS } from './levelAus';
 import { LEVELS_NZ } from './levelNZ';
 import { LEVELS_EURO } from './levelEuropean';
-import { AlertInput } from '@ionic/core';
+import { environment } from '../../environments/environment';
+
 
 /**
  * Generated class for the SettingsPage page.
@@ -43,9 +45,9 @@ export class SettingsPage implements OnInit {
 
   settings: LocalAppSettings;
   msg: string[] = [];
+  env = environment;
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     public appSettingsService: AppSettingsService,
     public connectedUserService: ConnectedUserService,
@@ -56,7 +58,9 @@ export class SettingsPage implements OnInit {
     public coachingService: CoachingService,
     public assessmentService: AssessmentService,
     public alertController: AlertController,
-    public emailService: EmailService
+    public emailService: EmailService,
+    private firestore: AngularFirestore,
+    public toastController: ToastController
     // public file: File,
     // private filePath: FilePath,
     // private socialSharing: SocialSharing,
@@ -67,9 +71,17 @@ export class SettingsPage implements OnInit {
 
   ngOnInit() {
     console.log('ionViewDidLoad SettingsPage');
-    this.appSettingsService.get().subscribe((settings: LocalAppSettings) => {
-      this.settings = settings;
+    this.appSettingsService.get().subscribe((appSettings: LocalAppSettings) => {
+      this.settings = appSettings;
     });
+  }
+
+  public onToggleForceOffline() {
+    if (this.settings.forceOffline) {
+      this.firestore.firestore.disableNetwork();
+    } else {
+      this.firestore.firestore.enableNetwork();
+    }
   }
 
   public saveSettings() {
@@ -155,6 +167,15 @@ export class SettingsPage implements OnInit {
     });
   }
 
+  private toast(msg: string) {
+    this.toastController.create({
+      message: msg,
+      position: 'bottom',
+      duration: 2000,
+      translucent: true
+    }).then((alert) => alert.present());
+  }
+
   importLevelsAus() {
     let obs: Observable<any> = of('');
     LEVELS_AUS.forEach((elem) => {
@@ -162,8 +183,7 @@ export class SettingsPage implements OnInit {
       obs = concat(obs, this.skillProfileService.save(e).pipe(map(() => { console.log(e.id + ' imported.'); })));
     });
     obs.subscribe(() => {
-      console.log('Aus levels imported.');
-      // this.toast.showShortCenter('Aus levels imported.').subscribe();
+      this.toast('Aus levels imported.');
     });
   }
 
@@ -174,10 +194,10 @@ export class SettingsPage implements OnInit {
       obs = concat(obs, this.skillProfileService.save(e).pipe(map(() => { console.log(e.id + ' imported.'); })));
     });
     obs.subscribe(() => {
-      console.log('Euro level imported.');
-      // this.toast.showShortCenter('Euro level imported.').subscribe();
+      this.toast('Euro levels imported.');
     });
   }
+
   importLevelsNZ() {
     let obs: Observable<any> = of('');
     LEVELS_NZ.forEach((elem) => {
@@ -185,10 +205,10 @@ export class SettingsPage implements OnInit {
       obs = concat(obs, this.skillProfileService.save(e).pipe(map(() => { console.log(e.id + ' imported.'); })));
     });
     obs.subscribe(() => {
-      console.log('NZ levels imported.');
-      // this.toast.showShortCenter('NZ levels imported.').subscribe();
+      this.toast('NZ levels imported.');
     });
   }
+
   public exportData() {
       this.alertController.create({
         header: 'Which data do you want to export?',

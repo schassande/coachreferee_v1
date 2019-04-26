@@ -2,11 +2,11 @@ import { SkillProfile } from '../../app/model/skill';
 
 export const LEVELS_EURO: SkillProfile[] = [
         {
-            id: null,
+            id: 'EURO1',
             version: 0,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            dataStatus: 'CLEAN',
+            dataStatus: 'NEW',
             name: 'EURO 1',
             level: 'EURO_1',
             backgroundColor: 'blue',
@@ -240,11 +240,11 @@ export const LEVELS_EURO: SkillProfile[] = [
 
 
         {
-            id: null,
+            id: 'EURO2',
             version: 0,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            dataStatus: 'CLEAN',
+            dataStatus: 'NEW',
             name: 'EURO 2',
             level: 'EURO_2',
             description: 'EFT - Referee level 2',
@@ -554,11 +554,11 @@ export const LEVELS_EURO: SkillProfile[] = [
 
 
         {
-            id: null,
+            id: 'EURO3',
             version: 0,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            dataStatus: 'CLEAN',
+            dataStatus: 'NEW',
             name: 'EURO 3',
             level: 'EURO_3',
             description: 'EFT - Referee level 3',
@@ -771,11 +771,11 @@ export const LEVELS_EURO: SkillProfile[] = [
 
 
         {
-            id: null,
+            id: 'EURO4',
             version: 0,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            dataStatus: 'CLEAN',
+            dataStatus: 'NEW',
             name: 'EURO 4',
             level: 'EURO_4',
             description: 'EFT - Referee level 4',
@@ -999,11 +999,11 @@ export const LEVELS_EURO: SkillProfile[] = [
 
 
         {
-            id: null,
+            id: 'EURO5',
             version: 0,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            dataStatus: 'CLEAN',
+            dataStatus: 'NEW',
             name: 'EURO 5',
             level: 'EURO_5',
             description: 'EFT - Referee level 5',

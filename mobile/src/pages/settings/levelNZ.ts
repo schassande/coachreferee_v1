@@ -2,11 +2,11 @@ import { SkillProfile } from '../../app/model/skill';
 
 export const LEVELS_NZ: SkillProfile[] = [
     {
-        id: null,
+        id: 'NZ1',
         version: 0,
         creationDate: new Date(),
         lastUpdate: new Date(),
-        dataStatus: 'CLEAN',
+        dataStatus: 'NEW',
         name: 'NZ 1',
         level: 'NZ_1',
         backgroundColor: '#00b050',
@@ -294,11 +294,11 @@ export const LEVELS_NZ: SkillProfile[] = [
 
 
     {
-        id: null,
+        id: 'NZ2',
         version: 0,
         creationDate: new Date(),
         lastUpdate: new Date(),
-        dataStatus: 'CLEAN',
+        dataStatus: 'NEW',
         name: 'NZ 2',
         level: 'NZ_2',
         description: 'NZ - Referee level 2',
@@ -574,11 +574,11 @@ export const LEVELS_NZ: SkillProfile[] = [
 
 
     {
-        id: null,
+        id: 'NZ3',
         version: 0,
         creationDate: new Date(),
         lastUpdate: new Date(),
-        dataStatus: 'CLEAN',
+        dataStatus: 'NEW',
         name: 'NZ 3',
         level: 'NZ_3',
         description: 'NZ - Referee level 3',
@@ -846,11 +846,11 @@ export const LEVELS_NZ: SkillProfile[] = [
 
 
     {
-        id: null,
+        id: 'NZ4',
         version: 0,
         creationDate: new Date(),
         lastUpdate: new Date(),
-        dataStatus: 'CLEAN',
+        dataStatus: 'NEW',
         name: 'NZ 4',
         level: 'NZ_4',
         description: 'NZ - Referee level 4',

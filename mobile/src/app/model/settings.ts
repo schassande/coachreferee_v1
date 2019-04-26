@@ -6,6 +6,7 @@ import { SkillProfile } from './skill';
 export interface LocalAppSettings {
     serverUrl: string;
     minNetworkConnectionForSyncho: NetworkConnection;
+    forceOffline?: boolean;
     lastUserEmail: string;
     lastUserPassword: string;
     applicationVersion?: string;

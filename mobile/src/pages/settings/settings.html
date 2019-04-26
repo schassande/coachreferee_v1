@@ -22,36 +22,27 @@
 <ion-content padding>
     <ion-list *ngIf="settings">
         <ion-item>
-            <ion-label fixed>Server Url</ion-label>
-            <ion-input type="text" [(ngModel)]="settings.serverUrl"></ion-input>
+            <ion-label fixed>Off line</ion-label>
+            <ion-toggle [(ngModel)]="settings.forceOffline"></ion-toggle>
         </ion-item>
-        <ion-item>
-            <ion-label fixed>API Key</ion-label>
-            <ion-input type="text" [(ngModel)]="settings.apiKey"></ion-input>
+        <ion-item *ngIf="!env.production">
+            <ion-label fixed>Server Url: {{settings.serverUrl}}</ion-label>
         </ion-item>
-        <ion-item>
-            <ion-label>Network for synchro</ion-label>
-            <ion-select [(ngModel)]="settings.minNetworkConnectionForSyncho">
-                <ion-select-option value="NONE">Off Line only</ion-select-option>
-                <ion-select-option value="3G">3G</ion-select-option>
-                <ion-select-option value="4G">4G</ion-select-option>
-                <ion-select-option value="WIFI">Wifi</ion-select-option>
-                <ion-select-option value="WIRED">Wired</ion-select-option>
-                <ion-select-option value="UNKNOWN">Local dev</ion-select-option>
-            </ion-select>
+        <ion-item *ngIf="!env.production">
+            <ion-label fixed>API Key: {{settings.apiKey}}</ion-label>
         </ion-item>
     </ion-list>
     <div style="text-align: center; margin-top: 10px;">
         <ion-button shape="round" (click)="exportData()">Export</ion-button>
         <ion-button shape="round" (click)="importData()">Import</ion-button>
     </div>
-    <div style="text-align: center; margin-top: 10px;">
+    <div style="text-align: center; margin-top: 10px;" *ngIf="!env.production">
         <ion-button shape="round" (click)="importLevelsAus()">Import Aus Levels</ion-button>
     </div>
-    <div style="text-align: center; margin-top: 10px;">
+    <div style="text-align: center; margin-top: 10px;" *ngIf="!env.production">
         <ion-button shape="round" (click)="importLevelsEuro()">Import Euro Levels</ion-button>
     </div>
-    <div style="text-align: center; margin-top: 10px;">
+    <div style="text-align: center; margin-top: 10px;" *ngIf="!env.production">
         <ion-button shape="round" (click)="importLevelsNZ()">Import NZ Levels</ion-button>
     </div>
     <div style="text-align: center; margin-top: 10px;">
