@@ -120,7 +120,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
         const datas: D[] = [];
         qs.forEach((qds: QueryDocumentSnapshot<D>) => {
             const data: D = qds.data();
-            if (data && !data.id) {
+            if (data) {
                 // store id inside persistent object
                 data.id = qds.id;
             }
