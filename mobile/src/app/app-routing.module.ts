@@ -52,7 +52,7 @@ const routes: Routes = [
   // MODAL { path: 'referee/select', component: RefereeSelectPage, canActivate: [AuthGuard] },
   // MODAL { path: 'referee/edit/:id', component: RefereeEditPage, canActivate: [AuthGuard] },
 
-  { path: 'settings', component: SettingsPage},
+  { path: 'settings', component: SettingsPage, canActivate: [AuthGuard]},
 
   { path: 'skillprofile/list', component: SkillProfileListPage, canActivate: [AuthGuard] },
   { path: 'skillprofile/create', component: SkillProfileEditPage, canActivate: [AuthGuard] },
