@@ -21,7 +21,8 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
                     result = {
                         serverUrl: 'https://1eyhctd9mb.execute-api.eu-west-1.amazonaws.com/dev',
                         minNetworkConnectionForSyncho: 'NONE',
-                        lastUserId: 0
+                        lastUserEmail: null,
+                        lastUserPassword: null
                     };
                     super.save(result);
                 }
@@ -30,9 +31,10 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
         );
     }
 
-    public setLastUser(user: User) {
+    public setLastUser(email: string, password: string) {
         this.get().subscribe((setting: LocalAppSettings) => {
-            setting.lastUserId = user.id;
+            setting.lastUserEmail = email;
+            setting.lastUserPassword = password;
             this.save(setting).subscribe();
         });
     }

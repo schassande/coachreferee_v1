@@ -10,12 +10,12 @@ import { map } from 'rxjs/operators';
  * Service permitting to store persistent objects locally for disconnected mode.
  * The service isolates the data by a sort of tables using a table name.
  * Each table must contain the same type of object. These object must be PersistentData object.
- * Each table contains 3 lists of objects : 
+ * Each table contains 3 lists of objects :
  * - The non modified objects,
  * - The modified objects,
  * - The removed objects.
- * 
- * @Author: S.Chassande 
+ *
+ * @Author: S.Chassande
  */
 @Injectable()
 export class LocalDatabaseService {
@@ -30,7 +30,7 @@ export class LocalDatabaseService {
     /** Sets all the data of a table */
     public setModifiableData<D extends PersistentData>(tableName: string, md: ModifiableData<D>): Observable<ModifiableData<D>> {
         return from(this.storage.set(tableName, md))
-            .pipe(map(() => { return md; }));
+            .pipe(map(() => md));
     }
 
     public clear(tableName): Observable<Response> {
@@ -47,19 +47,19 @@ export class LocalDatabaseService {
             })
         );
     }
-    /** 
+    /**
      * Gets a persistent object from the table name and the object identifier.
      * @param tableName the name of the table.
      * @param id the identifier of the expected persistent object.
      * @return an Observable having one event which is the persistent object or null (if does not exist).
      */
-    public get<D extends PersistentData>(tableName: string, id: number): Observable<D> {
+    public get<D extends PersistentData>(tableName: string, id: string): Observable<D> {
         return from(
             this.storage.get(tableName).then((md: ModifiableData<D>) => {
                 if (md) {
-                    let val: D = md.unmodified.get(Number(id));
+                    let val: D = md.unmodified.get(id);
                     if (!val) {
-                        val = md.modified.get(Number(id));
+                        val = md.modified.get(id);
                     }
                     return val ? val : null;
                 } else {
@@ -80,40 +80,40 @@ export class LocalDatabaseService {
             this.storage.get(tableName)
                 .then((md: ModifiableData<D>) => {
                     if (!md) {
-                        //console.log('Create ModifiableData');
-                        md = { 
-                            unmodified : new Map<number, D>(), 
-                            modified : new Map<number, D>(), 
-                            removed: new Map<number, D>() 
+                        // console.log('Create ModifiableData');
+                        md = {
+                            unmodified : new Map<string, D>(),
+                            modified : new Map<string, D>(),
+                            removed: new Map<string, D>()
                         };
                     }
-                    //console.log(data.id, data.dataStatus);
-                    switch(data.dataStatus) {
-                        case 'CLEAN': 
-                            md.unmodified.set(data.id, data); 
+                    // console.log(data.id, data.dataStatus);
+                    switch (data.dataStatus) {
+                        case 'CLEAN':
+                            md.unmodified.set(data.id, data);
                             md.modified.delete(data.id);
                             md.removed.delete(data.id);
                             break;
-                        case 'REMOVED': 
-                            md.removed.set(data.id, data); 
+                        case 'REMOVED':
+                            md.removed.set(data.id, data);
                             md.modified.delete(data.id);
                             md.unmodified.delete(data.id);
                             break;
-                        case 'NEW': 
-                        case 'DIRTY': 
-                            md.modified.set(data.id, data); 
+                        case 'NEW':
+                        case 'DIRTY':
+                            md.modified.set(data.id, data);
                             md.removed.delete(data.id);
                             md.unmodified.delete(data.id);
                             break;
                     }
                     return this.storage.set(tableName, md);
                 }).then(() => {
-                    //this.get(tableName, data.id).subscribe((d) => console.log(d.id, 'saved.'));
+                    // this.get(tableName, data.id).subscribe((d) => console.log(d.id, 'saved.'));
                     return data;
                 })
         );
     }
-        
+
     /**
      * Marks as deleted a persistent object into the local storage.
      * @param tableName the name of the table.
@@ -126,9 +126,9 @@ export class LocalDatabaseService {
                 if (!md || !(md.modified instanceof Map)) {
                     console.log('markAsDeleted Create md');
                     md = {
-                        unmodified : new Map<number, D>(),
-                        modified : new Map<number, D>(),
-                        removed : new Map<number, D>(),
+                        unmodified : new Map<string, D>(),
+                        modified : new Map<string, D>(),
+                        removed : new Map<string, D>(),
                     };
                 }
                 md.modified.delete(data.id);
@@ -157,7 +157,7 @@ export class LocalDatabaseService {
 }
 
 export interface ModifiableData<D extends PersistentData> {
-    unmodified: Map<number, D>;
-    modified: Map<number, D>;
-    removed: Map<number, D>;
+    unmodified: Map<string, D>;
+    modified: Map<string, D>;
+    removed: Map<string, D>;
 }

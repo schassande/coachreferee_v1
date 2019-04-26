@@ -5,7 +5,7 @@ export type Upgradable = 'DNS' | 'DNSE'  | 'No' | 'Possible' | 'Yes';
 
 export interface PRO {
     problemShortDesc: string;
-    coachId: number;
+    coachId: string;
     skillName: string;
     problem: string;
     remedy: string;
@@ -14,7 +14,7 @@ export interface PRO {
 export interface PersistentPRO extends PRO, PersistentData {
 }
 export interface PROLink {
-    id: number;
+    id: string;
     problemShortDesc: string;
 }
 export interface Feedback extends PRO {
@@ -36,14 +36,14 @@ export interface Coaching extends PersistentData {
     date: Date;
     field: string;
     timeSlot: string;
-    coachId: number;
+    coachId: string;
     gameCategory: GameCategory;
     gameSpeed: GameLevel;
     gameSkill: GameLevel;
     closed?: boolean;
     currentPeriod?: number;
     referees: {
-        refereeId: number;
+        refereeId: string;
         refereeShortName: string;
         feedbacks: Feedback[];
         positiveFeedbacks: PositiveFeedback[];

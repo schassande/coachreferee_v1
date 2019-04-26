@@ -1,10 +1,6 @@
+import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
 import { ResponseWithData } from './response';
-import { HttpClient } from '@angular/common/http';
-import { SynchroService } from './SynchroService';
-import { LocalDatabaseService } from './LocalDatabaseService';
-import { AppSettingsService } from './AppSettingsService';
-import { ConnectedUserService } from './ConnectedUserService';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { PersistentPRO } from './../model/coaching';
@@ -13,13 +9,9 @@ import { PersistentPRO } from './../model/coaching';
 export class PROService extends RemotePersistentDataService<PersistentPRO> {
 
     constructor(
-        protected appSettingsService: AppSettingsService,
-        protected connectedUserService: ConnectedUserService,
-        protected localDatabaseService: LocalDatabaseService,
-        protected synchroService: SynchroService,
-        protected http: HttpClient
+        db: AngularFirestore,
     ) {
-        super(appSettingsService, connectedUserService, localDatabaseService, synchroService, http);
+        super(db);
     }
 
     getLocalStoragePrefix() {

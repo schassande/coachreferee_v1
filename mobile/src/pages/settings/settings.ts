@@ -244,35 +244,4 @@ export class SettingsPage implements OnInit {
           }]
       }).then( (alert) => alert.present());
   }
-
-  public resetData() {
-    this.alertController.create({
-      header: 'Which data do you want to reset?',
-      inputs: [
-        {type: 'checkbox', label: 'Users',           value: 'users',           checked: true},
-        {type: 'checkbox', label: 'Referees',        value: 'referees',        checked: true},
-        {type: 'checkbox', label: 'Skill Profiles',  value: 'skillProfiles',   checked: true},
-        {type: 'checkbox', label: 'PROs'     ,       value: 'pros',            checked: true},
-        {type: 'checkbox', label: 'Coachings',       value: 'coachings',       checked: true},
-        {type: 'checkbox', label: 'Assessments',     value: 'assessments',     checked: true}
-      ],
-      buttons: [
-        'Cancel',
-        {
-          text: 'Export',
-          handler: (data: string[]) => {
-              const observables = [];
-              if (data.indexOf('users') >= 0) {         observables.push(this.userService.clear()); }
-              if (data.indexOf('referees') >= 0) {      observables.push(this.refereeService.clear()); }
-              if (data.indexOf('skillProfiles') >= 0) { observables.push(this.skillProfileService.clear()); }
-              if (data.indexOf('pros') >= 0) {          observables.push(this.proService.clear()); }
-              if (data.indexOf('coachings') >= 0) {     observables.push(this.coachingService.clear()); }
-              if (data.indexOf('assessments') >= 0) {   observables.push(this.assessmentService.clear()); }
-              forkJoin(observables).subscribe( () => {
-                this.msg.push('Data cleared');
-              });
-            }
-        }]
-      }).then( (alert) => alert.present());
-  }
 }

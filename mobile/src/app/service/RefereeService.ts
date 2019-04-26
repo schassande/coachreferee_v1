@@ -1,10 +1,6 @@
+import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
 import { ResponseWithData } from './response';
-import { HttpClient } from '@angular/common/http';
-import { SynchroService } from './SynchroService';
-import { LocalDatabaseService } from './LocalDatabaseService';
-import { ConnectedUserService } from './ConnectedUserService';
-import { AppSettingsService } from './AppSettingsService';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { Referee } from './../model/user';
@@ -15,13 +11,9 @@ export class RefereeService extends RemotePersistentDataService<Referee> {
     public lastSelectedReferee: { referee: Referee, idx: number} = {referee: null, idx: -1};
 
     constructor(
-        protected appSettingsService: AppSettingsService,
-        protected connectedUserService: ConnectedUserService,
-        protected localDatabaseService: LocalDatabaseService,
-        protected synchroService: SynchroService,
-        protected http: HttpClient
+        db: AngularFirestore,
     ) {
-        super(appSettingsService, connectedUserService, localDatabaseService, synchroService, http);
+        super(db);
     }
 
     getLocalStoragePrefix() {

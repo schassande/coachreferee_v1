@@ -22,7 +22,7 @@ import { Coaching, PositiveFeedback } from './../../app/model/coaching';
 })
 export class CoachingPositiveFeedbackEditPage implements OnInit {
 
-  coachingId: number;
+  coachingId: string;
   coaching: Coaching;
   feedback: PositiveFeedback;
   feedbackIndex: number;
@@ -44,7 +44,7 @@ export class CoachingPositiveFeedbackEditPage implements OnInit {
     this.appCoach = this.connectedUserService.getCurrentUser();
     this.route.paramMap.pipe(
       flatMap( (paramMap: ParamMap) => {
-        this.coachingId = parseInt(paramMap.get('id'), 10);
+        this.coachingId = paramMap.get('id');
         this.refereeIndex = parseInt(paramMap.get('refereeIdx'), 10);
         this.feedbackIndex = parseInt(paramMap.get('feedbackIdx'), 10);
         return this.coachingService.get(this.coachingId);

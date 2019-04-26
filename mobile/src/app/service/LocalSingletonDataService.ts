@@ -3,7 +3,7 @@ import { Storage } from '@ionic/storage';
 import { map } from 'rxjs/operators';
 
 export abstract class LocalSingletonDataService<D extends any> {
- 
+
     private data: D;
 
     constructor(protected storage: Storage, protected storageName: string) {

@@ -1,6 +1,6 @@
 export interface PersistentData {
     /** Identifier of the persistent object */
-    id: number;
+    id: string;
     /** Version number of the persistent object */
     version: number;
     /** The creation date of the persistent object */

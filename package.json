@@ -10,5 +10,5 @@
         "build": "cd mobile && ionic build --prod --service-worker",
         "deploy": "cd firebase && firebase deploy"
     },
-    "private": true
+    "private": true,
 }

@@ -31,7 +31,7 @@ export class CoachingGamePage implements OnInit {
   coaching: Coaching;
   currentRefereeIdx = 0;
   currentReferee: Referee;
-  id2referee: Map<number, Referee> = new Map<number, Referee>();
+  id2referee: Map<string, Referee> = new Map<string, Referee>();
   refereesLoaded = false;
   currentPeriod = 1;
   coachingCoach = '';
@@ -115,7 +115,7 @@ export class CoachingGamePage implements OnInit {
 
   public getReferee(idx: number): string {
     const refereeId = this.coaching.referees[idx].refereeId;
-    if (refereeId === 0) {
+    if (refereeId === null) {
       return '';
     }
     const referee: Referee = this.id2referee.get(refereeId);
@@ -134,7 +134,7 @@ export class CoachingGamePage implements OnInit {
   private loadCoaching(): Observable<ResponseWithData<Coaching>> {
     return this.route.paramMap.pipe(
       flatMap( (paramMap: ParamMap) => {
-        const id = parseInt(paramMap.get('id'), 10);
+        const id = paramMap.get('id');
         return this.coachingService.get(id);
       })
     );

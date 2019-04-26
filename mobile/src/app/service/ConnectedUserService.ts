@@ -3,18 +3,23 @@ import { AppSettingsService } from './AppSettingsService';
 import { Injectable, EventEmitter } from '@angular/core';
 import { User } from './../model/user';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
+import * as firebase from 'firebase/app';
 
 @Injectable()
 export class ConnectedUserService {
 
   /** The current user */
   private currentUser: User = null;
+  private credential: firebase.auth.UserCredential = null;
+  private online = false;
 
   /** The event about user connection */
   public $userConnectionEvent: EventEmitter<User> = new EventEmitter<User>();
 
   constructor(
       public appSettingsService: AppSettingsService) {
+      // const connectedRef = firebase.database.database().ref('.info/connected');
+      // connectedRef.on('value', (snap) => { this.online = snap.val(); });
   }
 
   public getRequestOptions(las: LocalAppSettings): {
@@ -39,7 +44,9 @@ export class ConnectedUserService {
       }
       return { headers : new HttpHeaders(headers), observe: 'body', responseType: 'json' };
   }
-
+  public isOnline(): boolean {
+    return this.online;
+  }
   public isConnected(): boolean {
     return this.currentUser && this.currentUser !== null;
   }
@@ -51,14 +58,18 @@ export class ConnectedUserService {
     return this.currentUser;
   }
 
-  public userConnected(user: User) {
+  public userConnected(user: User, credential: firebase.auth.UserCredential) {
     this.currentUser = user;
-    this.appSettingsService.setLastUser(user);
-    console.log('User connected: ' + this.currentUser.id);
+    if (credential !== null || this.credential.user.email !== user.email) {
+      // set the new credential or clean if user is
+      this.credential = credential;
+    } // else keep the credential because it is same user
+    console.log('User connected: ' + this.currentUser.email);
     this.$userConnectionEvent.emit(this.currentUser);
   }
   public userDisconnected() {
     this.currentUser = null;
+    // keep the credential in case of
     console.log('User disconnected.');
     this.$userConnectionEvent.emit(this.currentUser);
   }

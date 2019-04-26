@@ -26,7 +26,7 @@ import { of, Observable } from 'rxjs';
 })
 export class CoachingImprovmentFeedbackEditPage implements OnInit {
 
-  coachingId: number;
+  coachingId: string;
   coaching: Coaching;
   feedback: Feedback;
   feedbackIndex: number;
@@ -55,7 +55,7 @@ export class CoachingImprovmentFeedbackEditPage implements OnInit {
     this.appCoach = this.connectedUserService.getCurrentUser();
     this.route.paramMap.pipe(
       flatMap( (paramMap: ParamMap) => {
-        this.coachingId = parseInt(paramMap.get('id'), 10);
+        this.coachingId = paramMap.get('id');
         this.refereeIndex = parseInt(paramMap.get('refereeIdx'), 10);
         this.feedbackIndex = parseInt(paramMap.get('feedbackIdx'), 10);
         return this.coachingService.get(this.coachingId);
@@ -155,7 +155,7 @@ export class CoachingImprovmentFeedbackEditPage implements OnInit {
 
   newPro(event= null) {
     const pro: PersistentPRO = {
-      id: 0,
+      id: null,
       version: 0,
       creationDate : new Date(),
       lastUpdate : new Date(),
@@ -186,7 +186,7 @@ export class CoachingImprovmentFeedbackEditPage implements OnInit {
 
     const opts: AlertOptions = {
       message: 'Choose the other referees',
-      inputs: inputs,
+      inputs,
       buttons: [
         'Cancel',
         {

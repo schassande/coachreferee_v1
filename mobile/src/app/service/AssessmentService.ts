@@ -1,12 +1,8 @@
+import { AngularFirestore } from 'angularfire2/firestore';
 import { SkillProfile } from './../model/skill';
 import { RefereeService } from './RefereeService';
-import { Referee, User, RefereeLevel } from './../model/user';
+import { Referee, User } from './../model/user';
 import { ResponseWithData } from './response';
-import { HttpClient } from '@angular/common/http';
-import { SynchroService } from './SynchroService';
-import { LocalDatabaseService } from './LocalDatabaseService';
-import { ConnectedUserService } from './ConnectedUserService';
-import { AppSettingsService } from './AppSettingsService';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { Assessment } from './../model/assessment';
@@ -23,14 +19,10 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
     public currentAssessment: Assessment = null;
 
     constructor(
-        protected appSettingsService: AppSettingsService,
-        protected connectedUserService: ConnectedUserService,
-        protected localDatabaseService: LocalDatabaseService,
-        protected synchroService: SynchroService,
-        protected http: HttpClient,
+        db: AngularFirestore,
         protected refereeService: RefereeService
     ) {
-        super(appSettingsService, connectedUserService, localDatabaseService, synchroService, http);
+        super(db);
     }
 
     getLocalStoragePrefix() {
@@ -40,7 +32,7 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
         return 5;
     }
 
-    getAssessmentByReferee(refereeId: number): Observable<ResponseWithData<Assessment[]>> {
+    getAssessmentByReferee(refereeId: string): Observable<ResponseWithData<Assessment[]>> {
         return super.all()
             .pipe(
                 map((rassessments: ResponseWithData<Assessment[]>) => {
@@ -137,8 +129,8 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
         assessment.date.setDate(Number.parseInt(elements[2], 0));
     }
 
-    public loadingReferees(assessment: Assessment, id2referee: Map<number, Referee>): Observable<string> {
-        if (assessment && assessment.refereeId !== 0) {
+    public loadingReferees(assessment: Assessment, id2referee: Map<string, Referee>): Observable<string> {
+        if (assessment && assessment.refereeId !== null && assessment.refereeId.trim().length > 0) {
             return this.refereeService.get(assessment.refereeId).pipe(
                 map((res: ResponseWithData<Referee>) => {
                 if (res.data) {

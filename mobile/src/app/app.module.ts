@@ -6,6 +6,10 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -20,7 +24,6 @@ import { LocalDatabaseService } from './service/LocalDatabaseService';
 import { PROService } from './service/PROService';
 import { RefereeService } from './service/RefereeService';
 import { SkillProfileService } from './service/SkillProfileService';
-import { SynchroService } from './service/SynchroService';
 import { ToolService } from './service/ToolService';
 import { UserService } from './service/UserService';
 import { VersionService } from './service/VersionService';
@@ -55,6 +58,7 @@ import { SkillSetEditPage } from './../pages/skill-set-edit/skill-set-edit';
 import { UserEditPage } from '../pages/user-edit/user-edit';
 import { UserSelectionPage } from '../pages/user-selection/user-selection';
 import { SharingComponent } from './../pages/sharing-component';
+import { UserLogoutComponent } from 'src/pages/user-logout/user-logout.component';
 
 
 @NgModule({
@@ -67,7 +71,7 @@ import { SharingComponent } from './../pages/sharing-component';
     RefereeListPage, RefereeViewPage, RefereeSelectPage, RefereeEditPage,
     SettingsPage,
     SkillEditPage, SkillProfileEditPage, SkillProfileListPage, SkillSetEditPage,
-    UserEditPage, UserSelectionPage,
+    UserEditPage, UserSelectionPage, UserLogoutComponent,
     SharingComponent, CompetencyComponent, PeriodSelectorComponent],
   entryComponents: [AppComponent, HomePage, RefereeSelectPage, RefereeEditPage],
   imports: [
@@ -77,7 +81,10 @@ import { SharingComponent } from './../pages/sharing-component';
     HttpClientModule,
     IonicStorageModule.forRoot({ name: '__myDb', driverOrder : [ 'indexeddb', 'websql', 'sqlite']}),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    AppRoutingModule],
+    AppRoutingModule,
+    AngularFireAuthModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule.enablePersistence()],
   providers: [
     AppSettingsService,
     AssessmentService,
@@ -92,7 +99,6 @@ import { SharingComponent } from './../pages/sharing-component';
     SplashScreen,
     StatusBar,
     SplashScreen,
-    SynchroService,
     ToolService,
     UserService,
     VersionService,

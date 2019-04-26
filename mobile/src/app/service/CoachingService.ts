@@ -1,15 +1,9 @@
-import { Feedback } from './../../app/model/coaching';
-import { PositiveFeedback } from './../../app/model/coaching';
+import { AngularFirestore } from 'angularfire2/firestore';
 import { Referee } from './../model/user';
 import { RefereeService } from './RefereeService';
 import { ResponseWithData } from './response';
 import { Observable, of, concat, forkJoin } from 'rxjs';
-import { map, combineLatest, concatAll } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
-import { SynchroService } from './SynchroService';
-import { LocalDatabaseService } from './LocalDatabaseService';
-import { ConnectedUserService } from './ConnectedUserService';
-import { AppSettingsService } from './AppSettingsService';
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { Coaching } from './../model/coaching';
@@ -21,14 +15,10 @@ const DATE_SEP = '-';
 export class CoachingService extends RemotePersistentDataService<Coaching> {
 
     constructor(
-        protected appSettingsService: AppSettingsService,
-        protected connectedUserService: ConnectedUserService,
-        protected localDatabaseService: LocalDatabaseService,
-        protected synchroService: SynchroService,
-        protected http: HttpClient,
-        protected refereeService: RefereeService
+      db: AngularFirestore,
+      protected refereeService: RefereeService
     ) {
-        super(appSettingsService, connectedUserService, localDatabaseService, synchroService, http);
+        super(db);
     }
 
     getLocalStoragePrefix() {
@@ -39,7 +29,7 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
         return 5;
     }
 
-    getCoachingByReferee(refereeId: number): Observable<ResponseWithData<Coaching[]>> {
+    getCoachingByReferee(refereeId: string): Observable<ResponseWithData<Coaching[]>> {
         return super.all().pipe(
             map((rcoachings: ResponseWithData<Coaching[]>) => {
                 if (!rcoachings.error) {
@@ -135,11 +125,11 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
         coaching.date.setDate(Number.parseInt(elements[2], 0));
     }
 
-    public loadingReferees(coaching: Coaching, id2referee: Map<number, Referee>): Observable<any> {
+    public loadingReferees(coaching: Coaching, id2referee: Map<string, Referee>): Observable<any> {
         if (coaching) {
           const obs: Observable<Referee>[] = [];
           coaching.referees.forEach((ref) => {
-            if (ref.refereeId !== 0) {
+            if (ref.refereeId !== null) {
               obs.push(this.refereeService.get(ref.refereeId).pipe(
                     map((res: ResponseWithData<Referee>) => {
                         if (res.data) {

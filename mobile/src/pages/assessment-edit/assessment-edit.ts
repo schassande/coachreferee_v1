@@ -29,11 +29,11 @@ export class AssessmentEditPage implements OnInit {
   assessmentCoach = '';
   assessmentOwner = true;
   readonly = false;
-  id2referee: Map<number, Referee> = new Map<number, Referee>();
+  id2referee: Map<string, Referee> = new Map<string, Referee>();
   refereesLoaded = false;
   profiles: SkillProfile[];
   assessmentValid = false;
-  profileId: number;
+  profileId: string;
   appCoach: User;
 
   constructor(
@@ -105,7 +105,7 @@ export class AssessmentEditPage implements OnInit {
     return this.route.paramMap.pipe(
       flatMap( (paramMap: ParamMap) => {
         const assessmentId = paramMap.get('id');
-        return this.assessmentService.get(parseInt(assessmentId, 10));
+        return this.assessmentService.get(assessmentId);
       })
     );
   }
@@ -113,7 +113,7 @@ export class AssessmentEditPage implements OnInit {
   initAssessment() {
     const coach: User = this.connectedUserService.getCurrentUser();
     this.assessment = {
-        id: 0,
+        id: null,
         version: 0,
         creationDate : new Date(),
         lastUpdate : new Date(),
@@ -126,10 +126,10 @@ export class AssessmentEditPage implements OnInit {
         gameCategory: 'OPEN',
         gameSpeed: 'Medium',
         gameSkill: 'Medium',
-        refereeId : 0,
+        refereeId : null,
         refereeShortName: '-',
         comment: '-',
-        profileId: 0,
+        profileId: null,
         profileName: '-',
         skillSetEvaluation: [],
         competency: 'NE',
@@ -139,7 +139,7 @@ export class AssessmentEditPage implements OnInit {
 
   getReferee(): string {
     const refereeId = this.assessment.refereeId;
-    if (refereeId === 0) {
+    if (refereeId === null) {
       return '';
     }
     const referee: Referee = this.id2referee.get(refereeId);
@@ -159,7 +159,7 @@ export class AssessmentEditPage implements OnInit {
     this.userService.update(this.assessment.coachId, (user: User) => { user.defaultCompetition = c; return user; }).subscribe();
   }
 
-  get date () {
+  get date() {
     return this.assessmentService.getAssessmentDateAsString(this.assessment);
   }
 

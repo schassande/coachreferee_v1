@@ -38,8 +38,8 @@ export class ProEditPage implements OnInit {
   private loadPRO(): Observable<PersistentPRO> {
     return this.route.paramMap.pipe(
       flatMap( (paramMap) => {
-        const proId: number  = parseInt(paramMap.get('id'), 10);
-        if (proId >= 0) {
+        const proId: string  = paramMap.get('id');
+        if (proId !== null) {
           return this.proService.get(proId);
         } else {
           return of({
