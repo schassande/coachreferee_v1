@@ -1,4 +1,3 @@
-import { User } from './../model/user';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LocalAppSettings, NetworkConnection } from './../model/settings';
@@ -19,10 +18,12 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
                 let result: LocalAppSettings = las;
                 if (!result) {
                     result = {
-                        serverUrl: 'https://1eyhctd9mb.execute-api.eu-west-1.amazonaws.com/dev',
+                        apiKey: 'AIzaSyCkimKVeEHQi3PilLUkJ8jl6XzTaZr_5FE',
+                        serverUrl: 'https://refcoach-676e3.firebaseio.com',
                         minNetworkConnectionForSyncho: 'NONE',
                         lastUserEmail: null,
-                        lastUserPassword: null
+                        lastUserPassword: null,
+                        forceOffline: false
                     };
                     super.save(result);
                 }
