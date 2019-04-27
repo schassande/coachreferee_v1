@@ -22,6 +22,7 @@ import { SkillProfileListPage } from './../pages/skill-profile-list/skill-profil
 import { SkillSetEditPage } from './../pages/skill-set-edit/skill-set-edit';
 import { UserEditPage } from '../pages/user-edit/user-edit';
 import { UserSelectionPage } from '../pages/user-selection/user-selection';
+import { UserLogoutComponent } from '../pages/user-logout/user-logout.component';
 
 import { AuthGuard } from './AuthGuard';
 
@@ -51,7 +52,7 @@ const routes: Routes = [
   // MODAL { path: 'referee/select', component: RefereeSelectPage, canActivate: [AuthGuard] },
   // MODAL { path: 'referee/edit/:id', component: RefereeEditPage, canActivate: [AuthGuard] },
 
-  { path: 'settings', component: SettingsPage},
+  { path: 'settings', component: SettingsPage, canActivate: [AuthGuard]},
 
   { path: 'skillprofile/list', component: SkillProfileListPage, canActivate: [AuthGuard] },
   { path: 'skillprofile/create', component: SkillProfileEditPage, canActivate: [AuthGuard] },
@@ -62,12 +63,16 @@ const routes: Routes = [
   { path: 'user/create', component: UserEditPage},
   { path: 'user/edit/:id', component: UserEditPage, canActivate: [AuthGuard] },
   { path: 'user/select', component: UserSelectionPage},
+  { path: 'user/logout', component: UserLogoutComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules, enableTracing: false,  onSameUrlNavigation: 'reload' })
+    RouterModule.forRoot(routes,
+      { preloadingStrategy: PreloadAllModules,
+        enableTracing: false,
+        onSameUrlNavigation: 'reload' })
   ],
   exports: [RouterModule]
 })

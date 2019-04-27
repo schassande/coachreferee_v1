@@ -33,7 +33,7 @@ export class AssessRefereePage implements OnInit {
   profile: SkillProfile;
   openedGroups: boolean[] = [];
   referee: Referee;
-  id2referee: Map<number, Referee> = new Map<number, Referee>();
+  id2referee: Map<string, Referee> = new Map<string, Referee>();
 
   constructor(
     private route: ActivatedRoute,
@@ -52,7 +52,7 @@ export class AssessRefereePage implements OnInit {
 
   private loadAssessment(): Observable<ResponseWithData<Assessment>> {
     return this.route.paramMap.pipe(
-      flatMap( (paramMap: ParamMap) => this.assessmentService.get(parseInt(paramMap.get('id'), 10))),
+      flatMap( (paramMap: ParamMap) => this.assessmentService.get(paramMap.get('id'))),
       map((response: ResponseWithData<Assessment>) => {
         this.assessment = this.addCompetencyField(response.data);
         console.log('Assessment loaded: ' + this.assessment.id);

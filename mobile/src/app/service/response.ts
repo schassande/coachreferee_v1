@@ -1,6 +1,7 @@
 export interface Response {
     error: {
         errorCode: number;
+        code?: string;
         error: any;
     };
 }

@@ -3,12 +3,14 @@ import { AppSettingsService } from './AppSettingsService';
 import { Injectable, EventEmitter } from '@angular/core';
 import { User } from './../model/user';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
+import * as firebase from 'firebase/app';
 
 @Injectable()
 export class ConnectedUserService {
 
   /** The current user */
   private currentUser: User = null;
+  private credential: firebase.auth.UserCredential = null;
 
   /** The event about user connection */
   public $userConnectionEvent: EventEmitter<User> = new EventEmitter<User>();
@@ -17,29 +19,9 @@ export class ConnectedUserService {
       public appSettingsService: AppSettingsService) {
   }
 
-  public getRequestOptions(las: LocalAppSettings): {
-        headers?: HttpHeaders | {
-            [header: string]: string | string[];
-        };
-        observe?: 'body';
-        params?: HttpParams | {
-            [param: string]: string | string[];
-        };
-        reportProgress?: boolean;
-        responseType?: 'json';
-        withCredentials?: boolean;
-    } {
-      const headers: any = {
-        'Content-Type': 'application/json',
-        version: '1.0',
-        'x-api-key': las.apiKey
-      };
-      if (this.currentUser && this.currentUser.token) {
-        headers.authorization = this.currentUser.token;
-      }
-      return { headers : new HttpHeaders(headers), observe: 'body', responseType: 'json' };
+  public isOnline(): boolean {
+    return navigator.onLine;
   }
-
   public isConnected(): boolean {
     return this.currentUser && this.currentUser !== null;
   }
@@ -51,14 +33,18 @@ export class ConnectedUserService {
     return this.currentUser;
   }
 
-  public userConnected(user: User) {
+  public userConnected(user: User, credential: firebase.auth.UserCredential) {
     this.currentUser = user;
-    this.appSettingsService.setLastUser(user);
-    console.log('User connected: ' + this.currentUser.id);
+    if (credential !== null || this.credential === null || this.credential.user.email !== user.email) {
+      // set the new credential or clean if user is
+      this.credential = credential;
+    } // else keep the credential because it is same user
+    console.log('User connected: ' + this.currentUser.email);
     this.$userConnectionEvent.emit(this.currentUser);
   }
   public userDisconnected() {
     this.currentUser = null;
+    // keep the credential in case of
     console.log('User disconnected.');
     this.$userConnectionEvent.emit(this.currentUser);
   }

@@ -25,7 +25,7 @@ export class SkillEditPage implements OnInit {
   skill: Skill;
 
   skillProfile: SkillProfile;
-  skillProfileId: number;
+  skillProfileId: string;
   skillSetIdx: number;
   skillIdx: number;
 
@@ -43,7 +43,7 @@ export class SkillEditPage implements OnInit {
   ngOnInit() {
     this.route.paramMap.pipe(
       flatMap((paramMap: ParamMap) => {
-        this.skillProfileId = parseInt(paramMap.get('skillProfileid'), 10);
+        this.skillProfileId = paramMap.get('skillProfileid');
         this.skillSetIdx = parseInt(paramMap.get('skillSetIdx'), 10);
         this.skillIdx = parseInt(paramMap.get('skillIdx'), 10);
         console.log('this.skillProfileId=', this.skillProfileId);

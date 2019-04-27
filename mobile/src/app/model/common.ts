@@ -1,6 +1,6 @@
 export interface PersistentData {
     /** Identifier of the persistent object */
-    id: number;
+    id: string;
     /** Version number of the persistent object */
     version: number;
     /** The creation date of the persistent object */
@@ -17,3 +17,9 @@ export type DataStatus =
     | 'DIRTY' /** The persistent object exists and has been modified locally. */
     | 'REMOVED' /** The persistent object exists but has been removed locally. */
     ;
+/** Object shared with users */
+export interface SharedElement {
+    /** List of users */
+    sharedWith: string[];
+}
+

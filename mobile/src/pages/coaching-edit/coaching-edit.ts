@@ -33,7 +33,7 @@ export class CoachingEditPage implements OnInit {
   coachingOwner = true;
   readonly = false;
   appCoach: User;
-  id2referee: Map<number, Referee> = new Map<number, Referee>();
+  id2referee: Map<string, Referee> = new Map<string, Referee>();
   refereesLoaded = false;
 
   constructor(
@@ -73,13 +73,13 @@ export class CoachingEditPage implements OnInit {
 
   private loadCoaching(): Observable<ResponseWithData<Coaching>> {
     return this.route.paramMap.pipe(
-      flatMap( (paramMap) => this.coachingService.get(parseInt(paramMap.get('id'), 10)))
+      flatMap( (paramMap) => this.coachingService.get(paramMap.get('id')))
     );
   }
 
   initCoaching() {
     this.coaching = {
-        id: 0,
+        id: null,
         version: 0,
         creationDate : new Date(),
         lastUpdate : new Date(),
@@ -94,7 +94,8 @@ export class CoachingEditPage implements OnInit {
         gameSkill: 'Medium',
         referees : [],
         currentPeriod : 1,
-        closed: false
+        closed: false,
+        sharedWith: []
       };
     this.computeCoachingValues();
   }
@@ -119,7 +120,7 @@ export class CoachingEditPage implements OnInit {
       return null;
     }
     const refereeId = this.coaching.referees[idx].refereeId;
-    if (refereeId === 0) {
+    if (refereeId === null) {
       return '';
     }
     const referee: Referee = this.id2referee.get(refereeId);
@@ -139,7 +140,7 @@ export class CoachingEditPage implements OnInit {
     this.userService.update(this.coaching.coachId, (user: User) => { user.defaultCompetition = c; return user; }).subscribe();
   }
 
-  get date () {
+  get date() {
     return this.coachingService.getCoachingDateAsString(this.coaching);
   }
 

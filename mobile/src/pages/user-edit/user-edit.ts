@@ -36,7 +36,7 @@ export class UserEditPage implements OnInit {
       map( (paramMap: ParamMap) => {
         const userId = paramMap.get('id');
         if (userId) {
-          this.userService.get(parseInt(userId, 10)).subscribe((res: ResponseWithData<User>) => {
+          this.userService.get(userId).subscribe((res: ResponseWithData<User>) => {
             if (res.error) {
               this.loadingCtrl.create({
                 message: 'Problem to load referee informaion ...',
@@ -75,7 +75,9 @@ export class UserEditPage implements OnInit {
 
   public initReferee() {
     this.user = {
-      id: 0,
+      id: null,
+      accountId: null,
+      role: 'USER',
       version: 0,
       creationDate : new Date(),
       lastUpdate : new Date(),

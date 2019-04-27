@@ -1,15 +1,10 @@
-import { Feedback } from './../../app/model/coaching';
-import { PositiveFeedback } from './../../app/model/coaching';
+import { ConnectedUserService } from './ConnectedUserService';
+import { AngularFirestore, Query } from 'angularfire2/firestore';
 import { Referee } from './../model/user';
 import { RefereeService } from './RefereeService';
 import { ResponseWithData } from './response';
 import { Observable, of, concat, forkJoin } from 'rxjs';
-import { map, combineLatest, concatAll } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
-import { SynchroService } from './SynchroService';
-import { LocalDatabaseService } from './LocalDatabaseService';
-import { ConnectedUserService } from './ConnectedUserService';
-import { AppSettingsService } from './AppSettingsService';
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { Coaching } from './../model/coaching';
@@ -21,14 +16,11 @@ const DATE_SEP = '-';
 export class CoachingService extends RemotePersistentDataService<Coaching> {
 
     constructor(
-        protected appSettingsService: AppSettingsService,
-        protected connectedUserService: ConnectedUserService,
-        protected localDatabaseService: LocalDatabaseService,
-        protected synchroService: SynchroService,
-        protected http: HttpClient,
-        protected refereeService: RefereeService
+      db: AngularFirestore,
+      protected refereeService: RefereeService,
+      private connectedUserService: ConnectedUserService
     ) {
-        super(appSettingsService, connectedUserService, localDatabaseService, synchroService, http);
+        super(db);
     }
 
     getLocalStoragePrefix() {
@@ -39,19 +31,23 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
         return 5;
     }
 
-    getCoachingByReferee(refereeId: number): Observable<ResponseWithData<Coaching[]>> {
-        return super.all().pipe(
-            map((rcoachings: ResponseWithData<Coaching[]>) => {
-                if (!rcoachings.error) {
-                    rcoachings.data = rcoachings.data.filter( (coaching: Coaching) => {
-                        // search if the coaching contains the searched referee
-                        return coaching.referees.filter( (ref) => refereeId === ref.refereeId).length > 0;
-                    });
-                }
-                return rcoachings;
-            })
-        );
+    getCoachingByReferee(refereeId: string): Observable<ResponseWithData<Coaching[]>> {
+      return concat(
+        this.query(this.getBaseQueryMyCoahchings().where('referees[0].refereeId', '==', refereeId), 'default'),
+        this.query(this.getBaseQueryMyCoahchings().where('referees[1].refereeId', '==', refereeId), 'default'),
+        this.query(this.getBaseQueryMyCoahchings().where('referees[2].refereeId', '==', refereeId), 'default'));
     }
+
+    /** Overide to restrict to the coachings of the user */
+    public all(): Observable<ResponseWithData<Coaching[]>> {
+      return this.query(this.getBaseQueryMyCoahchings(), 'default');
+    }
+
+    /** Query basis for coaching limiting access to the coachings of the user */
+    private getBaseQueryMyCoahchings(): Query {
+      return this.getCollectionRef().where('coachId', '==', this.connectedUserService.getCurrentUser().id);
+    }
+
     public sortCoachings(coachings: Coaching[], reverse: boolean = false): Coaching[] {
         let array: Coaching[] = coachings.sort(this.compareCoaching.bind(this));
         if (reverse) {
@@ -59,10 +55,11 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
         }
         return array;
     }
+
     public searchCoachings(text: string): Observable<ResponseWithData<Coaching[]>> {
         const str = text && text.trim().length > 0 ? text.trim() : null;
         return str ?
-            super.filter(super.all(), (coaching: Coaching) => {
+            super.filter(this.all(), (coaching: Coaching) => {
                 return this.stringContains(str, coaching.competition)
                 || (coaching.referees[0] && this.stringContains(str, coaching.referees[0].refereeShortName))
                 || (coaching.referees[1] && this.stringContains(str, coaching.referees[1].refereeShortName))
@@ -70,7 +67,7 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
                 || this.stringContains(str, coaching.field)
                 || this.stringContains(str, this.getCoachingDateAsString(coaching));
             })
-            : super.all();
+            : this.all();
     }
 
     public compareDate(day1: Date, day2: Date): number {
@@ -135,11 +132,11 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
         coaching.date.setDate(Number.parseInt(elements[2], 0));
     }
 
-    public loadingReferees(coaching: Coaching, id2referee: Map<number, Referee>): Observable<any> {
+    public loadingReferees(coaching: Coaching, id2referee: Map<string, Referee>): Observable<any> {
         if (coaching) {
           const obs: Observable<Referee>[] = [];
           coaching.referees.forEach((ref) => {
-            if (ref.refereeId !== 0) {
+            if (ref.refereeId !== null) {
               obs.push(this.refereeService.get(ref.refereeId).pipe(
                     map((res: ResponseWithData<Referee>) => {
                         if (res.data) {

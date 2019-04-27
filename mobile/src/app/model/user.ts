@@ -24,26 +24,46 @@ export interface Photo {
 
  /** List of countries [0] is the internal name, [1] is the viewed name. */
 export const COUNTRIES: string[][] = [
-    ['AUS', 'Australia'],
-    ['Austria', 'Austria'],
+    ['Australia	', 'Australia'],
+    ['Austria',	'Austria'],
     ['Belgium', 'Belgium'],
+    ['Canada', 'Canada'],
+    ['Chile', 'Chile'],
+    ['China', 'China'],
+    ['Chinese Taipei', 'Chinese Taipei'],
+    ['Cook Islands', 'Cook Islands'],
+    ['Czech Republic' ,	'Czech Republic'],
     ['England', 'England'],
-    ['France', 'France'],
+    ['Fiji', 'Fiji'],
+    ['France' , 'France'],
     ['Germany', 'Germany'],
     ['Guernesey', 'Guernesey'],
+    ['HongKong', 'HongKong'],
+    ['Hungary', 'Hungary'],
+    ['India', 'India'],
     ['Ireland', 'Ireland'],
     ['Italy', 'Italy'],
-    ['Jersey', 'Jersey'],
     ['Japan', 'Japan'],
+    ['Jersey', 'Jersey'],
     ['Luxembourg', 'Luxembourg'],
+    ['Malaysia', 'Malaysia'],
+    ['Mauritius', 'Mauritius'],
     ['Netherlands', 'Netherlands'],
     ['New Zealand', 'New Zealand'],
+    ['Pakistan', 'Pakistan'],
+    ['Papua New Guinea', 'Papua New Guinea'],
+    ['Philippines', 'Philippines'],
     ['Portugal', 'Portugal'],
+    ['Qatar', 'Qatar'],
+    ['Samoa', 'Samoa'],
     ['Scotland', 'Scotland'],
     ['Singapore', 'Singapore'],
+    ['South Africa', 'South Africa'],
     ['Spain', 'Spain'],
-    ['switzerland', 'Switzerland'],
-    ['USA', 'USA'],
+    ['Sweden', 'Sweden'],
+    ['Switzerland', 'Switzerland'],
+    ['United Arab Emirates', 'United Arab Emirates'],
+    ['USA',	'USA'],
     ['Wales', 'Wales'],
     ['Other', 'Other']
 ];
@@ -53,7 +73,8 @@ export const LANGUAGES: string[][] = [
     ['DE', 'Deutsch'],
     ['ES', 'Spanish'],
     ['IT', 'Italian'],
-    ['PO', 'Portuguese']
+    ['PO', 'Portuguese'],
+    ['CN', 'Chinese']
 ];
 
 export const CONSTANTES = {
@@ -64,15 +85,15 @@ export const CONSTANTES = {
 };
 
 export interface Person extends PersistentData {
-    firstName?: string;
-    lastName?: string;
-    shortName?: string;
-    country?: string;
-    email?: string;
-    gender?: Gender;
-    mobilePhones?: string[];
-    photo?: Photo;
-    speakingLanguages?: string[];
+    firstName: string;
+    lastName: string;
+    shortName: string;
+    country: string;
+    email: string;
+    gender: Gender;
+    mobilePhones: string[];
+    photo: Photo;
+    speakingLanguages: string[];
 }
 
 export interface Referee extends Person {
@@ -87,14 +108,22 @@ export interface Referee extends Person {
     dataSharingAgreement?: RefereeDataSharingAgreement;
 }
 
+export type AppRole = 'USER' | 'PROFILE_ADMIN' | 'ADMIN';
 export interface User extends Referee {
     password?: string;
+    accountId: string;
     token?: string;
     defaultCompetition: string;
     defaultGameCatory: GameCategory;
     dataSharingAgreement?: CoachDataSharingAgreement;
+    role: AppRole;
 }
 
+export interface UserGroup extends PersistentData {
+    name: string;
+    admins: string[];
+    members: string[];
+}
 
 export function getNextRefereeLevel(level: RefereeLevel): RefereeLevel {
     switch (level) {

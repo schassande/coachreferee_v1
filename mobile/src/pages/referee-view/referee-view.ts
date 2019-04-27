@@ -52,7 +52,7 @@ export class RefereeViewPage implements OnInit {
       map((params: ParamMap) => {
         const id = params.get('id');
         if (id) {
-          this.setRefereeId(parseInt(id, 10));
+          this.setRefereeId(id);
         } else {
           this.navBack();
         }
@@ -64,7 +64,7 @@ export class RefereeViewPage implements OnInit {
     this.navController.navigateRoot( ['/referee/list']);
   }
 
-  private setRefereeId(id: number) {
+  private setRefereeId(id: string) {
     console.log('RefereeView.setRefereeId(' + id + ')');
     this.refereeService.get(id).subscribe((response: ResponseWithData<Referee>) => {
       if (response.error) {

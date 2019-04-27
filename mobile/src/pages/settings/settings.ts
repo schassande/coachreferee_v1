@@ -1,11 +1,10 @@
+import { AngularFirestore } from 'angularfire2/firestore';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { AlertController } from '@ionic/angular';
-import { Router, ActivatedRoute } from '@angular/router';
+import { AlertController, ToastController, NavController } from '@ionic/angular';
 // import { File, FileEntry } from '@ionic-native/file';
 // import { SocialSharing } from '@ionic-native/social-sharing';
 // import { FilePath } from '@ionic-native/file-path';
-// import { Toast } from '@ionic-native/toast';
 // import { FileChooser } from '@ionic-native/file-chooser';
 import { Observable, of, concat, forkJoin } from 'rxjs';
 import { UserService } from '../../app/service/UserService';
@@ -27,7 +26,8 @@ import { ExportedData } from './../../app/model/settings';
 import { LEVELS_AUS } from './levelAus';
 import { LEVELS_NZ } from './levelNZ';
 import { LEVELS_EURO } from './levelEuropean';
-import { AlertInput } from '@ionic/core';
+import { environment } from '../../environments/environment';
+
 
 /**
  * Generated class for the SettingsPage page.
@@ -43,20 +43,22 @@ export class SettingsPage implements OnInit {
 
   settings: LocalAppSettings;
   msg: string[] = [];
+  env = environment;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    public appSettingsService: AppSettingsService,
-    public connectedUserService: ConnectedUserService,
-    public userService: UserService,
-    public refereeService: RefereeService,
-    public proService: PROService,
-    public skillProfileService: SkillProfileService,
-    public coachingService: CoachingService,
-    public assessmentService: AssessmentService,
-    public alertController: AlertController,
-    public emailService: EmailService
+    private navController: NavController,
+    private appSettingsService: AppSettingsService,
+    private connectedUserService: ConnectedUserService,
+    private userService: UserService,
+    private refereeService: RefereeService,
+    private proService: PROService,
+    private skillProfileService: SkillProfileService,
+    private coachingService: CoachingService,
+    private assessmentService: AssessmentService,
+    private alertController: AlertController,
+    private emailService: EmailService,
+    private firestore: AngularFirestore,
+    private toastController: ToastController
     // public file: File,
     // private filePath: FilePath,
     // private socialSharing: SocialSharing,
@@ -67,16 +69,24 @@ export class SettingsPage implements OnInit {
 
   ngOnInit() {
     console.log('ionViewDidLoad SettingsPage');
-    this.appSettingsService.get().subscribe((settings: LocalAppSettings) => {
-      this.settings = settings;
+    this.appSettingsService.get().subscribe((appSettings: LocalAppSettings) => {
+      this.settings = appSettings;
     });
+  }
+
+  public onToggleForceOffline() {
+    if (this.settings.forceOffline) {
+      this.firestore.firestore.disableNetwork();
+    } else {
+      this.firestore.firestore.enableNetwork();
+    }
   }
 
   public saveSettings() {
     this.appSettingsService.save(this.settings).pipe(
       map((settings: LocalAppSettings) => {
         this.settings = settings;
-        this.router.navigate(['/home']);
+        this.navController.navigateRoot(['/home']);
       })
     ).subscribe();
   }
@@ -155,6 +165,15 @@ export class SettingsPage implements OnInit {
     });
   }
 
+  private toast(msg: string) {
+    this.toastController.create({
+      message: msg,
+      position: 'bottom',
+      duration: 2000,
+      translucent: true
+    }).then((alert) => alert.present());
+  }
+
   importLevelsAus() {
     let obs: Observable<any> = of('');
     LEVELS_AUS.forEach((elem) => {
@@ -162,8 +181,7 @@ export class SettingsPage implements OnInit {
       obs = concat(obs, this.skillProfileService.save(e).pipe(map(() => { console.log(e.id + ' imported.'); })));
     });
     obs.subscribe(() => {
-      console.log('Aus levels imported.');
-      // this.toast.showShortCenter('Aus levels imported.').subscribe();
+      this.toast('Aus levels imported.');
     });
   }
 
@@ -174,10 +192,10 @@ export class SettingsPage implements OnInit {
       obs = concat(obs, this.skillProfileService.save(e).pipe(map(() => { console.log(e.id + ' imported.'); })));
     });
     obs.subscribe(() => {
-      console.log('Euro level imported.');
-      // this.toast.showShortCenter('Euro level imported.').subscribe();
+      this.toast('Euro levels imported.');
     });
   }
+
   importLevelsNZ() {
     let obs: Observable<any> = of('');
     LEVELS_NZ.forEach((elem) => {
@@ -185,10 +203,10 @@ export class SettingsPage implements OnInit {
       obs = concat(obs, this.skillProfileService.save(e).pipe(map(() => { console.log(e.id + ' imported.'); })));
     });
     obs.subscribe(() => {
-      console.log('NZ levels imported.');
-      // this.toast.showShortCenter('NZ levels imported.').subscribe();
+      this.toast('NZ levels imported.');
     });
   }
+
   public exportData() {
       this.alertController.create({
         header: 'Which data do you want to export?',
@@ -223,8 +241,7 @@ export class SettingsPage implements OnInit {
                 if (data.indexOf('assessments') >= 0) {
                   observables.push(this.assessmentService.all().pipe(map(    (response) => exportObj.assessments   =  response.data)));
                 }
-                /*
-                forkJoin(observables).subscribe( () => {
+                /*forkJoin(observables).subscribe( () => {
                   const str = JSON.stringify(exportObj, null, 2);
                   // console.log('Exported data: ', str);
                   const fileName = `referee_coach_${new Date().getTime()}.json`;
@@ -236,43 +253,12 @@ export class SettingsPage implements OnInit {
                       this.socialSharing.share(null, null, fe.nativeURL, null).then(() => this.msg.push('Data exported'));
                     }).catch((error) => {
                       console.error('Writing error: ', error);
-                      this.toast.showLongBottom('Fail to write file: ' + error).subscribe();
+                      this.toast('Fail to write file: ' + error);
                     });
-                });
-                */
-              }
-          }]
-      }).then( (alert) => alert.present());
-  }
-
-  public resetData() {
-    this.alertController.create({
-      header: 'Which data do you want to reset?',
-      inputs: [
-        {type: 'checkbox', label: 'Users',           value: 'users',           checked: true},
-        {type: 'checkbox', label: 'Referees',        value: 'referees',        checked: true},
-        {type: 'checkbox', label: 'Skill Profiles',  value: 'skillProfiles',   checked: true},
-        {type: 'checkbox', label: 'PROs'     ,       value: 'pros',            checked: true},
-        {type: 'checkbox', label: 'Coachings',       value: 'coachings',       checked: true},
-        {type: 'checkbox', label: 'Assessments',     value: 'assessments',     checked: true}
-      ],
-      buttons: [
-        'Cancel',
-        {
-          text: 'Export',
-          handler: (data: string[]) => {
-              const observables = [];
-              if (data.indexOf('users') >= 0) {         observables.push(this.userService.clear()); }
-              if (data.indexOf('referees') >= 0) {      observables.push(this.refereeService.clear()); }
-              if (data.indexOf('skillProfiles') >= 0) { observables.push(this.skillProfileService.clear()); }
-              if (data.indexOf('pros') >= 0) {          observables.push(this.proService.clear()); }
-              if (data.indexOf('coachings') >= 0) {     observables.push(this.coachingService.clear()); }
-              if (data.indexOf('assessments') >= 0) {   observables.push(this.assessmentService.clear()); }
-              forkJoin(observables).subscribe( () => {
-                this.msg.push('Data cleared');
-              });
+                  });*/
+                }
             }
-        }]
+        ]
       }).then( (alert) => alert.present());
   }
 }

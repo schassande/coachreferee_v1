@@ -24,10 +24,10 @@ export class RefereeEditPage implements OnInit {
   constantes = CONSTANTES;
 
   constructor(public modalController: ModalController,
-    private route: ActivatedRoute,
-    public refereeService: RefereeService,
-    public connectedUserService: ConnectedUserService,
-    public loadingCtrl: LoadingController
+              private route: ActivatedRoute,
+              public refereeService: RefereeService,
+              public connectedUserService: ConnectedUserService,
+              public loadingCtrl: LoadingController
     // private camera: Camera
     ) {
   }
@@ -41,7 +41,7 @@ export class RefereeEditPage implements OnInit {
           const id = params.get('id');
           if (id) {
             console.log('RefereeEditPage edit existing referee: ', id);
-            this.setRefereeId(parseInt(id, 10));
+            this.setRefereeId(id);
           } else {
             console.log('RefereeEditPage new referee: ');
             this.setReferee(this.buildNewReferee());
@@ -53,7 +53,7 @@ export class RefereeEditPage implements OnInit {
 
   private buildNewReferee(): Referee {
     return {
-      id: 0,
+      id: null,
       version: 0,
       creationDate : new Date(),
       lastUpdate : new Date(),
@@ -110,7 +110,7 @@ export class RefereeEditPage implements OnInit {
           + this.referee.lastName.charAt(this.referee.lastName.length - 1).toUpperCase();
     }
   }
-  private setRefereeId(id: number) {
+  private setRefereeId(id: string) {
     console.log('RefereeEdit.setRefereeId(' + id + ')');
     this.refereeService.get(id).subscribe((response: ResponseWithData<Referee>) => {
       if (response.error) {

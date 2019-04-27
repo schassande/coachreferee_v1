@@ -7,7 +7,6 @@ import { User } from '../../app/model/user';
 
 import { ConnectedUserService } from './../../app/service/ConnectedUserService';
 import { ResponseWithData } from './../../app/service/response';
-import { SynchroService } from './../../app/service/SynchroService';
 import { UserService } from './../../app/service/UserService';
 
 /**
@@ -30,49 +29,31 @@ export class UserSelectionPage implements OnInit {
     private navController: NavController,
     public userService: UserService,
     public connectedUserService: ConnectedUserService,
-    public synchroService: SynchroService,
     public alertCtrl: AlertController) {}
 
-    ngOnInit() {
+  ngOnInit() {
     this.loadUser();
   }
+
   loadUser() {
-      this.userService.localAll().pipe(
-        flatMap((rusers: ResponseWithData<User[]>) => {
-          if (rusers.error && rusers.error.errorCode) {
-            console.log('no local user => search remote users');
-            return this.userService.all();
-          } else {
-            return of(rusers);
-          }
-        })
-      ).subscribe((response: ResponseWithData<User[]>) => {
-        this.users = response.data;
-        this.error = response.error;
-        if (this.users == null || this.users.length === 0) {
-          this.newUser();
-        }
-      });
+    this.userService.all().subscribe((response: ResponseWithData<User[]>) => {
+      this.users = response.data;
+      this.error = response.error;
+      if (this.users == null || this.users.length === 0) {
+        this.newUser();
+      }
+    });
   }
 
-  public userSelected(userSelected: User): void {
-    this.userService.localGet(userSelected.id).pipe(
-      flatMap((response: ResponseWithData<User>) =>  response.data ? of(response) : this.userService.getByEmail(userSelected.email)),
-      map((response: ResponseWithData<User>) => response.data),
-      flatMap((user: User) => {
-        return this.synchroService.isOnline().pipe(flatMap((online: boolean) => {
-          if (online) {
-            return this.userService.login(user.email, user.password);
-          } else {
-            this.connectedUserService.userConnected(user);
-            return of({data: user, error: null});
-          }
-        }));
-      }),
-      map(() => {
-        this.navController.navigateRoot('/home');
-      }))
-      .subscribe();
+  public userSelected(user: User): void {
+    this.userService.askPasswordAndLogin(user.email).pipe(
+      map( (ruser) => {
+        if (ruser.data) {
+          // login with success
+          this.navController.navigateRoot('/home');
+        } // else login failed
+      })
+    ).subscribe();
   }
 
   public newUser(): void {
@@ -88,7 +69,12 @@ export class UserSelectionPage implements OnInit {
           text: 'Delete',
           handler: () => {
             console.log('Deleting user ' + user.id + '...');
-            this.userService.delete(user.id).subscribe(() => this.loadUser());
+            this.userService.delete(user.id).subscribe(
+              (data) => {
+                this.loadUser();
+                console.log('user deleted', data);
+              },
+              (err) => console.log('Error on user deletion: ', err));
           }
         }
       ]

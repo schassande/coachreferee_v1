@@ -18,7 +18,7 @@ import { ResponseWithData } from '../../app/service/response';
   templateUrl: 'skill-set-edit.html',
 })
 export class SkillSetEditPage implements OnInit {
-  skillProfileId: number;
+  skillProfileId: string;
   skillProfile: SkillProfile;
   skillSetIdx: number;
   skillSet: SkillSet;
@@ -37,7 +37,7 @@ export class SkillSetEditPage implements OnInit {
 
     this.route.paramMap.pipe(
       flatMap( (paramMap: ParamMap) => {
-        this.skillProfileId = parseInt(paramMap.get('skillProfileid'), 10);
+        this.skillProfileId = paramMap.get('skillProfileid');
         this.skillSetIdx = parseInt(paramMap.get('skillSetIdx'), 10);
         console.log('Load skill profile ', this.skillProfileId);
         return this.skillProfileService.get(this.skillProfileId);

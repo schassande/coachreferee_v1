@@ -1,9 +1,8 @@
-import { of } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { BookmarkService } from './../../app/service/BookmarkService';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { AppSettingsService } from './../../app/service/AppSettingsService';
 import { ConnectedUserService } from './../../app/service/ConnectedUserService';
-import { SynchroService } from './../../app/service/SynchroService';
 import { UserService } from './../../app/service/UserService';
 
 import { User } from './../../app/model/user';
@@ -26,14 +25,20 @@ export class HomePage implements OnInit {
 
   constructor(
       private navController: NavController,
-      public userService: UserService,
-      public connectedUserService: ConnectedUserService,
-      public synchroService: SynchroService,
-      public appSettingsService: AppSettingsService,
-      public alertCtrl: AlertController) {
+      private userService: UserService,
+      private connectedUserService: ConnectedUserService,
+      private appSettingsService: AppSettingsService,
+      private alertCtrl: AlertController,
+      private bookmarkService: BookmarkService,
+      private changeDetectorRef: ChangeDetectorRef) {
     this.connectedUserService.$userConnectionEvent.subscribe((user: User) => {
       this.connected = user != null;
-    });
+      this.changeDetectorRef.detectChanges();
+      this.bookmarkService.addBookmarkEntry({
+        id: 'logout',
+        label: 'Logout',
+        url: '/user/logout'});
+      });
   }
   public getShortName(): string {
     return this.connected
@@ -43,7 +48,10 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     console.log('Home.ionViewDidLoad()');
-    this.autoLogin();
+    this.connected = this.connectedUserService.isConnected();
+    if (!this.connected) {
+      this.tryToAutoLogin();
+    }
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent Chrome 67 and earlier from automatically showing the prompt
       e.preventDefault();
@@ -72,64 +80,34 @@ export class HomePage implements OnInit {
         this.deferredPrompt = null;
       });
   }
-  private autoLogin() {
-    this.synchroService.tryToSynchronize(false, this.userService.getLocalStoragePrefix()).pipe(
-      flatMap( () => this.appSettingsService.get()),
-      flatMap((settings: LocalAppSettings) => this.userService.localGet(settings.lastUserId)),
-      flatMap((ruser: ResponseWithData<User>) => {
-        return this.synchroService.isOnline().pipe(flatMap((online: boolean) => {
-          if (ruser.data) {
-            console.log('autologin: user=' + ruser.data.email);
-            if (online) {
-              console.log('autologin: login with server');
-              return this.userService.login(ruser.data.email, ruser.data.password)
-                .pipe(flatMap((rlogin) => {
-                  if (rlogin.error) {
-                    console.log('user does not exist try to save him');
-                    return this.userService.save(ruser.data);
-                  } else {
-                    return of(rlogin);
-                  }
-                }));
-            } else {
-              console.log('autologin: local connection');
-              this.connectedUserService.userConnected(ruser.data);
-              return of('');
-            }
-          } else {
-            console.log('autologin: no => search local users');
-            return this.userService.localAll().pipe(
-              flatMap((rusers: ResponseWithData<User[]>) => {
-                if (online && rusers.error && rusers.error.errorCode) {
-                  console.log('autologin: no local user => search remote users');
-                  return this.userService.all();
-                } else {
-                  return of(rusers);
-                }
-              }),
-              map((rusers: ResponseWithData<User[]>) => {
-                console.log('autologin: rusers=' + JSON.stringify(rusers));
-                if (rusers.data && rusers.data.length > 0) {
-                  console.log('autologin: Ask to select an user');
-                  this.navController.navigateRoot('/user/select');
-                } else {
-                  console.log('autologin: no users => create an user');
-                  this.alertCtrl.create({
-                    message: 'Welcome to RefCoach app !<br>You have to create an account to use the application.',
-                    buttons: [ { text: 'Ok', handler: () => this.navController.navigateRoot('/user/create') } ]
-                  }).then( (alert) => alert.present() );
-                }
-              }),
-              map(() => null));
-            }
-        }));
-      })).subscribe(null, (err) => console.error(err));
+
+  private tryToAutoLogin() {
+    // get last user connection info from the application settings store on device
+    this.userService.autoLogin().pipe(
+      map((ruser) => {
+        if (!this.connectedUserService.isConnected()) {
+          this.autoLoginNotPossible();
+        }
+      })
+    ).subscribe();
   }
 
-  public callbackUserEdit(user: User) {
-    if (user && user.id) {
-      this.connectedUserService.userConnected(user);
-    }
+  private autoLoginNotPossible() {
+    console.log('autologin: no => search users');
+    this.userService.all().pipe(
+      map((rusers: ResponseWithData<User[]>) => {
+        if (rusers.data && rusers.data.length > 0) {
+          console.log('autologin: Ask to select an user: ', rusers.data);
+          this.navController.navigateRoot('/user/select');
+        } else {
+          console.log('autologin: no users => create an user');
+          this.alertCtrl.create({
+            message: 'Welcome to RefCoach app !<br>You have to create an account to use the application.',
+            buttons: [ { text: 'Ok', handler: () => this.navController.navigateRoot('/user/create') } ]
+          }).then( (alert) => alert.present() );
+        }
+      })
+    ).subscribe();
   }
 
   public gotToMyAccount() {

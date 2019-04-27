@@ -20,7 +20,7 @@ import { ConnectedUserService } from './../../app/service/ConnectedUserService';
   templateUrl: 'skill-profile-edit.html',
 })
 export class SkillProfileEditPage implements OnInit {
-  skillProfileId: number;
+  skillProfileId: string;
   skillProfile: SkillProfile;
   skillSetName: string;
   readonly = false;
@@ -28,7 +28,6 @@ export class SkillProfileEditPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private navController: NavController,
-    private router: Router,
     public skillProfileService: SkillProfileService,
     public connectedUserService: ConnectedUserService,
     public alertCtrl: AlertController) {
@@ -47,7 +46,7 @@ export class SkillProfileEditPage implements OnInit {
   private loadSkillProfile(): Observable<ResponseWithData<SkillProfile>> {
     return this.route.paramMap.pipe(
       flatMap( (paramMap: ParamMap) => {
-        this.skillProfileId = parseInt(paramMap.get('skillProfileid'), 10);
+        this.skillProfileId = paramMap.get('skillProfileid');
         return this.skillProfileService.get(this.skillProfileId);
       })
     );
@@ -55,7 +54,7 @@ export class SkillProfileEditPage implements OnInit {
 
   private initSkillProfile() {
     this.skillProfile = {
-      id: 0,
+      id: null,
       version: 0,
       creationDate : new Date(),
       lastUpdate : new Date(),
@@ -78,7 +77,7 @@ export class SkillProfileEditPage implements OnInit {
         this.back();
         return response;
       })).subscribe(
-        (data) => console.log('Profil ' + this.skillProfile.name + ' saved: ' + JSON.stringify(data)),
+        (data) => console.log('Profil ' + this.skillProfile.name + ' saved.'),
         (err) => console.log('Error when saving Profil ' + this.skillProfile.name + ': ' + JSON.stringify(err))
         );
   }

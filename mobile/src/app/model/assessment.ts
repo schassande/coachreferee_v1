@@ -1,5 +1,5 @@
 import { GameCategory, GameLevel } from './game';
-import { PersistentData } from './common';
+import { PersistentData, SharedElement } from './common';
 export type Competency = 'YES' | 'NE' | 'NO';
 
 export interface Evaluation {
@@ -15,21 +15,20 @@ export interface SkillSetEvaluation extends Evaluation {
     skillEvaluations: SkillEvaluation[];
 }
 export interface SkillProfileEvaluation extends Evaluation {
-    profileId: number;
+    profileId: string;
     profileName: string;
     skillSetEvaluation: SkillSetEvaluation[];
 }
-
-export interface Assessment extends SkillProfileEvaluation, PersistentData {
+export interface Assessment extends SkillProfileEvaluation, PersistentData, SharedElement {
     competition: string;
     date: Date;
     field: string;
     timeSlot: string;
-    coachId: number;
+    coachId: string;
     gameCategory: GameCategory;
     gameSpeed: GameLevel;
     gameSkill: GameLevel;
-    refereeId: number;
+    refereeId: string;
     refereeShortName: string;
     closed?: boolean;
 }
