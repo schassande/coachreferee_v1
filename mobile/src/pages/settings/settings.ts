@@ -1,12 +1,10 @@
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { AlertController, ToastController } from '@ionic/angular';
-import { Router, ActivatedRoute } from '@angular/router';
+import { AlertController, ToastController, NavController } from '@ionic/angular';
 // import { File, FileEntry } from '@ionic-native/file';
 // import { SocialSharing } from '@ionic-native/social-sharing';
 // import { FilePath } from '@ionic-native/file-path';
-// import { Toast } from '@ionic-native/toast';
 // import { FileChooser } from '@ionic-native/file-chooser';
 import { Observable, of, concat, forkJoin } from 'rxjs';
 import { UserService } from '../../app/service/UserService';
@@ -48,19 +46,19 @@ export class SettingsPage implements OnInit {
   env = environment;
 
   constructor(
-    private router: Router,
-    public appSettingsService: AppSettingsService,
-    public connectedUserService: ConnectedUserService,
-    public userService: UserService,
-    public refereeService: RefereeService,
-    public proService: PROService,
-    public skillProfileService: SkillProfileService,
-    public coachingService: CoachingService,
-    public assessmentService: AssessmentService,
-    public alertController: AlertController,
-    public emailService: EmailService,
+    private navController: NavController,
+    private appSettingsService: AppSettingsService,
+    private connectedUserService: ConnectedUserService,
+    private userService: UserService,
+    private refereeService: RefereeService,
+    private proService: PROService,
+    private skillProfileService: SkillProfileService,
+    private coachingService: CoachingService,
+    private assessmentService: AssessmentService,
+    private alertController: AlertController,
+    private emailService: EmailService,
     private firestore: AngularFirestore,
-    public toastController: ToastController
+    private toastController: ToastController
     // public file: File,
     // private filePath: FilePath,
     // private socialSharing: SocialSharing,
@@ -88,7 +86,7 @@ export class SettingsPage implements OnInit {
     this.appSettingsService.save(this.settings).pipe(
       map((settings: LocalAppSettings) => {
         this.settings = settings;
-        this.router.navigate(['/home']);
+        this.navController.navigateRoot(['/home']);
       })
     ).subscribe();
   }
@@ -243,8 +241,7 @@ export class SettingsPage implements OnInit {
                 if (data.indexOf('assessments') >= 0) {
                   observables.push(this.assessmentService.all().pipe(map(    (response) => exportObj.assessments   =  response.data)));
                 }
-                /*
-                forkJoin(observables).subscribe( () => {
+                /*forkJoin(observables).subscribe( () => {
                   const str = JSON.stringify(exportObj, null, 2);
                   // console.log('Exported data: ', str);
                   const fileName = `referee_coach_${new Date().getTime()}.json`;
@@ -256,12 +253,12 @@ export class SettingsPage implements OnInit {
                       this.socialSharing.share(null, null, fe.nativeURL, null).then(() => this.msg.push('Data exported'));
                     }).catch((error) => {
                       console.error('Writing error: ', error);
-                      this.toast.showLongBottom('Fail to write file: ' + error).subscribe();
+                      this.toast('Fail to write file: ' + error);
                     });
-                });
-                */
-              }
-          }]
+                  });*/
+                }
+            }
+        ]
       }).then( (alert) => alert.present());
   }
 }
