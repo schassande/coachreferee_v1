@@ -35,9 +35,11 @@ export class AppComponent {
       this.versionService.migrate().subscribe();
       this.appSettingsService.get().subscribe((appSetttings) => {
         if (appSetttings.forceOffline) {
+          console.log('firestore.disableNetwork');
           this.firestore.firestore.disableNetwork();
         } else {
-          this.firestore.firestore.disableNetwork();
+          console.log('firestore.enableNetwork()');
+          this.firestore.firestore.enableNetwork();
         }
       });
     });
