@@ -1,11 +1,11 @@
 {
     "name": "refcoach",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "author": "Sebastien Chassande",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
-        "build": "ionic build --prod --service-worker",
+        "build": "npm version patch && node ./replace.build.js && ionic build --prod --service-worker",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e"
@@ -44,9 +44,9 @@
         "@angular/compiler-cli": "~7.2.2",
         "@angular/language-service": "~7.2.2",
         "@ionic/angular-toolkit": "~1.5.1",
-        "@types/node": "~10.14.2",
         "@types/jasmine": "~2.8.8",
         "@types/jasminewd2": "~2.0.3",
+        "@types/node": "~10.14.2",
         "codelyzer": "~4.5.0",
         "jasmine-core": "~2.99.1",
         "jasmine-spec-reporter": "~4.2.1",
@@ -56,6 +56,7 @@
         "karma-jasmine": "~1.1.2",
         "karma-jasmine-html-reporter": "^0.2.2",
         "protractor": "~5.4.0",
+        "replace-in-file": "^4.0.0",
         "ts-node": "~8.1.0",
         "tslint": "~5.16.0",
         "typescript": "~3.1.6"

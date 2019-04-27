@@ -11,7 +11,8 @@ export const environment = {
     projectId: 'refcoach-676e3',
     storageBucket: 'refcoach-676e3.appspot.com',
     messagingSenderId: '252857255317'
-  }
+  },
+  version: 'dev'
 };
 
 /*
