@@ -78,6 +78,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
                 return from(value.get());
             }),
             catchError((err) => {
+                console.log(err);
                 return of({ error: err, data: null});
             }),
             map(this.docSnapToResponse)
@@ -96,6 +97,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     private voidToObs(prom: Promise<void>, data: D): Observable<ResponseWithData<D>> {
         return from(prom).pipe(
             catchError((err) => {
+                console.log(err);
                 return of({ error: err, data: null});
             }),
             map(() => {
@@ -104,11 +106,13 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
         );
     }
     public all(): Observable<ResponseWithData<D[]>> {
-        return from(this.getCollectionRef().get({ source: 'default'})).pipe(
+        console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].all()');
+        return from(this.getCollectionRef().get()).pipe(
+            map(this.snapshotToObs),
             catchError((err) => {
+                console.log(err);
                 return of({ error: err, data: null});
-            }),
-            map(this.snapshotToObs)
+            })
         );
     }
 
@@ -148,6 +152,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     public query(query: Query, options: 'default' | 'server' | 'cache'): Observable<ResponseWithData<D[]>> {
         return from(query.get({ source: options})).pipe(
             catchError((err) => {
+                console.log(err);
                 return of({ error: err, data: null});
             }),
             map(this.snapshotToObs)
@@ -157,6 +162,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     public queryOne(query: Query, options: 'default' | 'server' | 'cache'): Observable<ResponseWithData<D>> {
         return from(query.limit(1).get({ source: options})).pipe(
             catchError((err) => {
+                console.log(err);
                 return of({ error: err, data: null});
             }),
             map(this.snapshotOneToObs)
@@ -167,6 +173,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
         console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].delete(' + id + ')');
         return from(this.fireStoreCollection.doc(id).delete()).pipe(
             catchError((err) => {
+                console.log(err);
                 return of({ error: err});
             }),
             map(() => {
