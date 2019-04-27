@@ -35,7 +35,7 @@ export class ConnectedUserService {
 
   public userConnected(user: User, credential: firebase.auth.UserCredential) {
     this.currentUser = user;
-    if (credential !== null || this.credential.user.email !== user.email) {
+    if (credential !== null || this.credential === null || this.credential.user.email !== user.email) {
       // set the new credential or clean if user is
       this.credential = credential;
     } // else keep the credential because it is same user

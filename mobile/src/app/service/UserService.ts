@@ -1,3 +1,4 @@
+import { LocalAppSettings } from './../model/settings';
 import { AppSettingsService } from './AppSettingsService';
 import { AlertController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
@@ -72,31 +73,40 @@ export class UserService  extends RemotePersistentDataService<User> {
         );
     }
 
-    public autoLogin(email: string, password: string = null): Observable<ResponseWithData<User>> {
-        if (!email) {
-            console.log('UserService.autoLogin(' + email + ', ' + password + '): no email');
-            // No email => no autologin possible
-            return of({ error: null, data: null });
-        }
-        if (!this.connectedUserService.isOnline()) {
-            console.log('UserService.autoLogin(' + email + ', ' + password + '): offline');
-            return this.getByEmail(email).pipe(
-                map( (ruser: ResponseWithData<User>) => {
-                    if (ruser.data) {
-                        this.connectedUserService.userConnected(ruser.data, null);
-                    }
-                    return ruser;
-                })
-            );
-        }
-        if (password) {
-            // password is defined => try to login
-            console.log('UserService.autoLogin(' + email + ', ' + password + '): login');
-            return this.login(email, password);
-        }
+    /**
+     * Try to autologin an user with data stored from local storage.
+     */
+    public autoLogin(): Observable<ResponseWithData<User>> {
+        return this.appSettingsService.get().pipe(
+            flatMap((settings: LocalAppSettings) => {
+                const email = settings.lastUserEmail;
+                const password = settings.lastUserPassword;
+                console.log('UserService.autoLogin(): lastUserEmail=' + email + ', lastUserPassword=' + password);
+                if (!email) {
+                    return of({ error: null, data: null});
+                }
+                if (!this.connectedUserService.isOnline()) {
+                    console.log('UserService.autoLogin(): offline => connect with email only');
+                    return this.connectByEmail(email, password);
+                }
+                if (password) {
+                    // password is defined => try to login
+                    console.log('UserService.autoLogin(): login(' + email + ', ' + password + ')');
+                    return this.login(email, password).pipe(
+                        flatMap((ruser) =>  ruser.data ?  of(ruser) : this.askPasswordAndLogin(email))
+                    );
+                }
+                return this.askPasswordAndLogin(email);
+            })
+        );
+    }
 
-        // There is an email but no password
-        // => ask the password to the user with a confirmation popup
+    /**
+     * There is an email but no password. Then ask the password to the user with a confirmation popup.
+     * Try to login with the read password.
+     * @param email is the email of the user
+     */
+    private askPasswordAndLogin(email: string): Observable<ResponseWithData<User>> {
         const sub = new Subject<ResponseWithData<User>>(); // use subject due to async actions
         from(this.alertCtrl.create({
             message: 'Please enter the password of the account \'' + email +  '\'.',
@@ -106,36 +116,46 @@ export class UserService  extends RemotePersistentDataService<User> {
             buttons: [
                 { text: 'Cancel', role: 'cancel',
                     handler: () => {
-                        console.log('suject.next(null)');
+                        console.log('Cancel password demand');
                         sub.next({ error: null, data: null});
-                        console.log('suject.complete()');
                         sub.complete();
                     }
                 },
                 { text: 'Login',
                     handler: (data: any) => {
-                        // console.log('autoLogin: password=', data.password, 'save=', data.savePassword);
+                        console.log('askPasswordAndLogin(' + email + '): read password=', data.password, 'save=', data.savePassword);
                         if (data.password && data.password.trim().length > 0) {
                             // try to login with the password
+                            console.log('UserService.askPasswordToLogin(' + email + '): login with read password');
                             this.login(email, data.password).pipe(
+                                flatMap ( (ruser) => {
+                                    if (ruser.error) {
+                                        // login failed
+                                        data.savePassword = false; // don't save the password if error occurs
+                                        if (ruser.error.code === 'auth/network-request-failed') {
+                                            console.log('UserService.askPasswordToLogin(' + email + '): no network');
+                                            // no network => check the email/password with local storage
+                                            return this.connectByEmail(email, data.password);
+                                        }
+                                    }
+                                    return of(ruser);
+                                }),
                                 map( (ruser) => {
                                     if (ruser.data) { // Login with success
+                                        console.log('UserService.askPasswordToLogin(' + email + '): login with success');
                                         if (data.savePassword) {
+                                            console.log('UserService.askPasswordToLogin(' + email + '): store password.');
                                             // The user is ok to store password in settings on local device
                                             this.appSettingsService.setLastUser(email, data.password);
                                         }
-                                    } // else login fails
-                                    console.log('suject.next(', ruser.data, ')');
+                                    }
                                     sub.next(ruser);
-                                    console.log('suject.complete()');
                                     sub.complete();
-                                })
+                                }),
                             ).subscribe();
                         } else {
-                            // the user didn't provide a valid password
-                            console.log('suject.next(null)');
+                            console.log('UserService.askPasswordToLogin(' + email + '): no password provided');
                             sub.next({ error: null, data: null});
-                            console.log('suject.complete()');
                             sub.complete();
                         }
                     }
@@ -145,6 +165,28 @@ export class UserService  extends RemotePersistentDataService<User> {
         return sub;
     }
 
+    private connectByEmail(email: string, password: string = null): Observable<ResponseWithData<User>> {
+        return this.appSettingsService.get().pipe(
+            flatMap((appSettings) => {
+                if (email === appSettings.lastUserEmail && (password == null || password === appSettings.lastUserPassword)) {
+                    console.log('UserService.connectByEmail(' + email + ',' + password + '): password is valid => get user');
+                    return this.getByEmail(email);
+                } else {
+                    console.log('UserService.connectByEmail(' + email + ',' + password + '): wrong password.');
+                    return of({ error: null, data: null });
+                }
+            }),
+            map( (ruser: ResponseWithData<User>) => {
+                if (ruser.data) {
+                    console.log('UserService.connectByEmail(' + email + ',' + password + '): user found', ruser.data);
+                    this.connectedUserService.userConnected(ruser.data, null);
+                } else {
+                    console.log('UserService.connectByEmail(' + email + ',' + password + '): fail.');
+                }
+                return ruser;
+            })
+        );
+}
     public getUrlPathOfGet(id: number) {
         return '?id=' + id;
     }
