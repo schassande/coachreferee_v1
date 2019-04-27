@@ -46,7 +46,7 @@ export class UserSelectionPage implements OnInit {
   }
 
   public userSelected(user: User): void {
-    this.userService.autoLogin(user.email, null).pipe(
+    this.userService.askPasswordAndLogin(user.email).pipe(
       map( (ruser) => {
         if (ruser.data) {
           // login with success

@@ -83,11 +83,8 @@ export class HomePage implements OnInit {
 
   private tryToAutoLogin() {
     // get last user connection info from the application settings store on device
-    this.appSettingsService.get().pipe(
-      flatMap((settings: LocalAppSettings) => {
-        return this.userService.autoLogin(settings.lastUserEmail, settings.lastUserPassword);
-      }),
-      map(() => {
+    this.userService.autoLogin().pipe(
+      map((ruser) => {
         if (!this.connectedUserService.isConnected()) {
           this.autoLoginNotPossible();
         }

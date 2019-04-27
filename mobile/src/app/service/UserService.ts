@@ -106,7 +106,7 @@ export class UserService  extends RemotePersistentDataService<User> {
      * Try to login with the read password.
      * @param email is the email of the user
      */
-    private askPasswordAndLogin(email: string): Observable<ResponseWithData<User>> {
+    public askPasswordAndLogin(email: string): Observable<ResponseWithData<User>> {
         const sub = new Subject<ResponseWithData<User>>(); // use subject due to async actions
         from(this.alertCtrl.create({
             message: 'Please enter the password of the account \'' + email +  '\'.',
