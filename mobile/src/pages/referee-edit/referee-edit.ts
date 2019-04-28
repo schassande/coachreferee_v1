@@ -8,6 +8,7 @@ import { Referee, CONSTANTES } from './../../app/model/user';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 
+
 /**
  * Generated class for the RefereeNewPage page.
  *
@@ -20,8 +21,9 @@ import { map } from 'rxjs/operators';
 })
 export class RefereeEditPage implements OnInit {
   referee: Referee;
-  error: string[];
+  error: string[] = [];
   constantes = CONSTANTES;
+  image: any = null;
 
   constructor(public modalController: ModalController,
               private route: ActivatedRoute,
@@ -161,9 +163,13 @@ export class RefereeEditPage implements OnInit {
   public cancel() {
     this.refereeService.lastSelectedReferee.referee = null;
     this.modalController.dismiss();
-}
+  }
 
-  getPicture() {
+  onImage(event) {
+    console.log('onImage(', event, '): image=', this.image);
+  }
+
+//  getPicture() {
     /*
     const options: CameraOptions = {
       quality: 50,
@@ -182,5 +188,5 @@ export class RefereeEditPage implements OnInit {
         console.error('getPicture: ', err);
       });
     */
-  }
+  // }
 }

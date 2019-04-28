@@ -58,8 +58,8 @@ import { SkillSetEditPage } from './../pages/skill-set-edit/skill-set-edit';
 import { UserEditPage } from '../pages/user-edit/user-edit';
 import { UserSelectionPage } from '../pages/user-selection/user-selection';
 import { SharingComponent } from './../pages/sharing-component';
-import { UserLogoutComponent } from 'src/pages/user-logout/user-logout.component';
-
+import { UserLogoutComponent } from '../pages/user-logout/user-logout.component';
+import { CameraIconComponent } from './../pages/camera-icon-component';
 
 @NgModule({
   declarations: [AppComponent,
@@ -72,7 +72,7 @@ import { UserLogoutComponent } from 'src/pages/user-logout/user-logout.component
     SettingsPage,
     SkillEditPage, SkillProfileEditPage, SkillProfileListPage, SkillSetEditPage,
     UserEditPage, UserSelectionPage, UserLogoutComponent,
-    SharingComponent, CompetencyComponent, PeriodSelectorComponent],
+    SharingComponent, CompetencyComponent, PeriodSelectorComponent, CameraIconComponent],
   entryComponents: [AppComponent, HomePage, RefereeSelectPage, RefereeEditPage],
   imports: [
     BrowserModule,
