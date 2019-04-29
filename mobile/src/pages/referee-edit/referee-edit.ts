@@ -1,7 +1,6 @@
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { ConnectedUserService } from './../../app/service/ConnectedUserService';
-// import { Camera, CameraOptions } from '@ionic-native/camera';
 import { ResponseWithData } from './../../app/service/response';
 import { RefereeService } from './../../app/service/RefereeService';
 import { Referee, CONSTANTES } from './../../app/model/user';
@@ -30,7 +29,6 @@ export class RefereeEditPage implements OnInit {
               public refereeService: RefereeService,
               public connectedUserService: ConnectedUserService,
               public loadingCtrl: LoadingController
-    // private camera: Camera
     ) {
   }
 

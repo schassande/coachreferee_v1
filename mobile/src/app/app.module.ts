@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireModule } from 'angularfire2';
+import { AngularFireStorageModule } from 'angularfire2/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -82,9 +83,10 @@ import { CameraIconComponent } from './../pages/camera-icon-component';
     IonicStorageModule.forRoot({ name: '__myDb', driverOrder : [ 'indexeddb', 'websql', 'sqlite']}),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     AppRoutingModule,
-    AngularFireAuthModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule.enablePersistence()],
+    AngularFireAuthModule,
+    AngularFirestoreModule.enablePersistence(),
+    AngularFireStorageModule],
   providers: [
     AppSettingsService,
     AssessmentService,
