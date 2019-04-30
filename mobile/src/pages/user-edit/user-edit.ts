@@ -1,3 +1,4 @@
+import { AngularFireStorage } from 'angularfire2/storage';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -6,6 +7,8 @@ import { ConnectedUserService } from './../../app/service/ConnectedUserService';
 import { ResponseWithData } from './../../app/service/response';
 import { UserService } from './../../app/service/UserService';
 import { User, CONSTANTES } from './../../app/model/user';
+
+import { environment } from '../../environments/environment';
 
 /**
  * Generated class for the UserNewPage page.
@@ -22,12 +25,14 @@ export class UserEditPage implements OnInit {
   user: User;
   error: string[] = [];
   constantes = CONSTANTES;
+  imageUrl: string = null;
 
   constructor(
     private navController: NavController,
     private route: ActivatedRoute,
     public userService: UserService,
     public connectedUserService: ConnectedUserService,
+    private afStorage: AngularFireStorage,
     public loadingCtrl: LoadingController) {
   }
 
@@ -47,6 +52,7 @@ export class UserEditPage implements OnInit {
               });
             } else {
               this.user = res.data;
+              this.updateImageUrl();
               console.log('load user: ', this.user);
               this.ensureDataSharing();
             }
@@ -162,24 +168,21 @@ export class UserEditPage implements OnInit {
     }
   }
 
-  getPicture() {
-    /*
-    const options: CameraOptions = {
-      quality: 50,
-      destinationType: this.camera.DestinationType.FILE_URI,
-      encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE,
-      cameraDirection: this.camera.Direction.FRONT,
-      allowEdit: false
-    };
-
-    this.camera.getPicture(options).then((imageUrl) => {
-        console.log('getPicture: ', imageUrl);
-        this.user.photo = { url : imageUrl, id : null };
-      },
-      (err) => {
-        console.error('getPicture: ', err);
+  private updateImageUrl() {
+    if (this.user.photo && this.user.photo.url) {
+      const gsUrl = 'gs://' + environment.firebase.storageBucket + '/' + this.user.photo.url;
+      // console.log('gsUrl=' + gsUrl);
+      this.afStorage.storage.refFromURL(gsUrl).getDownloadURL().then((url: string) => {
+        this.imageUrl = url;
+        // console.log('imageUrl=' + this.imageUrl);
       });
-      */
+    }
+  }
+
+  onImage(event) {
+    if (event && event.url) {
+      this.user.photo.url = event.url;
+      this.updateImageUrl();
+    }
   }
 }

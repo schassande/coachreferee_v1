@@ -1,11 +1,14 @@
 import { flatMap, map, catchError } from 'rxjs/operators';
-import { Subject, Observable, from, of } from 'rxjs';
+import { Observable, from, of } from 'rxjs';
 import { Component, Input, forwardRef, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { AngularFireStorage } from 'angularfire2/storage';
 import { ToastController } from '@ionic/angular';
+import { v4 as uuid } from 'uuid';
 
 export interface PhotoEvent {
     url: string;
+    fileName: string;
+    path: string;
     error: any;
 }
 
@@ -58,21 +61,30 @@ export class CameraIconComponent  {
     }
 
     uploadImage(imageURI) {
-        this.encodeImageUri(imageURI).pipe(
-            flatMap( (image64) => {
-                console.log('uploadImage: image64=', image64);
-                const fileName = `${new Date().getTime()}.jpg`;
-                const upload =  this.afStorage.ref(`${this.storageDirectory}/${fileName}`);
-                    // Perhaps this syntax might change, it's no error here!
-                return from(upload.putString(image64).then().then());
-            }),
-            map( (snapshot) => {
-                console.log('uploadImage: snapshot=', snapshot);
+        console.log('uploadImage: imageURI=', imageURI);
+        // Champ present pour un fichier : name, size, type="image/jpeg"
+        const fileName = uuid() + '.jpg';
+        const child =  this.afStorage.ref('').child(this.storageDirectory + '/' + fileName);
+        let obs: Observable<any>;
+        if (imageURI.name && imageURI.size) {
+            obs = from(child.put(imageURI, {contentType: 'image/jpeg'}).then().then());
+        } else {
+            obs = this.encodeImageUri(imageURI).pipe(
+                flatMap( (image64) => {
+                    // console.log('uploadImage: image64.length=', image64.length, imageURI);
+                        // Perhaps this syntax might change, it's no error here!
+                    return from(child.put(image64, {contentType: 'image/jpeg'}).then().then());
+                })
+            );
+        }
+        return obs.pipe(
+            map( (snapshot: any) => {
+                // console.log('uploadImage: snapshot=' + JSON.stringify(snapshot.metadata, null, 2));
                 if (this.userAlert) {
                     this.toastController.create({ message: 'Photo saved.', duration: 3000 })
                         .then((toast) => toast.present());
                 }
-                this.photo.emit({ url: snapshot.downloadURL, error: null });
+                this.photo.emit({ url: snapshot.metadata.fullPath, fileName, path: this.storageDirectory, error: null });
             }),
             catchError( (err, caught) => {
                 console.log('uploadImage: err=', err);
@@ -80,7 +92,7 @@ export class CameraIconComponent  {
                     this.toastController.create({ message: 'Error when saving photo: ' + err, duration: 3000 })
                         .then((toast) => toast.present());
                 }
-                this.photo.emit({ url: null, error: err });
+                this.photo.emit({ url: null, fileName: null, path: null, error: err });
                 return caught;
             })
         ).subscribe();

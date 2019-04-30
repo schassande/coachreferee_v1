@@ -24,9 +24,9 @@
                 <ion-item-group style="width: 100%;">
                     <ion-item-divider color="light">General info</ion-item-divider>
                     <ion-item>
-                        <ion-label *ngIf="!user.photo || !user.photo.url">No photo</ion-label>
-                        <ion-avatar item-start *ngIf="user.photo && user.photo.url"><img src="{{user.photo.url}}"></ion-avatar>
-                        <ion-icon slot="end" name="camera" (click)="getPicture()"></ion-icon>
+                        <ion-label *ngIf="!imageUrl">No photo</ion-label>
+                        <ion-avatar item-start *ngIf="imageUrl"><img src="{{imageUrl}}"></ion-avatar>
+                        <camera-icon-comp (photo)="onImage($event)" slot="end" alert="true"></camera-icon-comp>
                     </ion-item>
                     <ion-item>
                         <ion-label fixed>First name</ion-label>

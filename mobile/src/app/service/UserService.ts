@@ -33,9 +33,9 @@ export class UserService  extends RemotePersistentDataService<User> {
     }
 
     public save(user: User): Observable<ResponseWithData<User>> {
+        const password = user.password;
+        delete user.password;
         if (user.dataStatus === 'NEW') {
-            const password = user.password;
-            user.password = null;
             return from(firebase.auth().createUserWithEmailAndPassword(user.email, password)).pipe(
                 flatMap((userCred: firebase.auth.UserCredential) => {
                     // Store in application user datbase the firestore user id

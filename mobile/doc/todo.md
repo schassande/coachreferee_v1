@@ -4,8 +4,7 @@ This file lists the development task to do:
 
 ## V2.0
 
-- capture photo (user & referee)
-- Store photo on firebase storage
+- (User |Referee) Photo in offline
 - change logo of installed app
 - secure the firestore database (rules: authentificated)
 - tool to import referees in a massive way

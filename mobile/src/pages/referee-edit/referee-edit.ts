@@ -1,3 +1,4 @@
+import { AngularFireStorage } from 'angularfire2/storage';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { ConnectedUserService } from './../../app/service/ConnectedUserService';
@@ -7,6 +8,7 @@ import { Referee, CONSTANTES } from './../../app/model/user';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 
+import { environment } from '../../environments/environment';
 
 /**
  * Generated class for the RefereeNewPage page.
@@ -22,12 +24,13 @@ export class RefereeEditPage implements OnInit {
   referee: Referee;
   error: string[] = [];
   constantes = CONSTANTES;
-  image: any = null;
+  imageUrl: string = null;
 
   constructor(public modalController: ModalController,
               private route: ActivatedRoute,
               public refereeService: RefereeService,
               public connectedUserService: ConnectedUserService,
+              private afStorage: AngularFireStorage,
               public loadingCtrl: LoadingController
     ) {
   }
@@ -129,6 +132,7 @@ export class RefereeEditPage implements OnInit {
 
   private setReferee(ref: Referee) {
     this.referee = this.ensureDataSharing(ref);
+    this.updateImageUrl();
   }
 
   private ensureDataSharing(ref: Referee): Referee {
@@ -164,27 +168,20 @@ export class RefereeEditPage implements OnInit {
   }
 
   onImage(event) {
-    console.log('onImage(', event, '): image=', this.image);
+    if (event && event.url) {
+      this.referee.photo.url = event.url;
+      this.updateImageUrl();
+    }
   }
 
-//  getPicture() {
-    /*
-    const options: CameraOptions = {
-      quality: 50,
-      destinationType: this.camera.DestinationType.FILE_URI,
-      encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE,
-      cameraDirection: this.camera.Direction.BACK,
-      allowEdit: false
-    };
-
-    this.camera.getPicture(options).then((imageUrl) => {
-        console.log('getPicture: ', imageUrl);
-        this.referee.photo = { url : imageUrl, id : null };
-      },
-      (err) => {
-        console.error('getPicture: ', err);
+  private updateImageUrl() {
+    if (this.referee.photo && this.referee.photo.url) {
+      const gsUrl = 'gs://' + environment.firebase.storageBucket + '/' + this.referee.photo.url;
+      // console.log('gsUrl=' + gsUrl);
+      this.afStorage.storage.refFromURL(gsUrl).getDownloadURL().then((url: string) => {
+        this.imageUrl = url;
+        // console.log('imageUrl=' + this.imageUrl);
       });
-    */
-  // }
+    }
+  }
 }
