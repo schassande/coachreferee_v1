@@ -16,10 +16,12 @@ export interface PhotoEvent {
     selector: 'camera-icon-comp',
     template: `
         <span *ngIf="visible" style="margin: 0 5px;">
+            <ion-spinner slot="{{slot}}" *ngIf="loading"></ion-spinner>
             <input type="file" id="inputPhoto" #inputPhoto accept="image/*;capture=camera"
                 style="display: none;" capture="camera" (change)="onImage($event)" />
-            <ion-icon slot="{{slot}}" name="camera" size="large" class="cameraButton" (click)="openPhoto(inputPhoto)"></ion-icon>
-        </span>`,
+            <ion-icon slot="{{slot}}" name="camera" size="large" *ngIf="!loading"
+                class="cameraButton" (click)="openPhoto(inputPhoto)"></ion-icon>
+        </span>`
   })
 export class CameraIconComponent  {
 
@@ -33,6 +35,7 @@ export class CameraIconComponent  {
     public photo: EventEmitter<PhotoEvent> = new EventEmitter<PhotoEvent>();
     @Input()
     public userAlert = false;
+    loading = false;
 
     image: any = null;
     @ViewChild('inputPhoto') inputPhoto: ElementRef;
@@ -62,6 +65,7 @@ export class CameraIconComponent  {
 
     uploadImage(imageURI) {
         console.log('uploadImage: imageURI=', imageURI);
+        this.loading = true;
         // Champ present pour un fichier : name, size, type="image/jpeg"
         const fileName = uuid() + '.jpg';
         const child =  this.afStorage.ref('').child(this.storageDirectory + '/' + fileName);
@@ -84,9 +88,11 @@ export class CameraIconComponent  {
                     this.toastController.create({ message: 'Photo saved.', duration: 3000 })
                         .then((toast) => toast.present());
                 }
+                this.loading = false;
                 this.photo.emit({ url: snapshot.metadata.fullPath, fileName, path: this.storageDirectory, error: null });
             }),
             catchError( (err, caught) => {
+                this.loading = false;
                 console.log('uploadImage: err=', err);
                 if (this.userAlert) {
                     this.toastController.create({ message: 'Error when saving photo: ' + err, duration: 3000 })

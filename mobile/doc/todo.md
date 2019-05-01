@@ -6,9 +6,8 @@ This file lists the development task to do:
 
 - change logo of installed app
 - (User |Referee) Photo in offline
-- loading logo when uploading photo on server
 - secure the firestore database (rules: authentificated)
-- loading
+- loading spinner on startup and login
 - tool to import referees in a massive way
 - apply application user profile on skillprofile/levels
 - coaching : export as editable document (email?, html)
