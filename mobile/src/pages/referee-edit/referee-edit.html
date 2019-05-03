@@ -19,8 +19,8 @@
                     <ion-item-divider color="light">Person</ion-item-divider>
                 </ion-item-group>
                 <ion-item>
-                    <ion-label slot="start" *ngIf="!imageUrl">No photo</ion-label>
-                    <ion-avatar slot="start" *ngIf="imageUrl"><img src="{{imageUrl}}"></ion-avatar>
+                    <ion-label slot="start" *ngIf="!referee.photo || !referee.photo.url">No photo</ion-label>
+                    <ion-avatar slot="start" *ngIf="referee.photo && referee.photo.url"><img src="{{referee.photo.url}}"></ion-avatar>
                     <camera-icon-comp (photo)="onImage($event)" slot="end" alert="true"></camera-icon-comp>
                 </ion-item>
                 <ion-item>

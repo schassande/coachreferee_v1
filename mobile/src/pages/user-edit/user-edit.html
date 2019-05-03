@@ -24,8 +24,8 @@
                 <ion-item-group style="width: 100%;">
                     <ion-item-divider color="light">General info</ion-item-divider>
                     <ion-item>
-                        <ion-label *ngIf="!imageUrl">No photo</ion-label>
-                        <ion-avatar item-start *ngIf="imageUrl"><img src="{{imageUrl}}"></ion-avatar>
+                        <ion-label *ngIf="!user.photo || !user.photo.url">No photo</ion-label>
+                        <ion-avatar item-start *ngIf="user.photo && user.photo.url"><img src="{{user.photo.url}}"></ion-avatar>
                         <camera-icon-comp (photo)="onImage($event)" slot="end" alert="true"></camera-icon-comp>
                     </ion-item>
                     <ion-item>
@@ -37,7 +37,7 @@
                     </ion-item>
                     <ion-item>
                         <ion-label fixed>Last name</ion-label>
-                        <ion-input type="text" [(ngModel)]="user.lastName" (ionBlur)="updateShortName()" id="lastName" name="lastName" min="3" max="15" #lastName="ngModel" required tabindex="2"></ion-input>
+                        <ion-input type="text" [(ngModel)]="user.lastName" (ionBlur)="updateShortName()" id="lastName" name="lastName" min="3" max="25" #lastName="ngModel" required tabindex="2"></ion-input>
                     </ion-item>
                     <ion-item no-lines *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="alert alert-danger">
                         <div *ngIf="lastName.errors.required">A value is required.</div>
@@ -129,6 +129,6 @@
         </ul>
     </div>
     <div style="text-align: center;">
-        <ion-button (click)="newUser($event)" [disabled]="firstName.invalid && lastName.invalid">Save</ion-button>
+        <ion-button (click)="newUser($event)" [disabled]="firstName.invalid && lastName.invalid && !saving">Save</ion-button>
     </div>
 </ion-content>

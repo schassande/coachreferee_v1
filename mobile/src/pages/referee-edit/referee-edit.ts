@@ -1,3 +1,4 @@
+import { PhotoEvent } from './../camera-icon-component';
 import { AngularFireStorage } from 'angularfire2/storage';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { ModalController, LoadingController } from '@ionic/angular';
@@ -7,8 +8,6 @@ import { RefereeService } from './../../app/service/RefereeService';
 import { Referee, CONSTANTES } from './../../app/model/user';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
-
-import { environment } from '../../environments/environment';
 
 /**
  * Generated class for the RefereeNewPage page.
@@ -68,7 +67,7 @@ export class RefereeEditPage implements OnInit {
       email: '',
       gender: 'M',
       mobilePhones: [ ],
-      photo: {id: null, url: null},
+      photo: {path: null, url: null},
       speakingLanguages: [ 'EN' ],
       referee : {
           refereeLevel: 'EURO_1',
@@ -132,7 +131,6 @@ export class RefereeEditPage implements OnInit {
 
   private setReferee(ref: Referee) {
     this.referee = this.ensureDataSharing(ref);
-    this.updateImageUrl();
   }
 
   private ensureDataSharing(ref: Referee): Referee {
@@ -167,21 +165,10 @@ export class RefereeEditPage implements OnInit {
     this.modalController.dismiss();
   }
 
-  onImage(event) {
+  onImage(event: PhotoEvent) {
     if (event && event.url) {
       this.referee.photo.url = event.url;
-      this.updateImageUrl();
-    }
-  }
-
-  private updateImageUrl() {
-    if (this.referee.photo && this.referee.photo.url) {
-      const gsUrl = 'gs://' + environment.firebase.storageBucket + '/' + this.referee.photo.url;
-      // console.log('gsUrl=' + gsUrl);
-      this.afStorage.storage.refFromURL(gsUrl).getDownloadURL().then((url: string) => {
-        this.imageUrl = url;
-        // console.log('imageUrl=' + this.imageUrl);
-      });
+      this.referee.photo.path = event.path;
     }
   }
 }

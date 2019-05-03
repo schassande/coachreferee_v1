@@ -5,9 +5,10 @@ import { AngularFireStorage } from 'angularfire2/storage';
 import { ToastController } from '@ionic/angular';
 import { v4 as uuid } from 'uuid';
 
+import { environment } from '../environments/environment';
+
 export interface PhotoEvent {
     url: string;
-    fileName: string;
     path: string;
     error: any;
 }
@@ -82,14 +83,21 @@ export class CameraIconComponent  {
             );
         }
         return obs.pipe(
-            map( (snapshot: any) => {
-                // console.log('uploadImage: snapshot=' + JSON.stringify(snapshot.metadata, null, 2));
+            flatMap( (snapshot: any) => {
+                    // console.log('uploadImage: snapshot=' + JSON.stringify(snapshot.metadata, null, 2));
+                const gsUrl = 'gs://' + environment.firebase.storageBucket + '/' + snapshot.metadata.fullPath;
+                // console.log('gsUrl=' + gsUrl);
+                return this.afStorage.storage.refFromURL(gsUrl).getDownloadURL().then((url: string) => {
+                  return { path: snapshot.metadata.fullPath, url, error: null };
+                });
+            }),
+            map( (event: PhotoEvent) => {
                 if (this.userAlert) {
                     this.toastController.create({ message: 'Photo saved.', duration: 3000 })
                         .then((toast) => toast.present());
                 }
                 this.loading = false;
-                this.photo.emit({ url: snapshot.metadata.fullPath, fileName, path: this.storageDirectory, error: null });
+                this.photo.emit(event);
             }),
             catchError( (err, caught) => {
                 this.loading = false;
@@ -98,7 +106,7 @@ export class CameraIconComponent  {
                     this.toastController.create({ message: 'Error when saving photo: ' + err, duration: 3000 })
                         .then((toast) => toast.present());
                 }
-                this.photo.emit({ url: null, fileName: null, path: null, error: err });
+                this.photo.emit({ url: null, path: null, error: err });
                 return caught;
             })
         ).subscribe();

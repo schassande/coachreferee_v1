@@ -2,9 +2,8 @@ import { LocalAppSettings } from './../model/settings';
 import { AppSettingsService } from './AppSettingsService';
 import { AlertController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { ResponseWithData } from './response';
+import { ResponseWithData, Response } from './response';
 import { Observable, of, from, Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { ConnectedUserService } from './ConnectedUserService';
 import { Injectable } from '@angular/core';
 import { User } from './../model/user';
@@ -43,12 +42,40 @@ export class UserService  extends RemotePersistentDataService<User> {
                     return super.save(user);
                 }),
                 catchError((err) => {
+                    console.error(err);
                     return of({ error: err, data: null});
                 }),
             );
         } else {
             return super.save(user);
         }
+    }
+
+    public delete(id: string): Observable<Response> {
+        // check the user to delete is the current user.
+        if (this.connectedUserService.getCurrentUser().id !== id) {
+            return of({error: {error: 'Not current user', errorCode: 1}});
+        }
+        // First delete user from database
+        return super.delete(id).pipe(
+            flatMap( (res) => {
+                if (res.error != null) {
+                    console.log('Error on delete', res.error);
+                    return of (res);
+                } else {
+                    // then delete the user from firestore user auth database
+                    return from(firebase.auth().currentUser.delete()).pipe(
+                        map(() => {
+                            return {error: null};
+                        }),
+                        catchError((err) => {
+                            console.error(err);
+                            return of({error: err});
+                        })
+                    );
+                }
+            })
+        );
     }
 
     public login(email: string, password: string): Observable<ResponseWithData<User>> {

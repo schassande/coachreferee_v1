@@ -1,14 +1,14 @@
-import { AngularFireStorage } from 'angularfire2/storage';
+import { PersistentDataUpdater } from './../../app/service/PersistentDataFonctions';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { LoadingController, NavController } from '@ionic/angular';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { LoadingController, NavController, ToastController } from '@ionic/angular';
 import { ConnectedUserService } from './../../app/service/ConnectedUserService';
 import { ResponseWithData } from './../../app/service/response';
 import { UserService } from './../../app/service/UserService';
 import { User, CONSTANTES } from './../../app/model/user';
 
-import { environment } from '../../environments/environment';
+import { PhotoEvent } from '../camera-icon-component';
 
 /**
  * Generated class for the UserNewPage page.
@@ -25,14 +25,14 @@ export class UserEditPage implements OnInit {
   user: User;
   error: string[] = [];
   constantes = CONSTANTES;
-  imageUrl: string = null;
+  saving = false;
 
   constructor(
     private navController: NavController,
     private route: ActivatedRoute,
     public userService: UserService,
     public connectedUserService: ConnectedUserService,
-    private afStorage: AngularFireStorage,
+    private toastController: ToastController,
     public loadingCtrl: LoadingController) {
   }
 
@@ -52,7 +52,6 @@ export class UserEditPage implements OnInit {
               });
             } else {
               this.user = res.data;
-              this.updateImageUrl();
               console.log('load user: ', this.user);
               this.ensureDataSharing();
             }
@@ -96,7 +95,7 @@ export class UserEditPage implements OnInit {
       gender: 'M',
       mobilePhones: [ ],
       photo: {
-        id: null,
+        path: null,
         url: null
       },
       speakingLanguages: [ 'EN' ],
@@ -128,8 +127,8 @@ export class UserEditPage implements OnInit {
     if (!this.isValidString(this.user.firstName, 3, 15)) {
       this.error.push(('Invalid first name: 3 to 15 chars'));
     }
-    if (!this.isValidString(this.user.lastName, 3, 15)) {
-      this.error.push(('Invalid last name: 3 to 15 chars'));
+    if (!this.isValidString(this.user.lastName, 3, 25)) {
+      this.error.push(('Invalid last name: 3 to 25 chars'));
     }
     if (!this.isValidString(this.user.shortName, 3, 5)) {
       this.error.push(('Invalid short name: 3 to 5 chars'));
@@ -156,9 +155,18 @@ export class UserEditPage implements OnInit {
 
   public newUser(event) {
     if (this.isValid()) {
+      this.saving = true;
       this.userService.save(this.user).subscribe((response: ResponseWithData<User>) => {
+        this.saving = false;
         if (response.error) {
-          this.error.push('Error when saving the user info: ' + this.error);
+          if (response.error.code === 'auth/email-already-in-use') {
+            console.log('The email addresse is already used.');
+            this.toastController.create({ message: 'The email addresse is already used: ' + this.user.email, duration: 5000})
+              .then((toast) => toast.present());
+          } else {
+            this.toastController.create({ message: 'Error when saving the user info: ' + this.error, duration: 5000})
+              .then((toast) => toast.present());
+          }
         } else {
           this.user = response.data;
           console.log('Saved user: ', this.user);
@@ -168,21 +176,10 @@ export class UserEditPage implements OnInit {
     }
   }
 
-  private updateImageUrl() {
-    if (this.user.photo && this.user.photo.url) {
-      const gsUrl = 'gs://' + environment.firebase.storageBucket + '/' + this.user.photo.url;
-      // console.log('gsUrl=' + gsUrl);
-      this.afStorage.storage.refFromURL(gsUrl).getDownloadURL().then((url: string) => {
-        this.imageUrl = url;
-        // console.log('imageUrl=' + this.imageUrl);
-      });
-    }
-  }
-
-  onImage(event) {
+  onImage(event: PhotoEvent) {
     if (event && event.url) {
       this.user.photo.url = event.url;
-      this.updateImageUrl();
+      this.user.photo.path = event.path;
     }
   }
 }
