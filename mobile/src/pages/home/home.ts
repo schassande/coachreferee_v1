@@ -1,15 +1,13 @@
 import { BookmarkService } from './../../app/service/BookmarkService';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
-import { AppSettingsService } from './../../app/service/AppSettingsService';
 import { ConnectedUserService } from './../../app/service/ConnectedUserService';
 import { UserService } from './../../app/service/UserService';
 
 import { User } from './../../app/model/user';
-import { LocalAppSettings } from './../../app/model/settings';
 import { ResponseWithData } from './../../app/service/response';
-import { flatMap, map } from 'rxjs/operators';
-import { NavController, AlertController } from '@ionic/angular';
+import { map } from 'rxjs/operators';
+import { NavController, AlertController, LoadingController } from '@ionic/angular';
 
 
 @Component({
@@ -22,14 +20,15 @@ export class HomePage implements OnInit {
   connected = false;
   showInstallBtn = false;
   deferredPrompt;
+  loading;
 
   constructor(
       private navController: NavController,
       private userService: UserService,
       private connectedUserService: ConnectedUserService,
-      private appSettingsService: AppSettingsService,
       private alertCtrl: AlertController,
       private bookmarkService: BookmarkService,
+      private loadingController: LoadingController,
       private changeDetectorRef: ChangeDetectorRef) {
     this.connectedUserService.$userConnectionEvent.subscribe((user: User) => {
       this.connected = user != null;
@@ -47,7 +46,10 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('Home.ionViewDidLoad()');
+    this.loadingController.create({ message: 'Auto login...'}).then( (alert) => {
+      this.loading = alert;
+      this.loading.present();
+    });
     this.connected = this.connectedUserService.isConnected();
     if (!this.connected) {
       this.tryToAutoLogin();
@@ -65,6 +67,7 @@ export class HomePage implements OnInit {
       console.log('display-mode is standalone');
     }
   }
+
   addToHome() {
     // hide our user interface that shows our button
     // Show the prompt
@@ -87,15 +90,23 @@ export class HomePage implements OnInit {
       map((ruser) => {
         if (!this.connectedUserService.isConnected()) {
           this.autoLoginNotPossible();
+        } else {
+          this.loading.dismiss();
         }
       })
     ).subscribe();
   }
 
   private autoLoginNotPossible() {
+    this.loading.dismiss();
+    this.loadingController.create({ message: 'Searching users...'}).then( (alert) => {
+      this.loading = alert;
+      this.loading.present();
+    });
     console.log('autologin: no => search users');
     this.userService.all().pipe(
       map((rusers: ResponseWithData<User[]>) => {
+        this.loading.dismiss();
         if (rusers.data && rusers.data.length > 0) {
           console.log('autologin: Ask to select an user: ', rusers.data);
           this.navController.navigateRoot('/user/select');
