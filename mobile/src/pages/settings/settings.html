@@ -33,8 +33,11 @@
         </ion-item>
     </ion-list>
     <div style="text-align: center; margin-top: 10px;" *ngIf="!env.production">
-        <ion-button shape="round" (click)="exportData()">Export</ion-button>
-        <ion-button shape="round" (click)="importData()">Import</ion-button>
+        <span>
+            <input type="file" #inputReferees accept="*.csv"
+            style="display: none;" (change)="importRefereeFromCsv($event)" />
+            <ion-button shape="round" (click)="importReferees()">Import referees</ion-button>
+        </span>
     </div>
     <div style="text-align: center; margin-top: 10px;" *ngIf="!env.production">
         <ion-button shape="round" (click)="importLevelsAus()">Import Aus Levels</ion-button>

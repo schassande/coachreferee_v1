@@ -5,7 +5,6 @@ This file lists the development task to do:
 ## V2.0
 
 - change logo of installed app
-- tool to import referees in a massive way
 - coaching : export as editable document (email?, html)
 - assessment : export as pdf (via storage ?)
 - create a trigger to delete unused photo on storage every week end

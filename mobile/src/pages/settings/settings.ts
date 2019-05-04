@@ -1,5 +1,5 @@
 import { AngularFirestore } from 'angularfire2/firestore';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { map, flatMap } from 'rxjs/operators';
 import { AlertController, ToastController, NavController } from '@ionic/angular';
 // import { File, FileEntry } from '@ionic-native/file';
@@ -20,14 +20,16 @@ import { EmailService } from '../../app/service/EmailService';
 import { Coaching, PersistentPRO } from './../../app/model/coaching';
 import { Assessment } from './../../app/model/assessment';
 import { SkillProfile } from './../../app/model/skill';
-import { User, Referee } from './../../app/model/user';
+import { User, Referee, Gender, RefereeLevel, RefereeCategory } from './../../app/model/user';
 import { ExportedData } from './../../app/model/settings';
 
 import { LEVELS_AUS } from './levelAus';
 import { LEVELS_NZ } from './levelNZ';
 import { LEVELS_EURO } from './levelEuropean';
 import { environment } from '../../environments/environment';
+import { read } from 'fs';
 
+const csv = require('csvtojson');
 
 /**
  * Generated class for the SettingsPage page.
@@ -44,6 +46,7 @@ export class SettingsPage implements OnInit {
   settings: LocalAppSettings;
   msg: string[] = [];
   env = environment;
+  @ViewChild('inputReferees') inputReferees: ElementRef;
 
   constructor(
     private navController: NavController,
@@ -101,8 +104,97 @@ export class SettingsPage implements OnInit {
     ).subscribe();
   }
 
-  public importData() {
-    /*
+  importReferees() {
+    this.inputReferees.nativeElement.click();
+  }
+  public importRefereeFromCsv(event) {
+    const reader: FileReader = new FileReader();
+    reader.readAsText(event.target.files[0]);
+    reader.onloadend = () => {
+      console.log('File loaded:');
+      console.log(reader.result);
+      csv({ output: 'json', trim: true, noheader: false, delimiter: ';', ignoreEmpty: true, checkType: true})
+        .fromString(reader.result).then((jsons) => {
+          jsons.forEach(json => {
+            this.importReferee(json);
+          });
+        });
+   };
+  }
+
+  private importReferee(json) {
+    const referee: Referee = {
+      id: null,
+      version: 0,
+      creationDate : new Date(),
+      lastUpdate : new Date(),
+      dataStatus: 'NEW',
+      firstName: this.getValue(json, 'firstName', ''),
+      lastName: this.getValue(json, 'lastName', ''),
+      shortName: this.getValue(json, 'shortName', ''),
+      country: this.getValue(json, 'country', ''),
+      email: this.getValue(json, 'email', ''),
+      gender: this.getGender(json, 'gender', 'M'),
+      mobilePhones: this.getStringList(json, 'mobilePhones', []),
+      photo: {path: null, url: null},
+      speakingLanguages: this.getStringList(json, 'speakingLanguages', ['EN']),
+      referee : {
+          refereeLevel: this.getRefereeLevel(json, 'refereeLevel', 'EURO_1'),
+          refereeCategory : 'OPEN',
+          nextRefereeLevel: this.getRefereeLevel(json, 'nextRefereeLevel', null),
+      },
+      refereeCoach: {
+          refereeCoachLevel: 'NONE'
+      },
+      dataSharingAgreement: {
+        personnalInfoSharing: 'NO',
+        photoSharing: 'NO',
+        refereeAssessmentSharing: 'NO',
+        refereeCoachingInfoSharing: 'NO'
+      }
+    };
+    this.refereeService.save(referee).subscribe();
+  }
+
+  private getValue(json: any, fieldName: string, defaultValue: string): string {
+    return json[fieldName] ? json[fieldName] : defaultValue;
+  }
+
+  private getGender(json: any, fieldName: string, defaultValue: Gender): Gender {
+    return json[fieldName] ? json[fieldName] : defaultValue;
+  }
+
+  private getStringList(json: any, fieldName: string, defaultValue: string[]): string[] {
+    if (json[fieldName] ) {
+      // TODO json[fieldName]
+      return [];
+    } else {
+      return defaultValue;
+    }
+  }
+
+  private getRefereeLevel(json: any, fieldName: string, defaultValue: RefereeLevel): RefereeLevel {
+    if (json.referee && json.referee[fieldName]) {
+      return json.referee[fieldName] as RefereeLevel;
+    } else if (json[fieldName]) {
+      return json[fieldName] as RefereeLevel;
+    } else {
+      return defaultValue;
+    }
+  }
+
+  public getRefereeCategory(json: any, defaultValue: RefereeCategory): RefereeCategory {
+    if (json.referee && json.referee.refereeCategory) {
+      return json.referee.refereeCategory as RefereeCategory;
+    } else if (json.refereeCategory) {
+      return json.refereeCategory as RefereeCategory;
+    } else {
+      return defaultValue;
+    }
+  }
+  // nextRefereeLevel: RefereeLevel;
+
+  /*
     this.fileChooser.open().then(uri => {
       console.log(uri);
       return this.filePath.resolveNativePath(uri);
@@ -118,7 +210,6 @@ export class SettingsPage implements OnInit {
       console.log(e);
       this.toast.showLongBottom('Fail to read file: ' + e);
     });
-    */
   }
 
   private importDataObjects(importObj: ExportedData) {
@@ -265,10 +356,12 @@ export class SettingsPage implements OnInit {
                       console.error('Writing error: ', error);
                       this.toast('Fail to write file: ' + error);
                     });
-                  });*/
+                  });
                 }
             }
         ]
       }).then( (alert) => alert.present());
   }
+  */
+
 }
