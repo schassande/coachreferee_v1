@@ -166,8 +166,7 @@ export class SettingsPage implements OnInit {
 
   private getStringList(json: any, fieldName: string, defaultValue: string[]): string[] {
     if (json[fieldName] ) {
-      // TODO json[fieldName]
-      return [];
+      return json[fieldName].split(',');
     } else {
       return defaultValue;
     }
