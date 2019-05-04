@@ -21,7 +21,6 @@ export class HomePage implements OnInit {
   connected = false;
   showInstallBtn = false;
   deferredPrompt;
-  loading;
 
   constructor(
       private navController: NavController,
@@ -56,10 +55,6 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
-    this.loadingController.create({ message: 'Auto login...'}).then( (alert) => {
-      this.loading = alert;
-      this.loading.present();
-    });
     this.connected = this.connectedUserService.isConnected();
     if (!this.connected) {
       this.tryToAutoLogin();
@@ -94,29 +89,31 @@ export class HomePage implements OnInit {
       });
   }
 
-  private tryToAutoLogin() {
+  private async tryToAutoLogin() {
     // get last user connection info from the application settings store on device
+    console.log('auto login.present');
+    const loading = await this.loadingController.create({ message: 'Auto login...'});
+    loading.present();
     this.userService.autoLogin().pipe(
       map((ruser) => {
+        console.log('auto login.dismiss');
+        loading.dismiss();
         if (!this.connectedUserService.isConnected()) {
           this.autoLoginNotPossible();
-        } else {
-          this.loading.dismiss();
         }
       })
     ).subscribe();
   }
 
-  private autoLoginNotPossible() {
-    this.loading.dismiss();
-    this.loadingController.create({ message: 'Searching users...'}).then( (alert) => {
-      this.loading = alert;
-      this.loading.present();
-    });
+  private async autoLoginNotPossible() {
+    // this.loadingController.getTop()
+    const loading = await this.loadingController.create({ message: 'Searching users...'});
+    loading.present();
     console.log('autologin: no => search users');
     this.userService.all().pipe(
       map((rusers: ResponseWithData<User[]>) => {
-        this.loading.dismiss();
+        console.log('search users.dismiss');
+        loading.dismiss();
         if (rusers.data && rusers.data.length > 0) {
           console.log('autologin: Ask to select an user: ', rusers.data);
           this.navController.navigateRoot('/user/select');
