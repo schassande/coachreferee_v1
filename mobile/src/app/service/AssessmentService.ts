@@ -9,6 +9,7 @@ import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { Assessment } from './../model/assessment';
 import { Observable, of, concat } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ToastController } from '@ionic/angular';
 
 const TIME_SLOT_SEP = ':';
 const DATE_SEP = '-';
@@ -22,9 +23,10 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
     constructor(
         db: AngularFirestore,
         protected refereeService: RefereeService,
-        private connectedUserService: ConnectedUserService
+        private connectedUserService: ConnectedUserService,
+        toastController: ToastController
     ) {
-        super(db);
+        super(db, toastController);
     }
 
     getLocalStoragePrefix() {

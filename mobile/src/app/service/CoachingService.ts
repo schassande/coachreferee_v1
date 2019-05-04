@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { Coaching } from './../model/coaching';
+import { ToastController } from '@ionic/angular';
 
 const TIME_SLOT_SEP = ':';
 const DATE_SEP = '-';
@@ -18,9 +19,10 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
     constructor(
       db: AngularFirestore,
       protected refereeService: RefereeService,
-      private connectedUserService: ConnectedUserService
+      private connectedUserService: ConnectedUserService,
+      toastController: ToastController
     ) {
-        super(db);
+        super(db, toastController);
     }
 
     getLocalStoragePrefix() {

@@ -1,3 +1,4 @@
+import { ToastController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
 import { ResponseWithData } from './response';
@@ -12,8 +13,9 @@ export class RefereeService extends RemotePersistentDataService<Referee> {
 
     constructor(
         db: AngularFirestore,
+        toastController: ToastController
     ) {
-        super(db);
+        super(db, toastController);
     }
 
     getLocalStoragePrefix() {

@@ -11,13 +11,16 @@ import { AngularFirestore,
     QuerySnapshot,
     QueryDocumentSnapshot,
     Query} from 'angularfire2/firestore';
+import { ToastController } from '@ionic/angular';
 
 export abstract class RemotePersistentDataService<D extends PersistentData> implements Crud<D> {
 
     private fireStoreCollection: AngularFirestoreCollection<D>;
+    private preloaded = false;
 
     constructor(
-        protected db: AngularFirestore
+        protected db: AngularFirestore,
+        private toastController: ToastController
     ) {
         this.fireStoreCollection = db.collection<D>(this.getLocalStoragePrefix());
     }
@@ -115,12 +118,22 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             })
         );
     }
+    public allO(options: 'default' | 'server' | 'cache'): Observable<ResponseWithData<D[]>> {
+        console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].all()');
+        return from(this.getCollectionRef().get({ source: options})).pipe(
+            map(this.snapshotToObs),
+            catchError((err) => {
+                // console.log(err);
+                return of({ error: err, data: null});
+            })
+        );
+    }
 
     public getCollectionRef() {
         return this.fireStoreCollection.ref;
     }
 
-    private snapshotToObs(qs: QuerySnapshot<D>): ResponseWithData<D[]> {
+    protected snapshotToObs(qs: QuerySnapshot<D>): ResponseWithData<D[]> {
         const datas: D[] = [];
         qs.forEach((qds: QueryDocumentSnapshot<D>) => {
             const data: D = qds.data();
@@ -210,5 +223,46 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
 
     protected stringContains(elem: string, text: string): boolean {
         return elem && text && text.toLowerCase().indexOf(elem.toLowerCase()) >= 0;
+    }
+
+    public preload(): Observable<Response> {
+        if (this.preloaded) {
+            console.log('preload[' + this.getLocalStoragePrefix() + ']: already cached');
+            return of({ error: null});
+        } else {
+            let toast = null;
+            return this.allO('cache').pipe(
+                flatMap( (resL) => {
+                    if (resL.data.length === 0) {
+                        console.log('preload[' + this.getLocalStoragePrefix() + ']: Loading from server');
+                        this.toastController.create({ message: 'Loading ' + this.getLocalStoragePrefix() + 's...', position: 'bottom'})
+                            .then((alert) => {
+                                toast = alert;
+                                alert.present();
+                            });
+                        // load from server
+                        return this.allO('server').pipe(flatMap( (resR) =>  {
+                            this.preloaded = true;
+                            return of({ error: null});
+                        }));
+                    } else {
+                        console.log('preload[' + this.getLocalStoragePrefix() + ']: already cached by firestore');
+                        this.preloaded = true;
+                        return of({ error: null});
+                    }
+                }),
+                catchError((err) => {
+                    console.log(err);
+                    return of({ error: err});
+                })
+            ).pipe(
+                map((res) => {
+                    if (toast !== null) {
+                        toast.dismiss();
+                    }
+                    return res;
+                })
+            );
+        }
     }
 }

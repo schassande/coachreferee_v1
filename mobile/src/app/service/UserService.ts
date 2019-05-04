@@ -1,6 +1,6 @@
 import { LocalAppSettings } from './../model/settings';
 import { AppSettingsService } from './AppSettingsService';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { ResponseWithData, Response } from './response';
 import { Observable, of, from, Subject } from 'rxjs';
@@ -18,9 +18,10 @@ export class UserService  extends RemotePersistentDataService<User> {
         private connectedUserService: ConnectedUserService,
         private appSettingsService: AppSettingsService,
         db: AngularFirestore,
-        private alertCtrl: AlertController
+        private alertCtrl: AlertController,
+        toastController: ToastController
     ) {
-        super(db);
+        super(db, toastController);
     }
 
     getLocalStoragePrefix(): string {

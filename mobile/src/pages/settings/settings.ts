@@ -1,6 +1,6 @@
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
 import { AlertController, ToastController, NavController } from '@ionic/angular';
 // import { File, FileEntry } from '@ionic-native/file';
 // import { SocialSharing } from '@ionic-native/social-sharing';
@@ -58,11 +58,10 @@ export class SettingsPage implements OnInit {
     private alertController: AlertController,
     private emailService: EmailService,
     private firestore: AngularFirestore,
-    private toastController: ToastController
+    private toastController: ToastController,
     // public file: File,
     // private filePath: FilePath,
     // private socialSharing: SocialSharing,
-    // private toast: Toast,
     // private fileChooser: FileChooser
   ) {
   }
@@ -70,12 +69,23 @@ export class SettingsPage implements OnInit {
   ngOnInit() {
     console.log('ionViewDidLoad SettingsPage');
     this.appSettingsService.get().subscribe((appSettings: LocalAppSettings) => {
+      if (appSettings.forceOffline === undefined) {
+        appSettings.forceOffline = false;
+      }
       this.settings = appSettings;
     });
   }
 
-  public onToggleForceOffline() {
+  public onToggleForceOffline(event) {
+    this.settings.forceOffline = !this.settings.forceOffline;
+    console.log('onToggleForceOffline(' + JSON.stringify(event) + ') =>', this.settings.forceOffline);
     if (this.settings.forceOffline) {
+      this.skillProfileService.preload().pipe(
+        flatMap(() => this.refereeService.preload()),
+        flatMap(() => this.proService.preload()),
+        flatMap(() => this.coachingService.preload()),
+        flatMap(() => this.assessmentService.preload())
+      ).subscribe();
       this.firestore.firestore.disableNetwork();
     } else {
       this.firestore.firestore.enableNetwork();

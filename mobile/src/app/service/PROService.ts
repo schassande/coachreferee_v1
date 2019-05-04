@@ -5,15 +5,17 @@ import { ResponseWithData } from './response';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { PersistentPRO } from './../model/coaching';
+import { ToastController } from '@ionic/angular';
 
 @Injectable()
 export class PROService extends RemotePersistentDataService<PersistentPRO> {
 
     constructor(
         db: AngularFirestore,
-        private connectedUserService: ConnectedUserService
+        private connectedUserService: ConnectedUserService,
+        toastController: ToastController
     ) {
-        super(db);
+        super(db, toastController);
     }
 
     getLocalStoragePrefix() {

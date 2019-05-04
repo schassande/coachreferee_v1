@@ -1,3 +1,4 @@
+import { SkillProfileService } from './../../app/service/SkillProfileService';
 import { BookmarkService } from './../../app/service/BookmarkService';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
@@ -43,6 +44,15 @@ export class HomePage implements OnInit {
     return this.connected
       ? this.connectedUserService.getCurrentUser().shortName
       : '';
+  }
+
+  public isLevelAdmin() {
+    if (this.connected) {
+      const role = this.connectedUserService.getCurrentUser().role;
+      return role === 'PROFILE_ADMIN' || role === 'ADMIN';
+    } else {
+      return false;
+    }
   }
 
   ngOnInit() {

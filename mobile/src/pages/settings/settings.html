@@ -23,7 +23,7 @@
     <ion-list *ngIf="settings">
         <ion-item>
             <ion-label fixed>Off line</ion-label>
-            <ion-toggle [(ngModel)]="settings.forceOffline"></ion-toggle>
+            <ion-toggle [checked]="settings.forceOffline" (ionChange)="onToggleForceOffline($event)"></ion-toggle>
         </ion-item>
         <ion-item *ngIf="!env.production">
             <ion-label fixed>Server Url: {{settings.serverUrl}}</ion-label>

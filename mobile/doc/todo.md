@@ -5,9 +5,7 @@ This file lists the development task to do:
 ## V2.0
 
 - change logo of installed app
-- (User |Referee) Photo in offline
 - tool to import referees in a massive way
-- apply application user profile on skillprofile/levels
 - coaching : export as editable document (email?, html)
 - assessment : export as pdf (via storage ?)
 - create a trigger to delete unused photo on storage every week end
@@ -21,3 +19,4 @@ This file lists the development task to do:
 - settings: limit to referee to a region
 - list of pro not completly defined
 - public sharing of a pro
+- (User |Referee) Photo in offline
