@@ -1,9 +1,10 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LocalAppSettings, NetworkConnection } from './../model/settings';
+import { LocalAppSettings } from './../model/settings';
 import { Storage } from '@ionic/storage';
 import { Injectable } from '@angular/core';
 import { LocalSingletonDataService } from './LocalSingletonDataService';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AppSettingsService extends LocalSingletonDataService<LocalAppSettings> {
@@ -18,9 +19,8 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
                 let result: LocalAppSettings = las;
                 if (!result) {
                     result = {
-                        apiKey: 'AIzaSyCkimKVeEHQi3PilLUkJ8jl6XzTaZr_5FE',
-                        serverUrl: 'https://refcoach-676e3.firebaseio.com',
-                        minNetworkConnectionForSyncho: 'NONE',
+                        apiKey: environment.firebase.apiKey,
+                        serverUrl: environment.firebase.databaseURL,
                         lastUserEmail: null,
                         lastUserPassword: null,
                         forceOffline: false
@@ -36,12 +36,6 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
         this.get().subscribe((setting: LocalAppSettings) => {
             setting.lastUserEmail = email;
             setting.lastUserPassword = password;
-            this.save(setting).subscribe();
-        });
-    }
-    public setMinNetworkConnectionForSyncho(minNetworkConnectionForSyncho: NetworkConnection) {
-        this.get().subscribe((setting: LocalAppSettings) => {
-            setting.minNetworkConnectionForSyncho = minNetworkConnectionForSyncho;
             this.save(setting).subscribe();
         });
     }
