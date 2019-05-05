@@ -91,13 +91,8 @@ export class HomePage implements OnInit {
 
   private async tryToAutoLogin() {
     // get last user connection info from the application settings store on device
-    console.log('auto login.present');
-    const loading = await this.loadingController.create({ message: 'Auto login...'});
-    loading.present();
     this.userService.autoLogin().pipe(
       map((ruser) => {
-        console.log('auto login.dismiss');
-        loading.dismiss();
         if (!this.connectedUserService.isConnected()) {
           this.autoLoginNotPossible();
         }

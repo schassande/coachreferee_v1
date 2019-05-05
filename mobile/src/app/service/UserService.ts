@@ -1,6 +1,6 @@
 import { LocalAppSettings } from './../model/settings';
 import { AppSettingsService } from './AppSettingsService';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController, LoadingController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { ResponseWithData, Response } from './response';
 import { Observable, of, from, Subject } from 'rxjs';
@@ -19,6 +19,7 @@ export class UserService  extends RemotePersistentDataService<User> {
         private appSettingsService: AppSettingsService,
         db: AngularFirestore,
         private alertCtrl: AlertController,
+        private loadingController: LoadingController,
         toastController: ToastController
     ) {
         super(db, toastController);
@@ -105,25 +106,37 @@ export class UserService  extends RemotePersistentDataService<User> {
      * Try to autologin an user with data stored from local storage.
      */
     public autoLogin(): Observable<ResponseWithData<User>> {
-        return this.appSettingsService.get().pipe(
+        let loading = null;
+        return from(this.loadingController.create({ message: 'Auto login...'})).pipe(
+            flatMap( (ctrl) => {
+                loading = ctrl;
+                loading.present();
+                return this.appSettingsService.get();
+            }),
             flatMap((settings: LocalAppSettings) => {
                 const email = settings.lastUserEmail;
                 const password = settings.lastUserPassword;
                 console.log('UserService.autoLogin(): lastUserEmail=' + email + ', lastUserPassword=' + password);
                 if (!email) {
+                    loading.dismiss();
                     return of({ error: null, data: null});
                 }
                 if (!this.connectedUserService.isOnline()) {
                     console.log('UserService.autoLogin(): offline => connect with email only');
+                    loading.dismiss();
                     return this.connectByEmail(email, password);
                 }
                 if (password) {
                     // password is defined => try to login
                     console.log('UserService.autoLogin(): login(' + email + ', ' + password + ')');
                     return this.login(email, password).pipe(
-                        flatMap((ruser) =>  ruser.data ?  of(ruser) : this.askPasswordAndLogin(email))
+                        flatMap((ruser) =>  {
+                            loading.dismiss();
+                            return ruser.data ?  of(ruser) : this.askPasswordAndLogin(email);
+                        })
                     );
                 }
+                loading.dismiss();
                 return this.askPasswordAndLogin(email);
             })
         );
