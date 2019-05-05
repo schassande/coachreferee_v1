@@ -19,7 +19,7 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionInput)="onSearchBarInput()"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
     <ion-list style="margin-bottom: 40px;">
         <ion-item *ngFor="let pro of pros">
             <ion-label ion-item (click)="proSelected($event, pro)" style="border: none;">{{pro.problemShortDesc}}</ion-label>

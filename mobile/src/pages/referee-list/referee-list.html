@@ -21,7 +21,7 @@
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button (click)="newReferee()" class="plusButton">+</ion-fab-button>
     </ion-fab>
-    <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionInput)="onSearchBarInput()"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
     <ion-list>
         <ion-item *ngFor="let referee of referees">
             <ion-icon slot="start" *ngIf="!referee.photo || !referee.photo.url" name="person" (click)="refereeSelected($event, referee)"></ion-icon>
