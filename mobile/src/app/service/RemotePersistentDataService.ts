@@ -36,19 +36,11 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             return of({ error: null, data: null});
         }
         console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].get(' + id + ')');
-        return this.fireStoreCollection.doc<D>(id).valueChanges().pipe(
+        return this.fireStoreCollection.doc<D>(id).get().pipe(
             catchError((err) => {
                 return of({ error: err, data: null});
             }),
-            map((data: D) => {
-                if (data) {
-                    data.id = id;
-                    this.adjustFieldOnLoad(data);
-                }
-                const res = { error: null, data};
-                console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].get(' + id + ')=', res);
-                return res;
-            })
+            map(this.docSnapToResponse.bind(this))
         );
     }
 
@@ -96,8 +88,9 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     }
 
     private docSnapToResponse(docSnap: DocumentSnapshot<D>): ResponseWithData<D> {
-        const data: D = docSnap.get(docSnap.id);
-        if (data && !data.id) {
+        const data: D = docSnap.exists ? docSnap.data() : null;
+        // console.log('load item ' + docSnap.id + ' exists=' + docSnap.exists + ', data=', data);
+        if (data) {
             // store id inside persistent object
             data.id = docSnap.id;
             this.adjustFieldOnLoad(data);
@@ -159,7 +152,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
         const datas: D[] = [];
         qs.forEach((qds: QueryDocumentSnapshot<D>) => {
             const data: D = qds.data();
-            if (data && !data.id) {
+            if (data) {
                 // store id inside persistent object
                 data.id = qds.id;
                 this.adjustFieldOnLoad(data);
