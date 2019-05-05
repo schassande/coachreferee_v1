@@ -25,6 +25,7 @@ export class PROService extends RemotePersistentDataService<PersistentPRO> {
     getPriority(): number {
         return 4;
     }
+
     /** Overide to restrict to the coachings of the user */
     public all(): Observable<ResponseWithData<PersistentPRO[]>> {
         return this.query(this.getBaseQueryMyAssessments(), 'default');
@@ -47,7 +48,7 @@ export class PROService extends RemotePersistentDataService<PersistentPRO> {
                     ).length > 0;
             });
         } else {
-            return super.all();
+            return this.all();
         }
     }
 }
