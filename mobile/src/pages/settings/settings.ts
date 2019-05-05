@@ -19,8 +19,8 @@ import { LEVELS_AUS } from './levelAus';
 import { LEVELS_NZ } from './levelNZ';
 import { LEVELS_EURO } from './levelEuropean';
 import { environment } from '../../environments/environment';
+import * as csv from 'csvtojson';
 
-const csv = require('csvtojson');
 
 /**
  * Generated class for the SettingsPage page.
@@ -97,10 +97,8 @@ export class SettingsPage implements OnInit {
     const reader: FileReader = new FileReader();
     reader.readAsText(event.target.files[0]);
     reader.onloadend = () => {
-      console.log('File loaded:');
-      console.log(reader.result);
       csv({ output: 'json', trim: true, noheader: false, delimiter: ';', ignoreEmpty: true, checkType: true})
-        .fromString(reader.result).then((jsons) => {
+        .fromString(reader.result as string).then((jsons) => {
           jsons.forEach(json => {
             this.importReferee(json);
           });
