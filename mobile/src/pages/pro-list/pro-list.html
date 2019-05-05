@@ -22,7 +22,7 @@
     <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
     <ion-list style="margin-bottom: 40px;">
         <ion-item *ngFor="let pro of pros">
-            <ion-label ion-item (click)="proSelected($event, pro)" style="border: none;">{{pro.problemShortDesc}}</ion-label>
+            <ion-label ion-item (click)="proSelected(pro)" style="border: none;">{{pro.problemShortDesc}}</ion-label>
             <ion-icon slot="end" name="trash" (click)="deletePRO(pro)"></ion-icon>
         </ion-item>
     </ion-list>

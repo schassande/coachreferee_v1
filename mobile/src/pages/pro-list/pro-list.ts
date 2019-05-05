@@ -37,7 +37,7 @@ export class ProListPage implements OnInit {
   public newPRO(): void {
     this.navController.navigateRoot(`/pro/edit/-1`);
   }
-  public proSelected(event: any, pro: PersistentPRO): void {
+  public proSelected(pro: PersistentPRO): void {
     this.navController.navigateRoot(`/pro/edit/${pro.id}`);
   }
   public onSearchBarInput() {
