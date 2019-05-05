@@ -43,6 +43,7 @@ export interface Coaching extends PersistentData, SharedElement {
     gameSkill: GameLevel;
     closed?: boolean;
     currentPeriod?: number;
+    refereeIds: string[];
     referees: {
         refereeId: string;
         refereeShortName: string;

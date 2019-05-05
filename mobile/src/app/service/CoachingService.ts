@@ -40,7 +40,7 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
     }
 
     getCoachingByReferee(refereeId: string): Observable<ResponseWithData<Coaching[]>> {
-      return this.query(this.getBaseQueryMyCoahchings().where('referees.refereeId', '==', refereeId), 'default');
+      return this.query(this.getBaseQueryMyCoahchings().where('refereeIds', 'array-contains', refereeId), 'default');
     }
 
     /** Overide to restrict to the coachings of the user */
@@ -62,7 +62,7 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
     }
 
     public searchCoachings(text: string): Observable<ResponseWithData<Coaching[]>> {
-        const str = text && text.trim().length > 0 ? text.trim() : null;
+        const str = text !== null && text && text.trim().length > 0 ? text.trim() : null;
         return str ?
             super.filter(this.all(), (coaching: Coaching) => {
                 return this.stringContains(str, coaching.competition)

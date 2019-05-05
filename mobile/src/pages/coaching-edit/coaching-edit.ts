@@ -94,6 +94,7 @@ export class CoachingEditPage implements OnInit {
         gameSpeed: 'Medium',
         gameSkill: 'Medium',
         referees : [],
+        refereeIds: [],
         currentPeriod : 1,
         closed: false,
         sharedWith: []
@@ -163,6 +164,7 @@ export class CoachingEditPage implements OnInit {
         }
         coachRef.refereeId = referee.id;
         coachRef.refereeShortName = referee.shortName;
+        this.coaching.refereeIds = this.coaching.referees.map((ref) => ref.refereeId);
         this.id2referee.set(referee.id, referee);
       }
     });
