@@ -43,6 +43,10 @@
             <ion-label fixed>Skill</ion-label>
             <ion-input type="text" [(ngModel)]="pro.skillName"></ion-input>
         </ion-item>
+        <ion-item>
+            <ion-label fixed>Complete</ion-label>
+            <ion-toggle [checked]="pro.complete" (ionChange)="onToggleComplete()"></ion-toggle>
+        </ion-item>
     </ion-list>
     <div style="text-align: center;">
         <ion-button shape="round" style='--background:green;' (click)="savePRO()">Save</ion-button>

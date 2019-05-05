@@ -21,7 +21,7 @@ import { flatMap, map } from 'rxjs/operators';
 })
 export class ProEditPage implements OnInit {
 
-  pro: PersistentPRO;
+  pro: PersistentPRO = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,7 +39,7 @@ export class ProEditPage implements OnInit {
     return this.route.paramMap.pipe(
       flatMap( (paramMap) => {
         const proId: string  = paramMap.get('id');
-        if (proId !== null) {
+        if (proId !== null && proId !== '-1') {
           return this.proService.get(proId);
         } else {
           return of({
@@ -66,9 +66,16 @@ export class ProEditPage implements OnInit {
       })
     );
   }
+  public onToggleComplete() {
+    this.pro.complete = !this.pro.complete;
+  }
 
   savePRO() {
-    this.proService.save(this.pro).pipe(map(() => this.leave())).subscribe();
+    if (this.pro.problemShortDesc != null && this.pro.problemShortDesc && this.pro.problemShortDesc.trim().length > 0) {
+      this.proService.save(this.pro).pipe(map(() => this.leave())).subscribe();
+    } else {
+      this.leave();
+    }
   }
 
   deletePRO() {
@@ -77,7 +84,12 @@ export class ProEditPage implements OnInit {
       message: 'Do you really want to delete this PRO ' + this.pro.problemShortDesc +  '?',
       buttons: [
         { text: 'Cancel', role: 'cancel'},
-        { text: 'Delete', handler: () => this.leave() }
+        { text: 'Delete', handler: () => {
+            this.proService.delete(this.pro.id).pipe(
+              map(() => this.leave())
+            ).subscribe();
+          }
+        }
       ]
     }).then( (alert) => alert.present());
   }
