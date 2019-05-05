@@ -52,6 +52,7 @@ export class CoachingEditPage implements OnInit {
     console.log('CoachingEdit.ngOnInit()');
     this.appCoach = this.connectedUserService.getCurrentUser();
     this.loadCoaching().subscribe((response: ResponseWithData<Coaching>) => {
+      // console.log('CoachingEdit: loaded coaching, response=' + JSON.stringify(response));
       this.coaching = response.data;
       if (this.coaching) {
         this.computeCoachingValues();
@@ -189,7 +190,7 @@ export class CoachingEditPage implements OnInit {
         this.navController.navigateRoot(`/coaching/coach/${this.coaching.id}`);
       } else {
         this.coachingService.save(this.coaching).pipe(
-          map((response: ResponseWithData<Coaching>) => this.navController.navigateRoot(`/coaching/coach/${this.coaching.id}`))
+          map((response: ResponseWithData<Coaching>) => this.navController.navigateRoot(`/coaching/coach/${response.data.id}`))
         ).subscribe();
       }
     }
