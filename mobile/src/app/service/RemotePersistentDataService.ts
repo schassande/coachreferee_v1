@@ -32,7 +32,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     // ============================= //
 
     public get(id: string): Observable<ResponseWithData<D>> {
-        if (id == null) {
+        if (id == null || id === '-1') {
             return of({ error: null, data: null});
         }
         console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].get(' + id + ')');
