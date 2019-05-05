@@ -2,11 +2,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { map, flatMap } from 'rxjs/operators';
 import { AlertController, ToastController, NavController } from '@ionic/angular';
-// import { File, FileEntry } from '@ionic-native/file';
-// import { SocialSharing } from '@ionic-native/social-sharing';
-// import { FilePath } from '@ionic-native/file-path';
-// import { FileChooser } from '@ionic-native/file-chooser';
-import { Observable, of, concat, forkJoin } from 'rxjs';
+import { Observable, of, concat } from 'rxjs';
 import { UserService } from '../../app/service/UserService';
 import { SkillProfileService } from '../../app/service/SkillProfileService';
 import { PROService } from '../../app/service/PROService';
@@ -16,18 +12,13 @@ import { AppSettingsService } from '../../app/service/AppSettingsService';
 import { LocalAppSettings } from '../../app/model/settings';
 import { AssessmentService } from '../../app/service/AssessmentService';
 import { ConnectedUserService } from '../../app/service/ConnectedUserService';
-import { EmailService } from '../../app/service/EmailService';
-import { Coaching, PersistentPRO } from './../../app/model/coaching';
-import { Assessment } from './../../app/model/assessment';
-import { SkillProfile } from './../../app/model/skill';
-import { User, Referee, Gender, RefereeLevel, RefereeCategory } from './../../app/model/user';
+import { Referee, Gender, RefereeLevel, RefereeCategory } from './../../app/model/user';
 import { ExportedData } from './../../app/model/settings';
 
 import { LEVELS_AUS } from './levelAus';
 import { LEVELS_NZ } from './levelNZ';
 import { LEVELS_EURO } from './levelEuropean';
 import { environment } from '../../environments/environment';
-import { read } from 'fs';
 
 const csv = require('csvtojson');
 
@@ -59,13 +50,8 @@ export class SettingsPage implements OnInit {
     private coachingService: CoachingService,
     private assessmentService: AssessmentService,
     private alertController: AlertController,
-    private emailService: EmailService,
     private firestore: AngularFirestore,
-    private toastController: ToastController,
-    // public file: File,
-    // private filePath: FilePath,
-    // private socialSharing: SocialSharing,
-    // private fileChooser: FileChooser
+    private toastController: ToastController
   ) {
   }
 
@@ -264,6 +250,7 @@ export class SettingsPage implements OnInit {
       console.log('Data imported.');
     });
   }
+  */
 
   private toast(msg: string) {
     this.toastController.create({
@@ -356,11 +343,11 @@ export class SettingsPage implements OnInit {
                       this.toast('Fail to write file: ' + error);
                     });
                   });
+                  */
                 }
             }
         ]
       }).then( (alert) => alert.present());
   }
-  */
 
 }
