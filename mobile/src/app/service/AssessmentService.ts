@@ -36,6 +36,13 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
         return 5;
     }
 
+    protected adjustFieldOnLoad(item: Assessment) {
+        const d: any = item.date;
+        if (!(d instanceof Date) ) {
+            item.date = d.toDate();
+        }
+    }
+
     getAssessmentByReferee(refereeId: string): Observable<ResponseWithData<Assessment[]>> {
         return this.query(this.getBaseQueryMyAssessments().where('refereeId', '==', refereeId), 'default');
     }
@@ -58,7 +65,7 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
     }
 
     public searchAssessments(text: string): Observable<ResponseWithData<Assessment[]>> {
-        const str = text && text.trim().length > 0 ? text.trim() : null;
+        const str = text !== null && text && text.trim().length > 0 ? text.trim() : null;
         return str
             ?  super.filter(this.all(), (assessment: Assessment) => {
                 return this.stringContains(str, assessment.competition)
