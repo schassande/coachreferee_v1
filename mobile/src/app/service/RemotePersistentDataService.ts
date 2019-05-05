@@ -32,6 +32,9 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     // ============================= //
 
     public get(id: string): Observable<ResponseWithData<D>> {
+        if (id == null) {
+            return of({ error: null, data: null});
+        }
         console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].get(' + id + ')');
         return this.fireStoreCollection.doc<D>(id).valueChanges().pipe(
             catchError((err) => {
@@ -40,6 +43,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             map((data: D) => {
                 if (data) {
                     data.id = id;
+                    this.adjustFieldOnLoad(data);
                 }
                 const res = { error: null, data};
                 console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].get(' + id + ')=', res);
@@ -48,9 +52,12 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
         );
     }
 
+    protected adjustFieldOnLoad(item: D) {
+    }
+
     public localGet(id: string): Observable<ResponseWithData<D>> {
         return this.fireStoreCollection.doc<D>(id).get({source: 'cache'}).pipe(
-            map(this.docSnapToResponse)
+            map(this.docSnapToResponse.bind(this))
         );
     }
 
@@ -84,15 +91,16 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
                 console.log(err);
                 return of({ error: err, data: null});
             }),
-            map(this.docSnapToResponse)
+            map(this.docSnapToResponse.bind(this))
         );
     }
 
-    private docSnapToResponse(docSnap: DocumentSnapshot<D>) {
+    private docSnapToResponse(docSnap: DocumentSnapshot<D>): ResponseWithData<D> {
         const data: D = docSnap.get(docSnap.id);
         if (data && !data.id) {
             // store id inside persistent object
             data.id = docSnap.id;
+            this.adjustFieldOnLoad(data);
         }
         return { error: null, data};
     }
@@ -111,7 +119,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     public all(): Observable<ResponseWithData<D[]>> {
         console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].all()');
         return from(this.getCollectionRef().get()).pipe(
-            map(this.snapshotToObs),
+            map((qs: QuerySnapshot<D>) => this.snapshotToObs(qs)),
             catchError((err) => {
                 console.log(err);
                 return of({ error: err, data: null});
@@ -121,7 +129,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     public allO(options: 'default' | 'server' | 'cache'): Observable<ResponseWithData<D[]>> {
         console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].all()');
         return from(this.getCollectionRef().get({ source: options})).pipe(
-            map(this.snapshotToObs),
+            map((qs: QuerySnapshot<D>) => this.snapshotToObs(qs)),
             catchError((err) => {
                 // console.log(err);
                 return of({ error: err, data: null});
@@ -140,11 +148,13 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             if (data) {
                 // store id inside persistent object
                 data.id = qds.id;
+                this.adjustFieldOnLoad(data);
             }
             datas.push(data);
         });
         return { error: null, data: datas };
     }
+
     private snapshotOneToObs(qs: QuerySnapshot<D>): ResponseWithData<D> {
         const datas: D[] = [];
         qs.forEach((qds: QueryDocumentSnapshot<D>) => {
@@ -152,6 +162,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             if (data && !data.id) {
                 // store id inside persistent object
                 data.id = qds.id;
+                this.adjustFieldOnLoad(data);
             }
             datas.push(data);
         });
@@ -168,7 +179,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
                 console.log(err);
                 return of({ error: err, data: null});
             }),
-            map(this.snapshotToObs)
+            map((qs: QuerySnapshot<D>) => this.snapshotToObs(qs))
         );
     }
 
@@ -178,7 +189,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
                 console.log(err);
                 return of({ error: err, data: null});
             }),
-            map(this.snapshotOneToObs)
+            map(this.snapshotOneToObs.bind(this))
         );
     }
 
@@ -208,7 +219,6 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             })
         );
     }
-
 
     protected filter(obs: Observable<ResponseWithData<D[]>>, filter: PersistentDataFilter<D>) {
         return obs.pipe(

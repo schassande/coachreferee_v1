@@ -3,7 +3,7 @@ import { AngularFirestore, Query } from 'angularfire2/firestore';
 import { Referee } from './../model/user';
 import { RefereeService } from './RefereeService';
 import { ResponseWithData } from './response';
-import { Observable, of, concat, forkJoin } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
@@ -32,12 +32,15 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
     getPriority(): number {
         return 5;
     }
+    protected adjustFieldOnLoad(item: Coaching) {
+      const d: any = item.date;
+      if (!(d instanceof Date) ) {
+        item.date = d.toDate();
+      }
+    }
 
     getCoachingByReferee(refereeId: string): Observable<ResponseWithData<Coaching[]>> {
-      return concat(
-        this.query(this.getBaseQueryMyCoahchings().where('referees[0].refereeId', '==', refereeId), 'default'),
-        this.query(this.getBaseQueryMyCoahchings().where('referees[1].refereeId', '==', refereeId), 'default'),
-        this.query(this.getBaseQueryMyCoahchings().where('referees[2].refereeId', '==', refereeId), 'default'));
+      return this.query(this.getBaseQueryMyCoahchings().where('referees.refereeId', '==', refereeId), 'default');
     }
 
     /** Overide to restrict to the coachings of the user */
