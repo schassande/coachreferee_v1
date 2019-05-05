@@ -27,11 +27,13 @@ export class RefereeService extends RemotePersistentDataService<Referee> {
     }
 
     public searchReferees(text: string): Observable<ResponseWithData<Referee[]>> {
-        if (text) {
+        const validText = text && text !== null  && text.trim().length > 0 ? text.trim() : null;
+        // console.log('RefereeService.searchReferees(' + validText + ')');
+        if (validText !== null) {
             return super.filter(super.all(), (referee: Referee) => {
-                return this.stringContains(text, referee.shortName)
-                    || this.stringContains(text, referee.firstName)
-                    || this.stringContains(text, referee.lastName);
+                return this.stringContains(validText, referee.shortName)
+                    || this.stringContains(validText, referee.firstName)
+                    || this.stringContains(validText, referee.lastName);
             });
         } else {
             return super.all();
