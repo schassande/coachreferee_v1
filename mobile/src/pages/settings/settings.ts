@@ -175,6 +175,10 @@ export class SettingsPage implements OnInit {
       return defaultValue;
     }
   }
+
+  public reloadPage() {
+    window.location.reload(true);
+  }
   // nextRefereeLevel: RefereeLevel;
 
   /*

@@ -54,6 +54,6 @@
     <p *ngFor="let m of msg" class="message">{{m}}</p>
     <div color="light" style="text-align: center; font-size: 0.8em; margin-top: 10px;">
         <div>The author of application is <a href="mailto:chassande@gmail.com">Sebastien Chassande-Barrioz</a>.</div>
-        <div>Version: {{env.version}}</div>
+        <div>Version: {{env.version}} <a click="reloadPage()">Force reload</a></div>
     </div>
 </ion-content>
