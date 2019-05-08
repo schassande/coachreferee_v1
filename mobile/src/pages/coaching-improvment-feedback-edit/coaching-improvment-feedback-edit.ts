@@ -90,7 +90,7 @@ export class CoachingImprovmentFeedbackEditPage implements OnInit {
     console.log('Save and Back');
     this.save().subscribe(() => {
       console.log('saved');
-      this.navController.navigateRoot(`/coaching/coach/${this.coaching.id}`);
+      this.navController.navigateRoot(`/coaching/coach/${this.coaching.id}?refereeIdx=${this.refereeIndex}`);
     });
   }
 

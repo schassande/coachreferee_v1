@@ -2,7 +2,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { AlertController, NavController, IonSegment } from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, map } from 'rxjs/operators';
 
 import { EmailService } from '../../app/service/EmailService';
 import { ConnectedUserService } from '../../app/service/ConnectedUserService';
@@ -40,7 +40,6 @@ export class CoachingGamePage implements OnInit {
   appCoach: User;
 
   @ViewChild(IonSegment) segment: IonSegment;
-  subParams: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -60,7 +59,7 @@ export class CoachingGamePage implements OnInit {
     // this.route.url
     this.coaching = null;
     this.appCoach = this.connectedUserService.getCurrentUser();
-    this.subParams = this.loadCoaching().subscribe((response: ResponseWithData<Coaching>) => {
+    this.loadCoaching().subscribe((response: ResponseWithData<Coaching>) => {
       this.coaching = this.clean(response.data);
       if (!this.coaching) {
         console.log('Error when loading coaching', response.error);
@@ -141,10 +140,20 @@ export class CoachingGamePage implements OnInit {
   }
 
   private loadingReferees() {
-    this.coachingService.loadingReferees(this.coaching, this.id2referee).subscribe((data) => {
-      this.refereesLoaded = true;
-      this.refereeSelected(this.currentRefereeIdx);
-    });
+    this.coachingService.loadingReferees(this.coaching, this.id2referee).pipe(
+      flatMap( () => {
+        // referee loaded
+        this.refereesLoaded = true;
+        return this.route.queryParamMap;
+      }),
+      map((queryParamMap) => {
+          // search if a tab is expected in url, otherwise select the first tab
+          const refereeIdxStr: string = queryParamMap.get('refereeIdx');
+          const refereeIdx = refereeIdxStr ? Number.parseInt(refereeIdxStr, 10) : 0;
+          this.refereeSelected(refereeIdx);
+          return refereeIdx;
+      })
+    ).subscribe();
   }
 
   private bookmarkPage() {
@@ -173,8 +182,8 @@ export class CoachingGamePage implements OnInit {
   refereeSelected(refereeIndex: number) {
     if (this.segment) { // prevent call before the component has been initialised.
       // console.log('refereeSelected(' + refereeIndex + ')', 'Segment.value=' + this.segment.value);
-      this.segment.value = String(refereeIndex);
-      this.currentRefereeIdx = refereeIndex;
+      this.currentRefereeIdx = Math.max(0, Math.min(refereeIndex, this.coaching.referees.length - 1));
+      this.segment.value = String(this.currentRefereeIdx);
       this.currentReferee = this.id2referee.get(this.coaching.referees[this.currentRefereeIdx].refereeId);
     }
   }
