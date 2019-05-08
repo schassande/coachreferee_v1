@@ -119,7 +119,8 @@ export class UserEditPage implements OnInit {
         coachAssessmentSharing: 'YES',
         coachCoachingInfoSharing: 'YES',
         coachProSharing: 'NO'
-      }
+      },
+      groupIds: []
     };
   }
   isValid(): boolean {

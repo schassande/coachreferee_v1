@@ -1,7 +1,6 @@
 import { AlertController, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
-import { flatMap, map } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { User } from '../../app/model/user';
 

@@ -21,7 +21,9 @@
 <ion-content *ngIf="coaching">
     <ion-list>
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
-            <ion-item-divider color="light" style="text-align: center; font-size: 1.2em;">Game info</ion-item-divider>
+            <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
+                <ion-label>Game information</ion-label>
+            </ion-item-divider>
             <ion-item>
                 <ion-label position="fixed">Competition:</ion-label>
                 <ion-input type="text" [(ngModel)]="competition" [readonly]="readonly"></ion-input>
@@ -99,7 +101,9 @@
             </ion-item>
         </ion-item-group>
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
-            <ion-item-divider color="light" style="text-align: center; font-size: 1.2em;">Referees</ion-item-divider>
+            <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
+                <ion-label>Coached referees</ion-label>
+            </ion-item-divider>
             <ion-item>
                 <ion-label>1: {{getReferee(0)}}</ion-label>
                 <ion-icon *ngIf="!readonly" slot="end" name="search" (click)="searchReferee(0)"></ion-icon>
@@ -113,6 +117,22 @@
                 <ion-icon *ngIf="!readonly" slot="end" name="search" (click)="searchReferee(2)"></ion-icon>
             </ion-item>
         </ion-item-group>
+        <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
+            <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
+                <ion-label>Coaching shared with</ion-label>
+                <ion-button shape="round" slot="end" (click)="shareWith()" *ngIf="coachingOwner">
+                    <ion-icon ios="ios-share" md="md-share"></ion-icon>
+                </ion-button>
+            </ion-item-divider>
+            <ion-item *ngFor="let user of sharedWith.users">
+                <ion-label>User {{user.firstName}} {{user.lastName}}</ion-label>
+                <ion-icon slot="end" name="trash" (click)="deleteSharedUser(user)" *ngIf="coachingOwner"></ion-icon>
+            </ion-item>
+            <ion-item *ngFor="let group of sharedWith.groups">
+                <ion-label>Group {{group.name}}</ion-label>
+                <ion-icon slot="end" name="trash" (click)="deleteSharedGroup(group)" *ngIf="coachingOwner"></ion-icon>
+            </ion-item>
+        </ion-item-group>
         <ion-item>
             <ion-grid>
                 <ion-row style="text-align: center; margin-top: 10px;">
@@ -123,7 +143,7 @@
                         </ion-button>
                     </ion-col>
                     <ion-col style="margin-right: 10px;">
-                        <ion-button shape="round" size="large" (click)="sendCoaching($event)" [disabled]="sending" style="width: 100%;">
+                        <ion-button shape="round" size="large" (click)="sendCoaching($event)" [disabled]="sending" style="width: 100%;" *ngIf="coachingOwner">
                             <ion-spinner *ngIf="sending"></ion-spinner>
                             <ion-icon name="send"></ion-icon>
                         </ion-button>

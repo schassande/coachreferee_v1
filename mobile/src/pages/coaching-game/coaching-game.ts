@@ -103,9 +103,13 @@ export class CoachingGamePage implements OnInit {
   }
 
   saveNback() {
-    this.coachingService.save(this.coaching).subscribe(() => {
+    if (this.coaching.closed || !this.coachingOwner) {
       this.navController.navigateRoot(`/coaching/edit/${this.coaching.id}`);
-    });
+    } else {
+      this.coachingService.save(this.coaching).subscribe(() => {
+        this.navController.navigateRoot(`/coaching/edit/${this.coaching.id}`);
+      });
+    }
   }
 
   public saveCoaching() {

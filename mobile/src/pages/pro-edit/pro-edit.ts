@@ -42,22 +42,22 @@ export class ProEditPage implements OnInit {
         if (proId !== null && proId !== '-1') {
           return this.proService.get(proId);
         } else {
-          return of({
-            data : {
-              id: 0,
-              version: 0,
-              creationDate : new Date(),
-              lastUpdate : new Date(),
-              dataStatus: 'NEW',
-              coachId: this.connectedUserService.getCurrentUser().id,
-              skillName: '',
-              problem: '',
-              problemShortDesc: '',
-              remedy: '',
-              outcome: ''
-            },
-            error: null
-          });
+          const pro: PersistentPRO = {
+            id: '0',
+            version: 0,
+            creationDate : new Date(),
+            lastUpdate : new Date(),
+            dataStatus: 'NEW',
+            coachId: this.connectedUserService.getCurrentUser().id,
+            skillName: '',
+            problem: '',
+            problemShortDesc: '',
+            remedy: '',
+            outcome: '',
+            complete: false,
+            sharedWith: { users: [], groups: [] }
+          };
+          return of({ data : pro, error: null });
         }
       }),
       map( (response: ResponseWithData<PersistentPRO>) => {

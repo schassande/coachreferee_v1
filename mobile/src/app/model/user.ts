@@ -117,6 +117,7 @@ export interface User extends Referee {
     defaultGameCatory: GameCategory;
     dataSharingAgreement?: CoachDataSharingAgreement;
     role: AppRole;
+    groupIds: string[];
 }
 
 export interface UserGroup extends PersistentData {
@@ -144,7 +145,7 @@ export function getNextRefereeLevel(level: RefereeLevel): RefereeLevel {
         case 'EURO_2': return 'EURO_3';
         case 'EURO_3': return 'EURO_4';
         case 'EURO_4': return 'EURO_5';
-        case 'EURO_4': return 'EURO_5';
+        case 'EURO_5': return 'EURO_5';
         default: return '';
     }
 }

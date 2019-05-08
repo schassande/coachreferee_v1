@@ -69,6 +69,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
 
         } else {
             data.dataStatus = 'CLEAN';
+            data.lastUpdate = new Date();
             data.version ++;
             return this.voidToObs(this.fireStoreCollection.doc(data.id).update(data), data);
         }
@@ -268,4 +269,20 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             );
         }
     }
+    protected mergeObservables(list: ResponseWithData<D[]>[]): ResponseWithData<D[]> {
+        const res = {data: [], error : null};
+        list.forEach( (item) => {
+          if (item.data) {
+            item.data.forEach( (d: D) => {
+              this.adjustFieldOnLoad(d);
+              res.data.push(d);
+            });
+          }
+          if (item.error) {
+            res.error = item.error;
+          }
+        });
+        return res;
+    }
+
 }

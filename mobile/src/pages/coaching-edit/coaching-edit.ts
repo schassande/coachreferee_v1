@@ -1,3 +1,6 @@
+import { UserGroup } from './../../app/model/user';
+import { UserGroupService } from './../../app/service/UserGroupService';
+import { UserSelectorComponent } from './../user-selector-component';
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController, ToastController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
@@ -12,6 +15,8 @@ import { AppSettingsService } from '../../app/service/AppSettingsService';
 import { ConnectedUserService } from '../../app/service/ConnectedUserService';
 import { Coaching } from '../../app/model/coaching';
 import { User, Referee } from '../../app/model/user';
+import { UserSelectionPage } from './../user-selection/user-selection';
+import { SharedWith } from 'src/app/model/common';
 
 /**
  * Generated class for the CoachingNewPage page.
@@ -35,6 +40,7 @@ export class CoachingEditPage implements OnInit {
   id2referee: Map<string, Referee> = new Map<string, Referee>();
   refereesLoaded = false;
   sending = false;
+  sharedWith: SharedWith = { users: [], groups: [] };
 
   constructor(
     private modalController: ModalController,
@@ -42,6 +48,7 @@ export class CoachingEditPage implements OnInit {
     private navController: NavController,
     public connectedUserService: ConnectedUserService,
     public userService: UserService,
+    public userGroupService: UserGroupService,
     public refereeService: RefereeService,
     public coachingService: CoachingService,
     public appSettingsService: AppSettingsService,
@@ -57,6 +64,7 @@ export class CoachingEditPage implements OnInit {
       if (this.coaching) {
         this.computeCoachingValues();
         this.loadingReferees();
+        this.computeSharedWith();
       } else {
         this.initCoaching();
       }
@@ -97,7 +105,10 @@ export class CoachingEditPage implements OnInit {
         refereeIds: [],
         currentPeriod : 1,
         closed: false,
-        sharedWith: []
+        sharedWith: {
+          users: [],
+          groups: []
+        }
       };
     this.computeCoachingValues();
   }
@@ -176,7 +187,7 @@ export class CoachingEditPage implements OnInit {
   }
 
   saveNback() {
-    if (this.coaching.closed || !this.isValid()) {
+    if (this.coaching.closed || !this.isValid() || !this.coachingOwner)  {
       this.navController.navigateRoot(`/coaching/list`);
     } else {
       this.coachingService.save(this.coaching).subscribe(() => {
@@ -188,7 +199,7 @@ export class CoachingEditPage implements OnInit {
 
   coach(event) {
     if (this.isValid()) {
-      if (this.coaching.closed) {
+      if (this.coaching.closed || !this.coachingOwner) {
         this.navController.navigateRoot(`/coaching/coach/${this.coaching.id}`);
       } else {
         this.coachingService.save(this.coaching).pipe(
@@ -220,5 +231,54 @@ export class CoachingEditPage implements OnInit {
   isValid(): boolean {
     return this.coaching.referees.length > 0
       && this.coaching.competition != null && this.coaching.competition.trim().length > 0;
+  }
+
+  async shareWith() {
+    const modal = await this.modalController.create({ component: UserSelectorComponent});
+    modal.onDidDismiss().then( (data) => {
+      const sharedWith: SharedWith = data.data as SharedWith;
+      sharedWith.users.forEach((user) => {
+        this.addToSet(user.id, this.coaching.sharedWith.users);
+      });
+      sharedWith.groups.forEach((group) => {
+        this.addToSet(group.id, this.coaching.sharedWith.groups);
+        group.members.forEach((userId) => {
+          this.addToSet(userId, this.coaching.sharedWith.users);
+        });
+      });
+      this.computeSharedWith();
+    });
+    modal.present();
+  }
+
+  private addToSet(item: string, list: string[]) {
+    if (!list.includes(item)) {
+      list.push(item);
+    }
+  }
+
+  computeSharedWith() {
+    this.sharedWith.users = [];
+    this.sharedWith.groups = [];
+    this.coaching.sharedWith.users.forEach((userId) => {
+      this.userService.get(userId).subscribe((ruser) => this.sharedWith.users.push(ruser.data));
+    });
+    this.coaching.sharedWith.groups.forEach((groupId) => {
+      this.userGroupService.get(groupId).subscribe((rgroup) => this.sharedWith.groups.push(rgroup.data));
+    });
+  }
+  deleteSharedUser(user: User) {
+    this.deleteFromStringArray(user.id, this.coaching.sharedWith.users);
+    this.computeSharedWith();
+  }
+  deleteSharedGroup(group: UserGroup) {
+    this.deleteFromStringArray(group.id, this.coaching.sharedWith.groups);
+    this.computeSharedWith();
+  }
+  deleteFromStringArray(item: string, stringArray: string[]) {
+    const idx = stringArray.indexOf(item);
+    if (idx >= 0) {
+      stringArray.splice(idx, 1);
+    }
   }
 }

@@ -1,3 +1,4 @@
+import { UserGroupService } from './service/UserGroupService';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -62,6 +63,7 @@ import { UserSelectionPage } from '../pages/user-selection/user-selection';
 import { SharingComponent } from './../pages/sharing-component';
 import { UserLogoutComponent } from '../pages/user-logout/user-logout.component';
 import { CameraIconComponent } from './../pages/camera-icon-component';
+import { UserSelectorComponent } from './../pages/user-selector-component';
 
 @NgModule({
   declarations: [AppComponent,
@@ -74,8 +76,8 @@ import { CameraIconComponent } from './../pages/camera-icon-component';
     SettingsPage,
     SkillEditPage, SkillProfileEditPage, SkillProfileListPage, SkillSetEditPage,
     UserEditPage, UserSelectionPage, UserLogoutComponent,
-    SharingComponent, CompetencyComponent, PeriodSelectorComponent, CameraIconComponent],
-  entryComponents: [AppComponent, HomePage, RefereeSelectPage, RefereeEditPage],
+    SharingComponent, CompetencyComponent, PeriodSelectorComponent, CameraIconComponent, UserSelectorComponent],
+  entryComponents: [AppComponent, HomePage, RefereeSelectPage, RefereeEditPage, UserSelectorComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -105,6 +107,7 @@ import { CameraIconComponent } from './../pages/camera-icon-component';
     SplashScreen,
     ToolService,
     UserService,
+    UserGroupService,
     VersionService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

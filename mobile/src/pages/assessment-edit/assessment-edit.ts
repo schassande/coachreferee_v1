@@ -134,7 +134,10 @@ export class AssessmentEditPage implements OnInit {
         skillSetEvaluation: [],
         competency: 'NE',
         closed: false,
-        sharedWith: []
+        sharedWith: {
+          users: [],
+          groups: []
+        }
       };
   }
 

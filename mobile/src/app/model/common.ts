@@ -1,3 +1,5 @@
+import { User, UserGroup } from './user';
+
 export interface PersistentData {
     /** Identifier of the persistent object */
     id: string;
@@ -20,6 +22,18 @@ export type DataStatus =
 /** Object shared with users */
 export interface SharedElement {
     /** List of users */
-    sharedWith: string[];
+    sharedWith: SharedWithIds;
+}
+export interface SharedWithIds {
+    /** List of users id */
+    users: string[];
+    /** List of group id */
+    groups: string[];
 }
 
+export interface SharedWith {
+    /** List of users */
+    users: User[];
+    /** List of group */
+    groups: UserGroup[];
+}

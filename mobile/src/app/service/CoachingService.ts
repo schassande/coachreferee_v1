@@ -1,16 +1,14 @@
-import { HttpClient } from '@angular/common/http';
 import { ConnectedUserService } from './ConnectedUserService';
 import { AngularFirestore, Query } from 'angularfire2/firestore';
 import { Referee } from './../model/user';
 import { RefereeService } from './RefereeService';
-import { ResponseWithData, Response } from './response';
+import { ResponseWithData } from './response';
 import { Observable, of, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { Coaching } from './../model/coaching';
 import { ToastController } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
 import { AngularFireFunctions } from '@angular/fire/functions';
 
 const TIME_SLOT_SEP = ':';
@@ -44,17 +42,41 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
     }
 
     getCoachingByReferee(refereeId: string): Observable<ResponseWithData<Coaching[]>> {
-      return this.query(this.getBaseQueryMyCoahchings().where('refereeIds', 'array-contains', refereeId), 'default');
+      return forkJoin(
+        this.query(this.getBaseQueryMyCoahchings()
+          .where('refereeIds', 'array-contains', refereeId), 'default'),
+        this.query(this.getBaseQuerySharedCoahchings(), 'default').pipe(
+          map((rcoa) => {
+            // query does not support double array contain in where clause
+            if (rcoa.data) {
+              rcoa.data = rcoa.data.filter((c: Coaching) => c.refereeIds.indexOf(refereeId) > -1);
+            }
+            return rcoa;
+          })
+        )
+     ).pipe(
+       map((list) => this.mergeObservables(list))
+     );
     }
 
     /** Overide to restrict to the coachings of the user */
     public all(): Observable<ResponseWithData<Coaching[]>> {
-      return this.query(this.getBaseQueryMyCoahchings(), 'default');
+      return forkJoin(
+        this.query(this.getBaseQueryMyCoahchings(), 'default'),
+        this.query(this.getBaseQuerySharedCoahchings(), 'default')
+      ).pipe(
+        map((list) => this.mergeObservables(list))
+      );
     }
 
     /** Query basis for coaching limiting access to the coachings of the user */
     private getBaseQueryMyCoahchings(): Query {
       return this.getCollectionRef().where('coachId', '==', this.connectedUserService.getCurrentUser().id);
+    }
+
+    /** Query basis for coaching limiting access to the coachings of the user */
+    private getBaseQuerySharedCoahchings(): Query {
+      return this.getCollectionRef().where('sharedWith.users', 'array-contains', this.connectedUserService.getCurrentUser().id);
     }
 
     public sortCoachings(coachings: Coaching[], reverse: boolean = false): Coaching[] {

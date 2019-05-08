@@ -161,7 +161,7 @@ export class CoachingImprovmentFeedbackEditPage implements OnInit {
       lastUpdate : new Date(),
       dataStatus: 'NEW',
       complete: false,
-      sharedWith: [],
+      sharedWith: { users: [], groups: [] },
       coachId: this.connectedUserService.getCurrentUser().id,
       skillName: this.feedback.skillName,
       problem: this.feedback.problem,
