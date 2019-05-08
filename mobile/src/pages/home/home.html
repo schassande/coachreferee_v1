@@ -9,7 +9,6 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <div *ngIf="connected" color="light" style="text-align: right; font-size: 0.8em; margin-top: 10px;">Connected as {{getShortName()}}.</div>
     <ion-list *ngIf="connected">
         <ion-item detail routerLink="/coaching/list">
             <ion-label class="menu-entry">Coach a game</ion-label>
@@ -39,5 +38,6 @@
             <ion-label class="menu-entry">Install on device</ion-label>
         </ion-item>
     </ion-list>
-    <div style="text-align: center; margin-top: 10px;"><img src="assets/imgs/logo.png" height="150" /></div>
+    <div *ngIf="connected" color="light" style="text-align: center; font-size: 0.8em; margin-top: 10px;">Connected as {{getShortName()}}.</div>
+    <div style="text-align: center; margin-top: 10px;" *ngIf="!connected"><img src="assets/imgs/logo.png" height="150" /></div>
 </ion-content>
