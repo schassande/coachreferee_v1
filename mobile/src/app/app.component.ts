@@ -54,4 +54,7 @@ export class AppComponent {
       this.navController.navigateRoot(entry.url);
     }
   }
+  public reloadPage() {
+    window.location.reload(true);
+  }
 }

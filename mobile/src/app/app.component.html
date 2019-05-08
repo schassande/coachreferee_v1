@@ -16,6 +16,9 @@
                 <ion-item *ngFor="let entry of bookmarkService.getBookmarks() |async">
                     <ion-button fill="clear" (click)="route(entry.url)">{{entry.label}}</ion-button>
                 </ion-item>
+                <ion-item>
+                    <ion-button fill="clear" (click)="reloadPage()">Reload app</ion-button>
+                </ion-item>
             </ion-list>
         </ion-content>
     </ion-menu>
