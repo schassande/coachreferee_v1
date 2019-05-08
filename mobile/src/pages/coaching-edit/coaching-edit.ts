@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavController } from '@ionic/angular';
+import { ModalController, NavController, ToastController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { flatMap, map, catchError } from 'rxjs/operators';
-import { EmailService } from './../../app/service/EmailService';
 import { RefereeService } from './../../app/service/RefereeService';
 import { ResponseWithData } from './../../app/service/response';
 import { CoachingService } from './../../app/service/CoachingService';
@@ -46,7 +45,7 @@ export class CoachingEditPage implements OnInit {
     public refereeService: RefereeService,
     public coachingService: CoachingService,
     public appSettingsService: AppSettingsService,
-    public emailService: EmailService) {
+    public toastController: ToastController) {
   }
 
   ngOnInit() {
@@ -205,6 +204,9 @@ export class CoachingEditPage implements OnInit {
       .pipe(
         map((res) => {
           this.sending = false;
+          this.toastController.create({ message : 'An email has been sent with the assessment sheet.',
+          position: 'bottom', color: 'light',
+          duration: 3000 }).then((toast) => toast.present());
           console.log('sendCoaching =>' + JSON.stringify(res));
         }),
         catchError( (err: any) => {

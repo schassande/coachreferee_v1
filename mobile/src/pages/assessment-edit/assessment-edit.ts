@@ -1,11 +1,10 @@
-import { ModalController, NavController } from '@ionic/angular';
+import { ModalController, NavController, ToastController } from '@ionic/angular';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { SkillProfile } from './../../app/model/skill';
 import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 
 import { ResponseWithData } from './../../app/service/response';
-import { EmailService } from './../../app/service/EmailService';
 import { AppSettingsService } from './../../app/service/AppSettingsService';
 import { AssessmentService } from './../../app/service/AssessmentService';
 import { RefereeService } from './../../app/service/RefereeService';
@@ -47,7 +46,7 @@ export class AssessmentEditPage implements OnInit {
     public assessmentService: AssessmentService,
     public skillProfileService: SkillProfileService,
     public appSettingsService: AppSettingsService,
-    public emailService: EmailService) {
+    public toastController: ToastController) {
   }
 
   ngOnInit() {
@@ -227,6 +226,10 @@ export class AssessmentEditPage implements OnInit {
       .pipe(
         map((res) => {
           this.sending = false;
+          this.toastController.create({
+            message : 'An email has been sent with the assessment sheet.',
+            position: 'bottom', color: 'light',
+            duration: 3000 }).then((toast) => toast.present());
           console.log('sendAssessment =>' + JSON.stringify(res));
         }),
         catchError( (err: any) => {
