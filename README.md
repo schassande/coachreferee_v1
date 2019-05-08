@@ -7,9 +7,9 @@ The application can be found on the [web site](https://app.coachreferee.com)
 
 The mobile application is build with IOnic 4 (Angular 6). As it is a PWA application, it can be installed on Laptop, Android and IOS devices. It works with a backend based on firebase: hosting, firestore and functions. But the application can work offline too.
 
-* [Documentation about the product](https://github.com/schassande/referee-coaching/wiki/RefCoach-application)
+* [Application](https://app.coachreferee.com)
+* [Documentation of the product](https://github.com/schassande/referee-coaching/wiki/Documentation-of-the-RefCoach-application)
 * [Privacy policy](https://github.com/schassande/referee-coaching/wiki/Privacy-policy)
-* [web site](https://app.coachreferee.com)
 
 This project is totaly free and can be fork/clone/deploy as you want.
 Be free to contribute to the project.
