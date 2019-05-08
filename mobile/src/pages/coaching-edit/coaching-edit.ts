@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { flatMap, map, catchError } from 'rxjs/operators';
 import { EmailService } from './../../app/service/EmailService';
 import { RefereeService } from './../../app/service/RefereeService';
 import { ResponseWithData } from './../../app/service/response';
@@ -35,6 +35,7 @@ export class CoachingEditPage implements OnInit {
   appCoach: User;
   id2referee: Map<string, Referee> = new Map<string, Referee>();
   refereesLoaded = false;
+  sending = false;
 
   constructor(
     private modalController: ModalController,
@@ -199,12 +200,20 @@ export class CoachingEditPage implements OnInit {
   }
 
   sendCoaching() {
-    this.emailService.sendEmail({
-      to: this.connectedUserService.getCurrentUser().email,
-      subject: this.coachingService.coachingAsEmailSubject(this.coaching),
-      body: this.coachingService.coachingAsEmailBody(this.coaching),
-      isHtml: true
-    });
+    this.sending = true;
+    this.coachingService.sendCoachingByEmail(this.coaching.id)
+      .pipe(
+        map((res) => {
+          this.sending = false;
+          console.log('sendCoaching =>' + JSON.stringify(res));
+        }),
+        catchError( (err: any) => {
+          this.sending = false;
+          console.error(err);
+          return of(err);
+        })
+      )
+      .subscribe();
   }
   isValid(): boolean {
     return this.coaching.referees.length > 0

@@ -16,7 +16,7 @@ import { Referee, User } from './../../app/model/user';
 import { Assessment, SkillSetEvaluation } from './../../app/model/assessment';
 
 import { RefereeSelectPage } from '../referee-select/referee-select';
-import { flatMap, map } from 'rxjs/operators';
+import { flatMap, map, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'page-assessment-edit',
@@ -35,6 +35,7 @@ export class AssessmentEditPage implements OnInit {
   assessmentValid = false;
   profileId: string;
   appCoach: User;
+  sending = false;
 
   constructor(
     public modalController: ModalController,
@@ -221,13 +222,20 @@ export class AssessmentEditPage implements OnInit {
   }
 
   sendAssessment() {
-    this.emailService.sendEmail({
-      to: this.connectedUserService.getCurrentUser().email,
-      subject: this.assessmentService.assessmentAsEmailSubject(this.assessment),
-      body: this.assessmentService.assessmentAsEmailBody(this.assessment, this.getProfile(this.assessment.profileId),
-        this.appCoach, this.id2referee.get(this.assessment.refereeId)),
-      isHtml: true
-    });
+    this.sending = true;
+    this.assessmentService.sendAssessmentByEmail(this.assessment.id, this.assessment.profileId, this.assessment.refereeId)
+      .pipe(
+        map((res) => {
+          this.sending = false;
+          console.log('sendAssessment =>' + JSON.stringify(res));
+        }),
+        catchError( (err: any) => {
+          this.sending = false;
+          console.error(err);
+          return of(err);
+        })
+      )
+      .subscribe();
   }
 
   private getProfile(profileId): SkillProfile {

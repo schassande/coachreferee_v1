@@ -1,14 +1,17 @@
+import { HttpClient } from '@angular/common/http';
 import { ConnectedUserService } from './ConnectedUserService';
 import { AngularFirestore, Query } from 'angularfire2/firestore';
 import { Referee } from './../model/user';
 import { RefereeService } from './RefereeService';
-import { ResponseWithData } from './response';
+import { ResponseWithData, Response } from './response';
 import { Observable, of, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { Coaching } from './../model/coaching';
 import { ToastController } from '@ionic/angular';
+import { environment } from 'src/environments/environment';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 const TIME_SLOT_SEP = ':';
 const DATE_SEP = '-';
@@ -20,6 +23,7 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
       db: AngularFirestore,
       protected refereeService: RefereeService,
       private connectedUserService: ConnectedUserService,
+      private angularFireFunctions: AngularFireFunctions,
       toastController: ToastController
     ) {
         super(db, toastController);
@@ -160,52 +164,10 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
         }
     }
 
-    public coachingAsEmailBody(coaching: Coaching): string {
-        let body = `
-        <ul>
-          <li> Competition: ${coaching.competition}</li>
-          <li> Date: ${this.getCoachingDateAsString(coaching)}</li>
-          <li> Field: ${coaching.field}</li>
-          <li> Time slot: ${coaching.timeSlot}</li>
-          <li> Game category: ${coaching.gameCategory}</li>
-          <li> Game speed: ${coaching.gameSpeed}</li>
-          <li> Game skill: ${coaching.gameSkill}</li>
-        </ul>`;
-        coaching.referees.forEach((referee) => {
-          if (referee.refereeShortName) {
-            body += `<h2>Referee ${referee.refereeShortName}</h2>`;
-
-            body += `<h3>Positive points</h3>`;
-            body += `<ul>`;
-            referee.positiveFeedbacks.forEach(positiveFeedback => {
-              body += `<li>${positiveFeedback.skillName}: ${positiveFeedback.description}</li>`;
-            });
-            body += `</ul>`;
-
-            body += `<h3>Axis of improvment</h3>`;
-            referee.feedbacks.forEach(feedback => {
-              body += `<h4>${feedback.problemShortDesc}</h4>
-              <ul>
-                <li>Skill: ${feedback.skillName}</li>
-                <li>Problem: ${feedback.problemShortDesc}</li>
-                <li>Remedy: ${feedback.remedy}</li>
-                <li>Outcome: ${feedback.outcome}</li>
-                <li>Period: ${feedback.period}</li>
-                <li>Improvement during the game: ${feedback.appliedLater}</li>
-                <li>Priority: ${feedback.priority}</li>
-              </ul>`;
-            });
-
-            body += `<h3>Misc</h3>
-            upgrade: ${referee.upgrade}, <br>
-            rank: ${referee.rank}`;
-          }
-        });
-        return body;
-    }
-
-    public coachingAsEmailSubject(coaching: Coaching): string {
-        return `Referee Coaching ${coaching.competition}, ${this.getCoachingDateAsString(coaching)}, ${
-            coaching.timeSlot}, Field ${coaching.field}`;
+    public sendCoachingByEmail(coachingId: string): Observable<any> {
+      return this.angularFireFunctions.httpsCallable('sendCoaching')({
+        coachingId,
+        userId: this.connectedUserService.getCurrentUser().id
+      });
     }
 }

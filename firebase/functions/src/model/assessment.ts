@@ -29,5 +29,5 @@ export interface Assessment extends SkillProfileEvaluation, PersistentData, Shar
     gameSkill: GameLevel;
     refereeId: string;
     refereeShortName: string;
-    closed?: boolean;
+    closed: boolean;
 }

@@ -1,13 +1,13 @@
+import { AngularFireFunctions } from '@angular/fire/functions';
 import { ConnectedUserService } from './ConnectedUserService';
 import { AngularFirestore, Query } from 'angularfire2/firestore';
-import { SkillProfile } from './../model/skill';
 import { RefereeService } from './RefereeService';
-import { Referee, User } from './../model/user';
-import { ResponseWithData } from './response';
+import { Referee } from './../model/user';
+import { Response, ResponseWithData } from './response';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { Assessment } from './../model/assessment';
-import { Observable, of, concat } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ToastController } from '@ionic/angular';
 
@@ -24,6 +24,7 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
         db: AngularFirestore,
         protected refereeService: RefereeService,
         private connectedUserService: ConnectedUserService,
+        private angularFireFunctions: AngularFireFunctions,
         toastController: ToastController
     ) {
         super(db, toastController);
@@ -154,44 +155,12 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
             return of('');
         }
     }
-
-
-    public assessmentAsEmailBody(assessment: Assessment, profile: SkillProfile, coach: User, referee: Referee): string {
-        let body = `
-        <h1 style="text-align: center; padding: 20px; background-color:${profile.backgroundColor}; color:${profile.color}; width: 100%;">
-        ${assessment.profileName} referee assessment</h1>
-        <table border="0" style="margin-top: 20px;">
-          <tr><td>Referee</td><td>${referee.firstName} ${referee.lastName} ${assessment.refereeShortName}</td></tr>
-          <tr><td>Referee NTA</td><td>${referee.country}</td></tr>
-          <tr><td>Assessment level</td><td>${assessment.profileName}</td></tr>
-          <tr><td>Referee coach</td><td>${coach.firstName} ${coach.lastName} (${coach.refereeCoach.refereeCoachLevel})</td></tr>
-          <tr><td>Competition</td><td>${assessment.competition}</td></tr>
-          <tr><td>Date</td><td>${this.getAssessmentDateAsString(assessment)}</td></tr>
-          <tr><td>Field</td><td>${assessment.field}</td></tr>
-          <tr><td>Time slot</td><td>${assessment.timeSlot}</td></tr>
-          <tr><td>Game category</td><td>${assessment.gameCategory}</td></tr>
-          <tr><td>Game speed</td><td>${assessment.gameSpeed}</td></tr>
-          <tr><td>Game skill</td><td>${assessment.gameSkill}</td></tr>
-        </table>`;
-
-        assessment.skillSetEvaluation.forEach( (skillSetEval) => {
-            body += `<h2 style="margin-top: 20px;">${skillSetEval.skillSetName}</h2>`;
-            body += `<p>Competent: ${skillSetEval.competent ? 'yes' : 'no'}</p>`;
-            body += `<table boder="0">`;
-            skillSetEval.skillEvaluations.forEach( (skillEval) => {
-                body += `<tr><td>${skillEval.skillName}</td><td>${skillEval.competent ? 'yes' : 'no'}</td></tr>`;
-            });
-            body += `</table>`;
+    public sendAssessmentByEmail(assessmentId: string, skillProfileId: string, refereeId: string): Observable<any> {
+        return this.angularFireFunctions.httpsCallable('sendAssessment')({
+          assessmentId,
+          skillProfileId,
+          refereeId,
+          userId: this.connectedUserService.getCurrentUser().id
         });
-        body += `<h2 style="margin-top: 20px;">Conclusion</h2>`;
-        body += `<p>${coach.firstName} ${coach.lastName} declares the referee ${
-            assessment.competent ? '' : 'NOT '}competent for the level ${assessment.profileName}.</p>`;
-
-        return body;
-    }
-
-    public assessmentAsEmailSubject(assessment: Assessment): string {
-        return `Referee Assessment ${assessment.competition}, ${this.getAssessmentDateAsString(assessment)}, ${
-            assessment.timeSlot}, Field ${assessment.field}`;
-    }
+      }
 }

@@ -114,7 +114,8 @@
                     </ion-button>
                 </ion-col>
                 <ion-col col-2 style="margin-right: 10px;">
-                    <ion-button shape="round" size="large" [disabled]="!assessmentValid" (click)="sendAssessment($event)" style="width: 100%;">
+                    <ion-button shape="round" size="large" [disabled]="!assessmentValid && sending" (click)="sendAssessment($event)" style="width: 100%;">
+                        <ion-spinner *ngIf="sending"></ion-spinner>
                         <ion-icon name="send"></ion-icon>
                     </ion-button>
                 </ion-col>

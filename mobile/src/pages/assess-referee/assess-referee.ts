@@ -54,31 +54,11 @@ export class AssessRefereePage implements OnInit {
     return this.route.paramMap.pipe(
       flatMap( (paramMap: ParamMap) => this.assessmentService.get(paramMap.get('id'))),
       map((response: ResponseWithData<Assessment>) => {
-        this.assessment = this.addCompetencyField(response.data);
+        this.assessment = response.data;
         console.log('Assessment loaded: ' + this.assessment.id);
         return response;
       })
     );
-  }
-
-  private addCompetencyField(assessment: Assessment): Assessment {
-    if (!assessment.competency) {
-        assessment.competency = assessment.competent ? 'YES' : 'NO';
-    }
-    delete assessment.competent;
-    assessment.skillSetEvaluation.forEach( (skillSetEval: SkillSetEvaluation) => {
-        if (!skillSetEval.competency) {
-            skillSetEval.competency = skillSetEval.competent ? 'YES' : 'NO';
-        }
-        delete skillSetEval.competent;
-        skillSetEval.skillEvaluations.forEach( (skillEval) => {
-            if (!skillEval.competency) {
-                skillEval.competency = skillEval.competent ? 'YES' : 'NO';
-            }
-            delete skillEval.competent;
-        });
-    });
-    return assessment;
   }
 
   isGroupShown(skillSetIdx): boolean {

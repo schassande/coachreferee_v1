@@ -111,16 +111,8 @@ export class RefereeViewPage implements OnInit {
   }
 
   sendCoachings() {
-    let body = '';
     this.coachings.forEach((coaching: Coaching) => {
-      body +=  '<h1>' + this.coachingService.coachingAsEmailSubject(coaching) + '</h1>'
-              + this.coachingService.coachingAsEmailBody(coaching);
-    });
-    this.emailService.sendEmail({
-      to: this.connectedUserService.getCurrentUser().email,
-      subject: `Coachings of the referee ${this.referee.firstName} ${this.referee.lastName} (${this.referee.shortName})`,
-      body,
-      isHtml: true
+      this.coachingService.sendCoachingByEmail(coaching.id).subscribe();
     });
   }
 }

@@ -4,9 +4,8 @@ This file lists the development task to do:
 
 ## V2.0
 
+- problem to select country, language that are not on list beginning
 - change logo of installed app
-- coaching : export as editable document (email?, html)
-- assessment : export as pdf (via storage ?)
 - create a trigger to delete unused photo on storage every week end
 - sharing of a feedback to several coach
 
