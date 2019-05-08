@@ -5,8 +5,6 @@ This file lists the development task to do:
 ## V2.0
 
 - sharing of a feedback to several coach
-- problem to select country, language that are not on list beginning
-- change logo of installed app
 
 ## V2.1
 
