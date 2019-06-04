@@ -237,16 +237,18 @@ export class CoachingEditPage implements OnInit {
     const modal = await this.modalController.create({ component: UserSelectorComponent});
     modal.onDidDismiss().then( (data) => {
       const sharedWith: SharedWith = data.data as SharedWith;
-      sharedWith.users.forEach((user) => {
-        this.addToSet(user.id, this.coaching.sharedWith.users);
-      });
-      sharedWith.groups.forEach((group) => {
-        this.addToSet(group.id, this.coaching.sharedWith.groups);
-        group.members.forEach((userId) => {
-          this.addToSet(userId, this.coaching.sharedWith.users);
+      if (sharedWith) {
+        sharedWith.users.forEach((user) => {
+          this.addToSet(user.id, this.coaching.sharedWith.users);
         });
-      });
-      this.computeSharedWith();
+        sharedWith.groups.forEach((group) => {
+          this.addToSet(group.id, this.coaching.sharedWith.groups);
+          group.members.forEach((userId) => {
+            this.addToSet(userId, this.coaching.sharedWith.users);
+          });
+        });
+        this.computeSharedWith();
+      }
     });
     modal.present();
   }
