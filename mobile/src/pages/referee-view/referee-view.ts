@@ -47,7 +47,6 @@ export class RefereeViewPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ionViewDidLoad RefereePage');
     this.route.paramMap.pipe(
       map((params: ParamMap) => {
         const id = params.get('id');
@@ -65,7 +64,7 @@ export class RefereeViewPage implements OnInit {
   }
 
   private setRefereeId(id: string) {
-    console.log('RefereeView.setRefereeId(' + id + ')');
+    // console.log('RefereeView.setRefereeId(' + id + ')');
     this.refereeService.get(id).subscribe((response: ResponseWithData<Referee>) => {
       if (response.error) {
         this.loadingCtrl.create({
