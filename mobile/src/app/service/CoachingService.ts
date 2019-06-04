@@ -102,45 +102,45 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
     }
 
     public compareDate(day1: Date, day2: Date): number {
-        // Compare date
-        let res: number = day1.getFullYear() - day2.getFullYear();
-        if (res === 0) {
+      // Compare date
+      let res: number = day1.getFullYear() - day2.getFullYear();
+      if (res === 0) {
         res = day1.getMonth() - day2.getMonth();
-        }
         if (res === 0) {
-        res = day1.getDate() - day2.getDate();
+          res = day1.getDate() - day2.getDate();
         }
-        return res;
+      }
+      return res;
     }
     public compareCoaching(coaching1: Coaching, coaching2: Coaching): number {
-        let res = 0;
-        if (res === 0) {
-            // compare competition name
-            res = coaching1.competition.localeCompare(coaching2.competition);
-        }
-        if (res === 0) {
-          // Compare date
-          res = this.compareDate(coaching1.date, coaching2.date);
-        }
-        if (res === 0) {
-          // Compare timeslot
-          const timeSlotElems1: string[] = coaching1.timeSlot.split(TIME_SLOT_SEP);
-          const timeSlotElems2: string[] = coaching2.timeSlot.split(TIME_SLOT_SEP);
-          const h1 = Number.parseInt(timeSlotElems1[0], 0);
-          const h2 = Number.parseInt(timeSlotElems2[0], 0);
-          res = h1 - h2;
+      let res = 0;
+      if (res === 0) {
+        // Compare date
+        res = this.compareDate(coaching1.date, coaching2.date);
+      }
+      if (res === 0) {
+        // compare competition name
+        res = coaching1.competition.localeCompare(coaching2.competition);
+      }
+      if (res === 0) {
+        // Compare timeslot
+        const timeSlotElems1: string[] = coaching1.timeSlot.split(TIME_SLOT_SEP);
+        const timeSlotElems2: string[] = coaching2.timeSlot.split(TIME_SLOT_SEP);
+        const h1 = Number.parseInt(timeSlotElems1[0], 0);
+        const h2 = Number.parseInt(timeSlotElems2[0], 0);
+        res = h1 - h2;
 
-          if (res === 0) {
-            const m1 = Number.parseInt(timeSlotElems1[1], 0);
-            const m2 = Number.parseInt(timeSlotElems2[1], 0);
-            res = m1 - m2;
-          }
-        }
         if (res === 0) {
-          // Compare field
-          res = Number.parseInt(coaching1.field, 0) - Number.parseInt(coaching2.field, 0);
+          const m1 = Number.parseInt(timeSlotElems1[1], 0);
+          const m2 = Number.parseInt(timeSlotElems2[1], 0);
+          res = m1 - m2;
         }
-        return res;
+      }
+      if (res === 0) {
+        // Compare field
+        res = Number.parseInt(coaching1.field, 0) - Number.parseInt(coaching2.field, 0);
+      }
+      return res;
     }
     public computeTimeSlot(ts: Date): string {
         return this.to2Digit(ts.getHours()) + TIME_SLOT_SEP + this.to2Digit(ts.getMinutes());

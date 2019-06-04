@@ -92,12 +92,12 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
     public compareAssessment(assessment1: Assessment, assessment2: Assessment): number {
         let res = 0;
         if (res === 0) {
-            // compare competition name
-            res = assessment1.competition.localeCompare(assessment2.competition);
-        }
-        if (res === 0) {
           // Compare date
           res = this.compareDate(assessment1.date, assessment2.date);
+        }
+        if (res === 0) {
+            // compare competition name
+            res = assessment1.competition.localeCompare(assessment2.competition);
         }
         if (res === 0) {
           // Compare timeslot
