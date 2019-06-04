@@ -38,6 +38,8 @@ export class SettingsPage implements OnInit {
   msg: string[] = [];
   env = environment;
   @ViewChild('inputReferees') inputReferees: ElementRef;
+  launchMode = '';
+  showDebugInfo = false;
 
   constructor(
     private navController: NavController,
@@ -56,13 +58,40 @@ export class SettingsPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ionViewDidLoad SettingsPage');
+    this.computeLaunchMode();
     this.appSettingsService.get().subscribe((appSettings: LocalAppSettings) => {
       if (appSettings.forceOffline === undefined) {
         appSettings.forceOffline = false;
       }
       this.settings = appSettings;
     });
+  }
+
+  private computeLaunchMode() {
+    this.launchMode = '';
+    if (window.hasOwnProperty('navigator') && window.navigator.hasOwnProperty('standalone')) {
+      try {
+        const nav: any = window.navigator;
+        if (nav && nav.standalone === true) {
+          this.launchMode += '<br>display-mode is standalone on iphone';
+        } else {
+          this.launchMode += '<br>display-mode is launch from Safari';
+        }
+      } catch (err) {
+      }
+
+    } else if (window.matchMedia('(display-mode: standalone)').matches) {
+      this.launchMode += '<br>display-mode is standalone';
+
+    } else {
+      this.launchMode += '<br>display-mode is launch from web browser';
+    }
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      e.preventDefault();
+      this.launchMode += '<br>App can be installed.';
+    });
+    window.addEventListener('appinstalled', (event) => { this.launchMode += '<br>App installed'; });
   }
 
   public onToggleForceOffline(event) {
@@ -352,4 +381,8 @@ export class SettingsPage implements OnInit {
       }).then( (alert) => alert.present());
   }
 
+  toggleDebugInfo() {
+    this.showDebugInfo = ! this.showDebugInfo;
+    console.log('this.showDebugInfo =', this.showDebugInfo);
+  }
 }
