@@ -32,6 +32,7 @@
             <ion-item *ngFor="let positiveFeedback of coaching.referees[currentRefereeIdx].positiveFeedbacks; let idx = index" [ngClass]="{'period1' : positiveFeedback.period == 1, 'period2' : positiveFeedback.period == 2}">
                 <ion-icon name="alert" (click)="deliverPositiveFeedback(positiveFeedback, idx)" class="star" [ngClass]="{'yellowStar' : positiveFeedback.deliver}"></ion-icon>
                 <p (click)="selectPositiveFeedback(positiveFeedback, idx)" class="feedbackTxt">{{positiveFeedback.skillName}}</p>
+                <ion-badge slot="end" color="{{positiveFeedback.period === 1 ? 'light' : 'primary'}}">{{positiveFeedback.period}}</ion-badge>
                 <ion-icon slot="end" *ngIf="!readonly" name="trash" (click)="deletePositiveFeedback(idx)"></ion-icon>
             </ion-item>
             <div *ngIf="coaching.referees[currentRefereeIdx].positiveFeedbacks.length == 0 && !readonly" style="padding: 5px;">No positive feedback, please click on green + to add one.</div>
@@ -41,6 +42,7 @@
             <ion-item *ngFor="let feedback of coaching.referees[currentRefereeIdx].feedbacks; let idx = index" [ngClass]="{'period1' : feedback.period == 1, 'period2' : feedback.period == 2}">
                 <ion-icon name="alert" (click)="deliverFeedback(feedback, idx)" class="star" [ngClass]="{'yellowStar' : feedback.deliver}"></ion-icon>
                 <p (click)="selectFeedback(feedback, idx)" class="feedbackTxt">{{feedback.problemShortDesc}}</p>
+                <ion-badge slot="end" color="{{feedback.period === 1 ? 'light' : 'primary'}}">{{feedback.period}}</ion-badge>
                 <ion-icon slot="end" *ngIf="!readonly" name="trash" (click)="deleteFeedback(idx)"></ion-icon>
             </ion-item>
             <div *ngIf="coaching.referees[currentRefereeIdx].feedbacks.length == 0 && !readonly" style="padding: 5px;">No feedback, please click on red + to add one.</div>
