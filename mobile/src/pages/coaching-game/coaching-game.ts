@@ -49,8 +49,7 @@ export class CoachingGamePage implements OnInit {
     public connectedUserService: ConnectedUserService,
     public refereeService: RefereeService,
     public alertCtrl: AlertController,
-    private bookmarkService: BookmarkService,
-    private emailService: EmailService) {
+    private bookmarkService: BookmarkService) {
       this.coaching = null;
   }
 
