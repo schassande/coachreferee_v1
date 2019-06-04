@@ -27,6 +27,7 @@ export class CoachingListPage implements OnInit {
   coachingLists: CoachingList[];
   error: any;
   searchInput: string;
+  loading = false;
 
   constructor(
     private navController: NavController,
@@ -39,9 +40,11 @@ export class CoachingListPage implements OnInit {
   }
 
   private searchCoaching() {
+    this.loading = true;
     this.coachingService.searchCoachings(this.searchInput).subscribe((response: ResponseWithData<Coaching[]>) => {
       this.coachings = this.coachingService.sortCoachings(response.data, true);
       this.coachingLists = this.computeCoachingLists(this.coachings);
+      this.loading = false;
       this.error = response.error;
     });
   }
@@ -50,7 +53,7 @@ export class CoachingListPage implements OnInit {
     this.navController.navigateRoot(`/coaching/edit/${coaching.id}`);
   }
 
-  getCoachingDate (coaching: Coaching) {
+  getCoachingDate(coaching: Coaching) {
     return this.coachingService.getCoachingDateAsString(coaching);
   }
 
