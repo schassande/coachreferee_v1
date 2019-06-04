@@ -1,6 +1,6 @@
 {
     "name": "refcoach",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "author": "Sebastien Chassande",
     "scripts": {
         "ng": "ng",
@@ -27,8 +27,7 @@
         "@ionic/angular": "^4.1.0",
         "@ionic/pwa-elements": "^1.0.2",
         "@ionic/storage": "^2.2.0",
-        "angularfire2": "^5.1.2",
-        "angularfire2-offline": "^4.3.1",
+        "angularfire2": "^5.2.1",
         "cordova-sqlite-storage": "3.2.0",
         "core-js": "^2.5.4",
         "csvtojson": "^2.0.8",
