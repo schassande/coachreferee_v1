@@ -68,9 +68,6 @@ export class HomePage implements OnInit {
       this.showInstallBtn = true;
     });
     window.addEventListener('appinstalled', (event) => console.log('App installed'));
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      console.log('display-mode is standalone');
-    }
   }
 
   addToHome() {
