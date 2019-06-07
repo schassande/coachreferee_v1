@@ -107,7 +107,7 @@ export interface Referee extends Person {
     };
     dataSharingAgreement?: RefereeDataSharingAgreement;
 }
-
+export type AuthProvider = 'EMAIL' | 'GOOGLE' | 'FACEBOOK';
 export type AppRole = 'USER' | 'PROFILE_ADMIN' | 'ADMIN';
 export interface User extends Referee {
     password?: string;
@@ -118,6 +118,7 @@ export interface User extends Referee {
     dataSharingAgreement?: CoachDataSharingAgreement;
     role: AppRole;
     groupIds: string[];
+    authProvider?: AuthProvider;
 }
 
 export interface UserGroup extends PersistentData {

@@ -23,13 +23,23 @@
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button (click)="newUser()" class="plusButton">+</ion-fab-button>
     </ion-fab>
-    <div style="margin-bottom: 20px;">Select an existing application user or create a new one.</div>
+    <div style="margin-bottom: 20px;">Choose an account provider:</div>
+    <div style="text-align: center;">
+        <ion-button color="primary" (click)="authWithGoogle()">
+            Sign In with Google
+            <ion-icon slot="start" name="logo-google"></ion-icon>
+        </ion-button>
+        <ion-button color="danger" (click)="authWithFacebook()">Sign In with Facebook
+            <ion-icon slot="start" name="logo-facebook"></ion-icon>
+        </ion-button>
+    </div>
+    <div style="margin: 20px 0 10px 0;">Or select an existing application user or create a new one with your email:</div>
     <ion-list>
         <ion-item *ngFor="let user of users">
             <ion-icon slot="start" *ngIf="user.photo && !user.photo.url" name="person"></ion-icon>
             <ion-avatar slot="start" *ngIf="user.photo && user.photo.url"><img src="{{user.photo.url}}"></ion-avatar>
-            <ion-label (click)="userSelected(user)">{{user.firstName}} {{user.lastName}}</ion-label>
-            <ion-icon slot="end" name="trash" (click)="deleteUser(user)"></ion-icon>
+            <ion-label (click)="userSelected(user)">{{user.firstName}} {{user.lastName}}<br><span style="font-size: 0.7em;">{{user.email}}</span></ion-label>
+            <ion-icon slot="end" [name]="getAuthProviderIcon(user)"></ion-icon>
         </ion-item>
     </ion-list>
 </ion-content>

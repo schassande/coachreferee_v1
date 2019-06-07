@@ -7,6 +7,7 @@ import { User } from '../../app/model/user';
 import { ConnectedUserService } from './../../app/service/ConnectedUserService';
 import { ResponseWithData } from './../../app/service/response';
 import { UserService } from './../../app/service/UserService';
+import { Observable, observable } from 'rxjs';
 
 /**
  * Generated class for the UserSelectionPage page.
@@ -44,8 +45,26 @@ export class UserSelectionPage implements OnInit {
     });
   }
 
-  public userSelected(user: User): void {
-    this.userService.askPasswordAndLogin(user.email).pipe(
+  public authWithGoogle() {
+    this.afterAuth(this.userService.authWithGoogle());
+  }
+
+  public authWithFacebook() {
+    this.afterAuth(this.userService.authWithFacebook());
+  }
+
+  public userSelected(user: User) {
+    if (user.authProvider && user.authProvider === 'GOOGLE') {
+      this.authWithGoogle();
+    } else if (user.authProvider && user.authProvider === 'FACEBOOK') {
+      return this.authWithFacebook();
+    } else {
+      return this.afterAuth(this.userService.askPasswordAndLogin(user.email));
+    }
+  }
+
+  private afterAuth(obs: Observable<ResponseWithData<User>>) {
+    obs.pipe(
       map( (ruser) => {
         if (ruser.data) {
           // login with success
@@ -78,5 +97,16 @@ export class UserSelectionPage implements OnInit {
         }
       ]
     }).then ( (alert) => alert.present());
+  }
+  getAuthProviderIcon(user: User) {
+    switch (user.authProvider) {
+      case 'GOOGLE':
+         return 'logo-google';
+      case 'FACEBOOK':
+        return 'logo-facebook';
+      default:
+      case 'EMAIL':
+        return 'at';
+    }
   }
 }

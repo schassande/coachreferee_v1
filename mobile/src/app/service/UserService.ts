@@ -2,11 +2,13 @@ import { LocalAppSettings } from './../model/settings';
 import { AppSettingsService } from './AppSettingsService';
 import { AlertController, ToastController, LoadingController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
+
 import { ResponseWithData, Response } from './response';
 import { Observable, of, from, Subject } from 'rxjs';
 import { ConnectedUserService } from './ConnectedUserService';
 import { Injectable } from '@angular/core';
-import { User } from './../model/user';
+import { User, CONSTANTES, AuthProvider } from './../model/user';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { flatMap, map, catchError } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
@@ -20,6 +22,7 @@ export class UserService  extends RemotePersistentDataService<User> {
         db: AngularFirestore,
         private alertCtrl: AlertController,
         private loadingController: LoadingController,
+        public afAuth: AngularFireAuth,
         toastController: ToastController
     ) {
         super(db, toastController);
@@ -33,11 +36,17 @@ export class UserService  extends RemotePersistentDataService<User> {
         return 1;
     }
 
-    public save(user: User): Observable<ResponseWithData<User>> {
+    public save(user: User, cred: firebase.auth.UserCredential = null): Observable<ResponseWithData<User>> {
         const password = user.password;
         delete user.password;
         if (user.dataStatus === 'NEW') {
-            return from(firebase.auth().createUserWithEmailAndPassword(user.email, password)).pipe(
+            let obs: Observable<firebase.auth.UserCredential> = null;
+            if (cred !== null  && (user.authProvider === 'FACEBOOK' || user.authProvider === 'GOOGLE')) {
+                obs = of(cred);
+            } else {
+                obs = from(firebase.auth().createUserWithEmailAndPassword(user.email, password));
+            }
+            return obs.pipe(
                 flatMap((userCred: firebase.auth.UserCredential) => {
                     // Store in application user datbase the firestore user id
                     user.accountId = userCred.user.uid;
@@ -152,8 +161,9 @@ export class UserService  extends RemotePersistentDataService<User> {
         from(this.alertCtrl.create({
             message: 'Please enter the password of the account \'' + email +  '\'.',
             inputs: [
-                { name: 'password', type: 'password'},
-                { name: 'savePassword', type: 'checkbox', label: 'Store password on device', value: 'true', checked: true }],
+                { name: 'password', type: 'password', label: 'Password', id: 'password'},
+                { name: 'savePassword', type: 'checkbox', label: 'Store password on device', value: 'true', checked: true,
+                    id: 'savePassword' }],
             buttons: [
                 { text: 'Cancel', role: 'cancel',
                     handler: () => {
@@ -242,5 +252,98 @@ export class UserService  extends RemotePersistentDataService<User> {
                 return of({ error: err, data: null});
             }),
         );
+    }
+
+    public authWithGoogle(): Observable<ResponseWithData<User>> {
+        return this.authWith(new firebase.auth.GoogleAuthProvider(), 'GOOGLE');
+    }
+
+    public authWithFacebook(): Observable<ResponseWithData<User>> {
+        return this.authWith(new firebase.auth.FacebookAuthProvider(), 'FACEBOOK');
+    }
+
+    public authWith(authProvider: any, authName: AuthProvider): Observable<ResponseWithData<User>> {
+        let credential = null;
+        return from(firebase.auth().signInWithPopup(authProvider)).pipe(
+            flatMap( (cred: firebase.auth.UserCredential) => {
+                credential = cred;
+                console.log('authWith: cred=', JSON.stringify(cred, null, 2));
+                return this.getByEmail(cred.user.email);
+            }),
+            catchError((err) => {
+                // console.log('authWith error: ', err);
+                return of({ error: err, data: null});
+            }),
+            flatMap( (ruser: ResponseWithData<User>) => {
+                if (!ruser.data) {
+                    return this.save(this.createUserFromCredential(credential, authName), credential);
+                } else {
+                    return of(ruser);
+                }
+            }),
+            map( (ruser: ResponseWithData<User>) => {
+                console.log('authWith user: ', JSON.stringify(ruser));
+                if (ruser.data) {
+                    this.connectedUserService.userConnected(ruser.data, credential);
+                }
+                return ruser;
+            })
+        );
+    }
+    public computeShortName(firstName, lastName): string {
+        return firstName.charAt(0).toUpperCase()
+            + lastName.charAt(0).toUpperCase()
+            + lastName.charAt(lastName.length - 1).toUpperCase();
+    }
+
+    private createUserFromCredential(cred: firebase.auth.UserCredential, authProvider: AuthProvider): User {
+        const names = cred.user.displayName.split(' ');
+        const firstName: string = names[0];
+        const lastName: string = names.length > 1 ? names[1] : ' ';
+        const shortName: string = this.computeShortName(firstName, lastName);
+        return {
+            id: null,
+            accountId: cred.user.uid,
+            role: 'USER',
+            authProvider,
+            version: 0,
+            creationDate : new Date(),
+            lastUpdate : new Date(),
+            dataStatus: 'NEW',
+            firstName,
+            lastName,
+            shortName,
+            country: CONSTANTES.countries[0][0],
+            email: cred.user.email,
+            gender: 'M',
+            mobilePhones: [ ],
+            photo: {
+              path: null,
+              url: null
+            },
+            speakingLanguages: [ 'EN' ],
+            referee : {
+                refereeLevel: null,
+                refereeCategory : 'OPEN',
+                nextRefereeLevel: null
+            },
+            refereeCoach: {
+                refereeCoachLevel: null
+            },
+            password: '',
+            token: null,
+            defaultCompetition: '',
+            defaultGameCatory: 'OPEN',
+            dataSharingAgreement: {
+              personnalInfoSharing: 'YES',
+              photoSharing: 'YES',
+              refereeAssessmentSharing: 'YES',
+              refereeCoachingInfoSharing: 'YES',
+              coachAssessmentSharing: 'YES',
+              coachCoachingInfoSharing: 'YES',
+              coachProSharing: 'NO'
+            },
+            groupIds: []
+        };
     }
 }

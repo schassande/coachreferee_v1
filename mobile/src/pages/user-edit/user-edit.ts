@@ -147,12 +147,9 @@ export class UserEditPage implements OnInit {
     if (this.isValidString(this.user.firstName, 3)
       && this.isValidString(this.user.lastName, 3)
       && (!this.user.shortName || this.user.shortName.trim().length === 0)) {
-        this.user.shortName = this.user.firstName.charAt(0).toUpperCase()
-          + this.user.lastName.charAt(0).toUpperCase()
-          + this.user.lastName.charAt(this.user.lastName.length - 1).toUpperCase();
+        this.user.shortName = this.userService.computeShortName(this.user.firstName, this.user.lastName);
     }
   }
-
 
   public newUser(event) {
     if (this.isValid()) {
