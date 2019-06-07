@@ -1,12 +1,12 @@
 {
     "name": "refcoach",
-    "version": "2.0.11",
+    "version": "2.0.12",
     "author": "Sebastien Chassande",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
-        "build": "npm version patch && node ./replace.build.js && ionic build --prod --service-worker",
-        "deploy": "npm run build && cd .. && npm run deploy",
+        "updateVersion": "npm version patch && node ./replace.build.js",
+        "build": "ionic build --prod --service-worker",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e"
