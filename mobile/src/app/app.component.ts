@@ -16,7 +16,7 @@ import { OfflinesService } from './service/OfflineService';
 export class AppComponent {
 
   /** The application settings store on device */
-  private appSetttings: LocalAppSettings;
+  appSetttings: LocalAppSettings;
 
   constructor(
     private navController: NavController,
