@@ -1,5 +1,3 @@
-import { OfflinesService } from './service/OfflineService';
-import { UserGroupService } from './service/UserGroupService';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -25,17 +23,18 @@ import { CoachingService } from './service/CoachingService';
 import { ConnectedUserService } from './service/ConnectedUserService';
 import { EmailService } from './service/EmailService';
 import { LocalDatabaseService } from './service/LocalDatabaseService';
+import { OfflinesService } from './service/OfflineService';
 import { PROService } from './service/PROService';
 import { RefereeService } from './service/RefereeService';
 import { SkillProfileService } from './service/SkillProfileService';
 import { ToolService } from './service/ToolService';
 import { UserService } from './service/UserService';
+import { UserGroupService } from './service/UserGroupService';
 import { VersionService } from './service/VersionService';
 
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
 
-import { AppComponent } from './app.component';
 import { AssessRefereePage } from './../pages/assess-referee/assess-referee';
 import { CompetencyComponent } from './../pages/assess-referee/competency-component';
 import { AssessmentEditPage } from './../pages/assessment-edit/assessment-edit';
@@ -61,9 +60,12 @@ import { SkillProfileListPage } from './../pages/skill-profile-list/skill-profil
 import { SkillSetEditPage } from './../pages/skill-set-edit/skill-set-edit';
 import { UserEditPage } from '../pages/user-edit/user-edit';
 import { UserSelectionPage } from '../pages/user-selection/user-selection';
+
+import { AppComponent } from './app.component';
+import { CameraIconComponent } from './../pages/camera-icon-component';
+import { LoginComponent } from 'src/pages/login-component';
 import { SharingComponent } from './../pages/sharing-component';
 import { UserLogoutComponent } from '../pages/user-logout/user-logout.component';
-import { CameraIconComponent } from './../pages/camera-icon-component';
 import { UserSelectorComponent } from './../pages/user-selector-component';
 
 @NgModule({
@@ -77,8 +79,8 @@ import { UserSelectorComponent } from './../pages/user-selector-component';
     SettingsPage,
     SkillEditPage, SkillProfileEditPage, SkillProfileListPage, SkillSetEditPage,
     UserEditPage, UserSelectionPage, UserLogoutComponent,
-    SharingComponent, CompetencyComponent, PeriodSelectorComponent, CameraIconComponent, UserSelectorComponent],
-  entryComponents: [AppComponent, HomePage, RefereeSelectPage, RefereeEditPage, UserSelectorComponent],
+    SharingComponent, CompetencyComponent, PeriodSelectorComponent, CameraIconComponent, UserSelectorComponent, LoginComponent],
+  entryComponents: [AppComponent, HomePage, RefereeSelectPage, RefereeEditPage, UserSelectorComponent, LoginComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

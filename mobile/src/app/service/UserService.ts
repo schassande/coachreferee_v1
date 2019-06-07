@@ -1,6 +1,7 @@
+import { LoginData } from './../../pages/login-component';
 import { LocalAppSettings } from './../model/settings';
 import { AppSettingsService } from './AppSettingsService';
-import { AlertController, ToastController, LoadingController } from '@ionic/angular';
+import { AlertController, ToastController, LoadingController, ModalController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 
@@ -12,18 +13,20 @@ import { User, CONSTANTES, AuthProvider } from './../model/user';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { flatMap, map, catchError } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
+import { LoginComponent } from 'src/pages/login-component';
 
 @Injectable()
 export class UserService  extends RemotePersistentDataService<User> {
 
     constructor(
+        db: AngularFirestore,
+        toastController: ToastController,
         private connectedUserService: ConnectedUserService,
         private appSettingsService: AppSettingsService,
-        db: AngularFirestore,
         private alertCtrl: AlertController,
         private loadingController: LoadingController,
-        public afAuth: AngularFireAuth,
-        toastController: ToastController
+        private afAuth: AngularFireAuth,
+        private modalController: ModalController,
     ) {
         super(db, toastController);
     }
@@ -158,62 +161,71 @@ export class UserService  extends RemotePersistentDataService<User> {
      */
     public askPasswordAndLogin(email: string): Observable<ResponseWithData<User>> {
         const sub = new Subject<ResponseWithData<User>>(); // use subject due to async actions
-        from(this.alertCtrl.create({
-            message: 'Please enter the password of the account \'' + email +  '\'.',
-            inputs: [
-                { name: 'password', type: 'password', label: 'Password', id: 'password'},
-                { name: 'savePassword', type: 'checkbox', label: 'Store password on device', value: 'true', checked: true,
-                    id: 'savePassword' }],
-            buttons: [
-                { text: 'Cancel', role: 'cancel',
-                    handler: () => {
-                        console.log('Cancel password demand');
-                        sub.next({ error: null, data: null});
-                        sub.complete();
-                    }
-                },
-                { text: 'Login',
-                    handler: (data: any) => {
-                        console.log('askPasswordAndLogin(' + email + '): read password=', data.password, 'save=', data.savePassword);
-                        if (data.password && data.password.trim().length > 0) {
-                            // try to login with the password
-                            console.log('UserService.askPasswordToLogin(' + email + '): login with read password');
-                            this.login(email, data.password).pipe(
-                                flatMap ( (ruser) => {
-                                    if (ruser.error) {
-                                        // login failed
-                                        data.savePassword = false; // don't save the password if error occurs
-                                        if (ruser.error.code === 'auth/network-request-failed') {
-                                            console.log('UserService.askPasswordToLogin(' + email + '): no network');
-                                            // no network => check the email/password with local storage
-                                            return this.connectByEmail(email, data.password);
-                                        }
-                                    }
-                                    return of(ruser);
-                                }),
-                                map( (ruser) => {
-                                    if (ruser.data) { // Login with success
-                                        console.log('UserService.askPasswordToLogin(' + email + '): login with success');
-                                        if (data.savePassword) {
-                                            console.log('UserService.askPasswordToLogin(' + email + '): store password.');
-                                            // The user is ok to store password in settings on local device
-                                            this.appSettingsService.setLastUser(email, data.password);
-                                        }
-                                    }
-                                    sub.next(ruser);
-                                    sub.complete();
-                                }),
-                            ).subscribe();
-                        } else {
-                            console.log('UserService.askPasswordToLogin(' + email + '): no password provided');
-                            sub.next({ error: null, data: null});
-                            sub.complete();
+        this.modalController.create({ component: LoginComponent, componentProps: { email}}).then( (modal) => {
+            modal.onDidDismiss().then( (modalData: any) => {
+                const loginData: LoginData = modalData.data as LoginData;
+                console.log('askPasswordAndLogin(' + email + ') user response=' + JSON.stringify(loginData));
+                if (loginData.action === 'LOGIN') {
+                    this.loginWithEmailNPassword(email, loginData.password, loginData.savePassword, sub);
+                } else if (loginData.action === 'RESET_PASSWORD') {
+                    this.resetPassword(email, sub);
+                } else {
+                    console.log('Cancel');
+                    sub.next({ error: null, data: null});
+                    sub.complete();
+                }
+            });
+            modal.present();
+        });
+        return sub;
+    }
+
+    private resetPassword(email, sub: Subject<ResponseWithData<User>>) {
+        // console.log('Reset password of the account', email);
+        firebase.auth().sendPasswordResetEmail(email).then(() => {
+            this.alertCtrl.create({message: 'An email to reset the password of the account ' + email})
+                .then((alert) => alert.present());
+            sub.next({ error: null, data: null});
+            sub.complete();
+        });
+    }
+
+    private loginWithEmailNPassword(email: string, password: string, savePassword: boolean, sub: Subject<ResponseWithData<User>>) {
+        // console.log('loginWithEmailNPassword(' + email + '): read password=', password, 'save=', savePassword);
+        if (password && password.trim().length > 0) {
+            // try to login with the password
+            console.log('UserService.askPasswordToLogin(' + email + '): login with read password');
+            this.login(email, password).pipe(
+                flatMap ( (ruser) => {
+                    if (ruser.error) {
+                        // login failed
+                        savePassword = false; // don't save the password if error occurs
+                        if (ruser.error.code === 'auth/network-request-failed') {
+                            console.log('UserService.askPasswordToLogin(' + email + '): no network');
+                            // no network => check the email/password with local storage
+                            return this.connectByEmail(email, password);
                         }
                     }
-                }
-            ]
-        }).then( (alert) => alert.present()));
-        return sub;
+                    return of(ruser);
+                }),
+                map( (ruser) => {
+                    if (ruser.data) { // Login with success
+                        console.log('UserService.askPasswordToLogin(' + email + '): login with success');
+                        if (savePassword) {
+                            console.log('UserService.askPasswordToLogin(' + email + '): store password.');
+                            // The user is ok to store password in settings on local device
+                            this.appSettingsService.setLastUser(email, password);
+                        }
+                    }
+                    sub.next(ruser);
+                    sub.complete();
+                }),
+            ).subscribe();
+        } else {
+            console.log('UserService.askPasswordToLogin(' + email + '): no password provided');
+            sub.next({ error: null, data: null});
+            sub.complete();
+        }
     }
 
     private connectByEmail(email: string, password: string = null): Observable<ResponseWithData<User>> {
