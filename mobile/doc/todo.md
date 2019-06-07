@@ -2,12 +2,6 @@
 
 This file lists the development task to do:
 
-## V2.0
-
-- offline mode does not work for creating new object
-- change alertcontroller of login to modal controller
-- add link to send email to reset password.
-
 
 ## V2.1
 
@@ -15,13 +9,20 @@ This file lists the development task to do:
 - create a trigger to delete unused photo on storage every week end
 - coaching : improve filters of the CoachingList page: choose a referee, period, Coaching of others
 - assessment : improve filters of the CoachingList page: choose a referee, period
+- auto detect disconnected mode.
 - new feature : create user group used to simplify the sharing
 - settings: limit to referee to a region
 - list of pro not completly defined
 - public sharing of a pro
 - (User |Referee) Photo in offline
 
-## Done
+## V2.0.12
+
+- change alertcontroller of login to modal controller
+- add link to send email to reset password.
+- add offline into menu
+
+## 2.0.11
 
 - Add google account
 - Add facebook account
