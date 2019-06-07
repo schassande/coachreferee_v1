@@ -21,10 +21,6 @@
 
 <ion-content padding>
     <ion-list *ngIf="settings">
-        <ion-item>
-            <ion-label fixed>Off line</ion-label>
-            <ion-toggle [checked]="settings.forceOffline" (ionChange)="onToggleForceOffline($event)"></ion-toggle>
-        </ion-item>
         <ion-item *ngIf="!env.production">
             <ion-label fixed>Server Url: {{settings.serverUrl}}</ion-label>
         </ion-item>
@@ -48,9 +44,11 @@
     <div style="text-align: center; margin-top: 10px;" *ngIf="!env.production">
         <ion-button shape="round" (click)="importLevelsNZ()">Import NZ Levels</ion-button>
     </div>
+    <!--
     <div style="text-align: center; margin-top: 10px;">
         <ion-button shape="round" (click)="saveSettings()" style="--background:green;">Save</ion-button>
     </div>
+    -->
     <p *ngFor="let m of msg" class="message">{{m}}</p>
     <div color="light" style="text-align: center; font-size: 0.8em; margin-top: 10px;">
         <div>The author of application is <br><a href="mailto:chassande@gmail.com">Sebastien Chassande-Barrioz</a>.</div>

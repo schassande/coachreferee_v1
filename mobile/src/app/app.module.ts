@@ -1,3 +1,4 @@
+import { OfflinesService } from './service/OfflineService';
 import { UserGroupService } from './service/UserGroupService';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -99,6 +100,7 @@ import { UserSelectorComponent } from './../pages/user-selector-component';
     ConnectedUserService,
     EmailService,
     LocalDatabaseService,
+    OfflinesService,
     PROService,
     RefereeService,
     SkillProfileService,

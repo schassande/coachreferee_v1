@@ -1,3 +1,4 @@
+import { LocalAppSettings } from './model/settings';
 import { AppSettingsService } from './service/AppSettingsService';
 import { Component } from '@angular/core';
 import { Platform, MenuController, NavController } from '@ionic/angular';
@@ -6,12 +7,17 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { VersionService } from './service/VersionService';
 import { Bookmark, BookmarkService } from './service/BookmarkService';
+import { OfflinesService } from './service/OfflineService';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+
+  /** The application settings store on device */
+  private appSetttings: LocalAppSettings;
+
   constructor(
     private navController: NavController,
     private platform: Platform,
@@ -20,6 +26,7 @@ export class AppComponent {
     private versionService: VersionService,
     public bookmarkService: BookmarkService,
     public appSettingsService: AppSettingsService,
+    private offlinesService: OfflinesService,
     private menu: MenuController,
     private firestore: AngularFirestore
   ) {
@@ -34,11 +41,10 @@ export class AppComponent {
       // Migrate local database if required.
       this.versionService.migrate().subscribe();
       this.appSettingsService.get().subscribe((appSetttings) => {
+        this.appSetttings = appSetttings;
         if (appSetttings.forceOffline) {
-          console.log('firestore.disableNetwork');
           this.firestore.firestore.disableNetwork();
         } else {
-          console.log('firestore.enableNetwork()');
           this.firestore.firestore.enableNetwork();
         }
       });
@@ -56,5 +62,12 @@ export class AppComponent {
   }
   public reloadPage() {
     window.location.reload(true);
+  }
+
+  public onToggleForceOffline() {
+    this.offlinesService.switchOfflineMode().subscribe((app) => {
+      this.appSetttings = app;
+      this.menu.close();
+    });
   }
 }

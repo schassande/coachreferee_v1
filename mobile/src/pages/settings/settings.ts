@@ -1,3 +1,4 @@
+import { OfflinesService } from './../../app/service/OfflineService';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { map, flatMap } from 'rxjs/operators';
@@ -44,7 +45,6 @@ export class SettingsPage implements OnInit {
   constructor(
     private navController: NavController,
     private appSettingsService: AppSettingsService,
-    private connectedUserService: ConnectedUserService,
     private userService: UserService,
     private refereeService: RefereeService,
     private proService: PROService,
@@ -52,7 +52,6 @@ export class SettingsPage implements OnInit {
     private coachingService: CoachingService,
     private assessmentService: AssessmentService,
     private alertController: AlertController,
-    private firestore: AngularFirestore,
     private toastController: ToastController
   ) {
   }
@@ -92,22 +91,6 @@ export class SettingsPage implements OnInit {
       this.launchMode += '<br>App can be installed.';
     });
     window.addEventListener('appinstalled', (event) => { this.launchMode += '<br>App installed'; });
-  }
-
-  public onToggleForceOffline(event) {
-    this.settings.forceOffline = !this.settings.forceOffline;
-    console.log('onToggleForceOffline(' + JSON.stringify(event) + ') =>', this.settings.forceOffline);
-    if (this.settings.forceOffline) {
-      this.skillProfileService.preload().pipe(
-        flatMap(() => this.refereeService.preload()),
-        flatMap(() => this.proService.preload()),
-        flatMap(() => this.coachingService.preload()),
-        flatMap(() => this.assessmentService.preload())
-      ).subscribe();
-      this.firestore.firestore.disableNetwork();
-    } else {
-      this.firestore.firestore.enableNetwork();
-    }
   }
 
   public saveSettings() {
@@ -208,80 +191,6 @@ export class SettingsPage implements OnInit {
   public reloadPage() {
     window.location.reload(true);
   }
-  // nextRefereeLevel: RefereeLevel;
-
-  /*
-    this.fileChooser.open().then(uri => {
-      console.log(uri);
-      return this.filePath.resolveNativePath(uri);
-    }).then( (filePath) => {
-      console.log('Filepath=', filePath);
-      const index = filePath.lastIndexOf('/');
-      const path: string = filePath.substr(0, index);
-      const fileName: string = filePath.substr(index + 1);
-      return this.file.readAsText(path, fileName);
-    }).then((content) => {
-      this.importDataObjects(JSON.parse(content));
-    }).catch(e => {
-      console.log(e);
-      this.toast.showLongBottom('Fail to read file: ' + e);
-    });
-  }
-
-  private importDataObjects(importObj: ExportedData) {
-    let obs: Observable<any> = of('');
-    if (importObj.users) {
-      importObj.users.forEach((elem: User) => {
-        // re create Date object avec serialisation
-        elem.creationDate = new Date(elem.creationDate);
-        elem.lastUpdate = new Date(elem.lastUpdate);
-        obs = concat(obs, this.userService.save(elem));
-      });
-    }
-    if (importObj.referees) {
-      importObj.referees.forEach((elem: Referee) => {
-        elem.creationDate = new Date(elem.creationDate);
-        elem.lastUpdate = new Date(elem.lastUpdate);
-        obs = concat(obs, this.refereeService.save(elem));
-      });
-    }
-    if (importObj.skillProfiles) {
-      importObj.skillProfiles.forEach((elem: SkillProfile) => {
-        elem.creationDate = new Date(elem.creationDate);
-        elem.lastUpdate = new Date(elem.lastUpdate);
-        obs = concat(obs, this.skillProfileService.save(elem));
-      });
-    }
-    if (importObj.pros) {
-      importObj.pros.forEach((elem: PersistentPRO) => {
-        elem.creationDate = new Date(elem.creationDate);
-        elem.lastUpdate = new Date(elem.lastUpdate);
-        obs = concat(obs, this.proService.save(elem));
-      });
-    }
-    if (importObj.coachings) {
-      importObj.coachings.forEach((elem: Coaching) => {
-        elem.date = new Date(elem.date);
-        elem.creationDate = new Date(elem.creationDate);
-        elem.lastUpdate = new Date(elem.lastUpdate);
-        obs = concat(obs, this.coachingService.save(elem));
-      });
-    }
-    if (importObj.assessments) {
-      importObj.assessments.forEach((elem: Assessment) => {
-        elem.date = new Date(elem.date);
-        elem.creationDate = new Date(elem.creationDate);
-        elem.lastUpdate = new Date(elem.lastUpdate);
-        obs = concat(obs, this.assessmentService.save(elem));
-      });
-    }
-    obs.subscribe(() => {
-      this.msg.push('Data imported.');
-      // this.toast.showShortCenter('Data imported.').subscribe();
-      console.log('Data imported.');
-    });
-  }
-  */
 
   private toast(msg: string) {
     this.toastController.create({

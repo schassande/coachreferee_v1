@@ -17,7 +17,10 @@
                     <ion-button fill="clear" (click)="route(entry.url)">{{entry.label}}</ion-button>
                 </ion-item>
                 <ion-item>
-                    <ion-button fill="clear" (click)="reloadPage()">Reload app</ion-button>
+                    <ion-button fill="clear" (click)="reloadPage()">Reload application</ion-button>
+                </ion-item>
+                <ion-item *ngIf="appSetttings">
+                    <ion-button fill="clear" (click)="onToggleForceOffline()">Switch {{ appSetttings.forceOffline ? 'offline' : 'online'}}</ion-button>
                 </ion-item>
             </ion-list>
         </ion-content>
