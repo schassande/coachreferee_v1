@@ -4,6 +4,7 @@ export type Competency = 'YES' | 'NE' | 'NO';
 
 export interface Evaluation {
     competency: Competency;
+    competencyPoints?: number;
     comment: string;
 }
 export interface SkillEvaluation extends Evaluation {

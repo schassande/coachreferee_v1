@@ -11,11 +11,13 @@ export interface Defintion {
 export interface Skill extends Defintion {
     proLinks: PROLink[];
     required: boolean;
+    maxPoints?: number;
 }
 export interface SkillSet extends Defintion {
     skills: Skill[];
     requirement: EvaluationRequirement;
     required: boolean;
+    requiredPoints?: number;
 }
 export interface SkillProfile extends Defintion, PersistentData {
     skillSets: SkillSet[];
@@ -23,4 +25,5 @@ export interface SkillProfile extends Defintion, PersistentData {
     backgroundColor?: string;
     color?: string;
     level?: RefereeLevel;
+    requiredPoints?: number;
 }
