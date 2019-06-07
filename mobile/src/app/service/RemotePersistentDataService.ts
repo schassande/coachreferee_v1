@@ -65,13 +65,23 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
         } else if (data.dataStatus === 'NEW') {
             data.dataStatus = 'CLEAN';
             data.creationDate = new Date();
-            return this.docToObs(this.fireStoreCollection.add(data));
+            // Create a document
+            data.id = this.db.createId();
+            const docRef = this.fireStoreCollection.doc(data.id);
+            // Get its id and set the id field
+            console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].save(): docRef=', docRef, data.id);
+            // store the data
+            docRef.set(data);
+            return of({ error: null, data});
+            // this.voidToObs(docRef.set(data), data);
 
         } else {
             data.dataStatus = 'CLEAN';
             data.lastUpdate = new Date();
             data.version ++;
-            return this.voidToObs(this.fireStoreCollection.doc(data.id).update(data), data);
+            this.fireStoreCollection.doc(data.id).update(data);
+            // return this.voidToObs(this.fireStoreCollection.doc(data.id).update(data), data);
+            return of({ error: null, data});
         }
     }
 
@@ -106,6 +116,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
                 return of({ error: err, data: null});
             }),
             map(() => {
+                console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].voidToObs(', data.id, ')');
                 return { error: null, data};
             })
         );
@@ -189,15 +200,13 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
 
     public delete(id: string): Observable<Response> {
         console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].delete(' + id + ')');
-        return from(this.fireStoreCollection.doc(id).delete()).pipe(
-            catchError((err) => {
-                console.log(err);
-                return of({ error: err});
-            }),
-            map(() => {
-                return { error: null};
-            })
-        );
+        try {
+            this.fireStoreCollection.doc(id).delete();
+            return of({ error: null});
+        } catch (err) {
+            console.log(err);
+            return of({ error: err});
+        }
     }
 
     public update(id: string, updater: PersistentDataUpdater<D>): Observable<ResponseWithData<D>> {
