@@ -40,6 +40,9 @@ export class UserService  extends RemotePersistentDataService<User> {
     }
 
     public save(user: User, cred: firebase.auth.UserCredential = null): Observable<ResponseWithData<User>> {
+        if (!user) {
+            return of({data: null, error: { error : 'null user', errorCode: -1}});
+        }
         const password = user.password;
         delete user.password;
         if (user.dataStatus === 'NEW') {
@@ -309,6 +312,9 @@ export class UserService  extends RemotePersistentDataService<User> {
     }
 
     private createUserFromCredential(cred: firebase.auth.UserCredential, authProvider: AuthProvider): User {
+        if (!cred || !cred.user) {
+            return null;
+        }
         const names = cred.user.displayName.split(' ');
         const firstName: string = names[0];
         const lastName: string = names.length > 1 ? names[1] : ' ';
