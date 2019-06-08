@@ -60,6 +60,7 @@ import { SkillProfileListPage } from './../pages/skill-profile-list/skill-profil
 import { SkillSetEditPage } from './../pages/skill-set-edit/skill-set-edit';
 import { UserEditPage } from '../pages/user-edit/user-edit';
 import { UserSelectionPage } from '../pages/user-selection/user-selection';
+import { XpListComponent } from '../pages/xp-list/xp-list.component';
 
 import { AppComponent } from './app.component';
 import { CameraIconComponent } from './../pages/camera-icon-component';
@@ -79,6 +80,7 @@ import { UserSelectorComponent } from './../pages/user-selector-component';
     SettingsPage,
     SkillEditPage, SkillProfileEditPage, SkillProfileListPage, SkillSetEditPage,
     UserEditPage, UserSelectionPage, UserLogoutComponent,
+    XpListComponent,
     SharingComponent, CompetencyComponent, PeriodSelectorComponent, CameraIconComponent, UserSelectorComponent, LoginComponent],
   entryComponents: [AppComponent, HomePage, RefereeSelectPage, RefereeEditPage, UserSelectorComponent, LoginComponent],
   imports: [
