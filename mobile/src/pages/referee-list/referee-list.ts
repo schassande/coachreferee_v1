@@ -21,6 +21,7 @@ export class RefereeListPage implements OnInit {
   referees: Referee[];
   error: any;
   searchInput: string;
+  sortBy: string;
 
   constructor(
     public modalController: ModalController,
@@ -35,9 +36,28 @@ export class RefereeListPage implements OnInit {
 
   private searchReferee() {
     this.refereeService.searchReferees(this.searchInput).subscribe((response: ResponseWithData<Referee[]>) => {
-      this.referees = response.data;
+      this.referees = this.sortReferees(response.data);
       this.error = response.error;
     });
+  }
+  private sortReferees(referees: Referee[]): Referee[] {
+    if (!referees) {
+      return referees;
+    }
+    if (this.sortBy === 'level') {
+      return referees.sort((ref1: Referee, ref2: Referee) => {
+        let res = 0;
+        if (res === 0) {
+          res = ref1.referee.refereeLevel.localeCompare(ref2.referee.refereeLevel);
+        }
+        if (res === 0) {
+            res = ref1.shortName.localeCompare(ref2.shortName);
+        }
+        return res;
+      });
+    } else {
+      return referees.sort((ref1: Referee, ref2: Referee) => ref1.shortName.localeCompare(ref2.shortName));
+    }
   }
 
   public refereeSelected(event: any, referee: Referee): void {

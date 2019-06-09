@@ -14,7 +14,6 @@ This file lists the development task to do:
 - Offline photo for users & referees
 - Create a trigger to delete unused photo on storage every week end
 - Auto detect disconnected mode.
-- referee list : sort by name or badge
 - referee list : show badge [color]
 - referee view : show badge  [color]
 
@@ -28,6 +27,7 @@ This file lists the development task to do:
 - CoachingList : view by competition name & day
 - refresh coaching list by pull down
 - RefereeView : show detail of coaching
+- referee list : sort by name or badge
 
 ## Version 2.0.13 (current)
 
