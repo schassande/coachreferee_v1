@@ -4,6 +4,7 @@ This file lists the development task to do:
 
 ## Possibles features
 
+- RefereeView : show detail of coaching
 - Mobile app installation on IOS device
 - Settings: limit to referee to a region or a group => defintion of referee group
 - Create user group used to simplify the sharing
@@ -15,11 +16,20 @@ This file lists the development task to do:
 - Create a trigger to delete unused photo on storage every week end
 - Auto detect disconnected mode.
 
-## Version 2.1 (next)
+## Version 2.1
 
 - XP history management
 
-## Version 2.0.12 (current)
+## Version 2.0.14 (next)
+
+- bug fix about default competition saving
+- CoachingList : view by competition name & day
+
+## Version 2.0.13 (current)
+
+- bug fix about user registration
+
+## Version 2.0.12
 
 - change alertcontroller of login to modal controller
 - add link to send email to reset password.
