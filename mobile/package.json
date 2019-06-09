@@ -1,6 +1,6 @@
 {
     "name": "refcoach",
-    "version": "2.0.12",
+    "version": "2.0.13",
     "author": "Sebastien Chassande",
     "scripts": {
         "ng": "ng",
