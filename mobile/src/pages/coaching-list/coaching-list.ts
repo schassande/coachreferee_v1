@@ -1,8 +1,10 @@
+import { Component, OnInit } from '@angular/core';
+import { AlertController, NavController } from '@ionic/angular';
+
 import { ResponseWithData } from './../../app/service/response';
 import { Coaching } from './../../app/model/coaching';
 import { CoachingService } from './../../app/service/CoachingService';
-import { Component, OnInit } from '@angular/core';
-import { AlertController, NavController } from '@ionic/angular';
+import { BookmarkService, Bookmark } from './../../app/service/BookmarkService';
 
 
 export interface CoachingList {
@@ -39,15 +41,25 @@ export class CoachingListPage implements OnInit {
   ngOnInit() {
     this.searchCoaching();
   }
-
-  private searchCoaching() {
+  doRefresh(event) {
+    this.searchCoaching(false, event);
+  }
+  private searchCoaching(forceServer: boolean = false, event: any = null) {
     this.loading = true;
-    this.coachingService.searchCoachings(this.searchInput).subscribe((response: ResponseWithData<Coaching[]>) => {
-      this.coachings = this.coachingService.sortCoachings(response.data, true);
-      this.coachingLists = this.computeCoachingLists(this.coachings);
-      this.loading = false;
-      this.error = response.error;
-    });
+    console.log('searchCoaching(' + this.searchInput + ')');
+    this.coachingService.searchCoachings(this.searchInput, forceServer ? 'server' : 'default')
+      .subscribe((response: ResponseWithData<Coaching[]>) => {
+        this.coachings = this.coachingService.sortCoachings(response.data, true);
+        this.coachingLists = this.computeCoachingLists(this.coachings);
+        this.loading = false;
+        if (event) {
+          event.target.complete();
+        }
+        this.error = response.error;
+        if (this.error) {
+          console.log('searchCoaching(' + this.searchInput + ') error=' + this.error);
+        }
+      });
   }
 
   public coachingSelected(event: any, coaching: Coaching): void {

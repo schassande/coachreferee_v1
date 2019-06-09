@@ -22,11 +22,16 @@
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button (click)="newCoaching()" class="plusButton">+</ion-fab-button>
     </ion-fab>
-    <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
-    <div *ngIf="loading" style="margin: 20px auto; text-align: center;">
-        <ion-spinner></ion-spinner>
+    <div slot="fixed" style="width: 100%;     background: white;">
+        <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
+        <div *ngIf="loading" style="margin: 20px auto; text-align: center;">
+            <ion-spinner></ion-spinner>
+        </div>
     </div>
-    <ion-list style="margin-bottom: 60px;">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" closeDuration="700ms">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <ion-list style="margin: 60px 0 60px 0;">
         <ion-item-group *ngFor="let coachingList of coachingLists">
             <ion-item-divider color="light">{{coachingList.competitionName}} - {{coachingList.day}}</ion-item-divider>
             <ion-item *ngFor="let coaching of coachingList.coachings" [color]="isPast(coaching) ? '' : 'medium'">

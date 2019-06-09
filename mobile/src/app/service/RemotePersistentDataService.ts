@@ -180,11 +180,11 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
 
     public query(query: Query, options: 'default' | 'server' | 'cache'): Observable<ResponseWithData<D[]>> {
         return from(query.get({ source: options})).pipe(
+            map((qs: QuerySnapshot<D>) => this.snapshotToObs(qs)),
             catchError((err) => {
                 console.log(err);
                 return of({ error: err, data: null});
-            }),
-            map((qs: QuerySnapshot<D>) => this.snapshotToObs(qs))
+            })
         );
     }
 
