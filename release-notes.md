@@ -24,6 +24,7 @@ This file lists the development task to do:
 
 - bug fix about default competition saving
 - CoachingList : view by competition name & day
+- refresh coaching list by pull down
 
 ## Version 2.0.13 (current)
 
