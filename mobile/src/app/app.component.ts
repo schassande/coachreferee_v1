@@ -33,7 +33,7 @@ export class AppComponent {
     this.initializeApp();
   }
 
-  initializeApp() {
+  private initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
@@ -50,16 +50,19 @@ export class AppComponent {
       });
     });
   }
-  route(url: string = '/home') {
-    console.log('route(', url, ')');
-    this.navController.navigateRoot(url);
+  public handleEntry(entry: Bookmark) {
+    if (entry.url) {
+      this.route(entry.url);
+    } else if (entry.handler) {
+      entry.handler();
+    }
     this.menu.close();
   }
-  openBookmark(entry: Bookmark) {
-    if (entry) {
-      this.navController.navigateRoot(entry.url);
-    }
+  private route(url: string = '/home') {
+    console.log('route(', url, ')');
+    this.navController.navigateRoot(url);
   }
+
   public reloadPage() {
     window.location.reload(true);
   }

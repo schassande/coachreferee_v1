@@ -63,5 +63,6 @@ export class BookmarkService {
 export interface Bookmark {
     id: string;
     label: string;
-    url: string;
+    url?: string;
+    handler?: any;
 }
