@@ -7,6 +7,7 @@ import { AlertController, NavController } from '@ionic/angular';
 
 export interface CoachingList {
   day: string;
+  competitionName: string;
   coachings: Coaching[];
 }
 
@@ -91,11 +92,13 @@ export class CoachingListPage implements OnInit {
     let currentIndex = -1;
     coachings.forEach((c: Coaching) => {
       const cd: string = this.coachingService.getCoachingDateAsString(c);
-      if (currentIndex >= 0 && lists[currentIndex].day === cd ) {
+      if (currentIndex >= 0
+          && lists[currentIndex].day === cd
+          && lists[currentIndex].competitionName === c.competition) {
         lists[currentIndex].coachings.push(c);
       } else {
         currentIndex ++;
-        lists.push({ day: cd, coachings : [c]});
+        lists.push({ day: cd, competitionName: c.competition, coachings : [c]});
       }
     });
     return lists;

@@ -28,7 +28,7 @@
     </div>
     <ion-list style="margin-bottom: 60px;">
         <ion-item-group *ngFor="let coachingList of coachingLists">
-            <ion-item-divider color="light">{{coachingList.day}}</ion-item-divider>
+            <ion-item-divider color="light">{{coachingList.competitionName}} - {{coachingList.day}}</ion-item-divider>
             <ion-item *ngFor="let coaching of coachingList.coachings" [color]="isPast(coaching) ? '' : 'medium'">
                 <!-- #BEF990 style='--color: #D8FFFF;' -->
                 <ion-label style="border: none;" class="listItemButton" (click)="coachingSelected($event, coaching)">
