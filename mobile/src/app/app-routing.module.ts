@@ -1,3 +1,5 @@
+import { XpEditComponent } from './../pages/xp-edit/xp-edit.component';
+import { XpListComponent } from './../pages/xp-list/xp-list.component';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
@@ -64,6 +66,11 @@ const routes: Routes = [
   { path: 'user/edit/:id', component: UserEditPage, canActivate: [AuthGuard] },
   { path: 'user/select', component: UserSelectionPage},
   { path: 'user/logout', component: UserLogoutComponent},
+
+  { path: 'xp/list', component: XpListComponent, canActivate: [AuthGuard]},
+  { path: 'xp/edit/:id', component: XpEditComponent, canActivate: [AuthGuard]},
+  { path: 'xp/create', component: XpEditComponent, canActivate: [AuthGuard]},
+
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];
 

@@ -19,6 +19,9 @@ export interface Xp extends PersistentData {
     eventName: string;
     /** Class of the event */
     eventClass: EventClass;
+    /** Year of the event */
+    year: number;
+    /** the days of coaching during the event */
     days: CoachingDay[];
 }
 export interface CoachingDay {
@@ -26,6 +29,8 @@ export interface CoachingDay {
     coachingDate: Date;
     /** Duration of the game in minutes */
     gameDuration: number;
+    /** Number of games */
+    nbGames?: number;
     /** Number of minute of coached game during the day */
     coachingDuration: number;
     /** Indicate the contribution level of the referee coach to the referee allocation */

@@ -1,3 +1,6 @@
+import { DateService } from './service/DateService';
+import { XpEditComponent } from './../pages/xp-edit/xp-edit.component';
+import { XpService } from './service/XpService';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -80,7 +83,7 @@ import { UserSelectorComponent } from './../pages/user-selector-component';
     SettingsPage,
     SkillEditPage, SkillProfileEditPage, SkillProfileListPage, SkillSetEditPage,
     UserEditPage, UserSelectionPage, UserLogoutComponent,
-    XpListComponent,
+    XpListComponent, XpEditComponent,
     SharingComponent, CompetencyComponent, PeriodSelectorComponent, CameraIconComponent, UserSelectorComponent, LoginComponent],
   entryComponents: [AppComponent, HomePage, RefereeSelectPage, RefereeEditPage, UserSelectorComponent, LoginComponent],
   imports: [
@@ -102,6 +105,7 @@ import { UserSelectorComponent } from './../pages/user-selector-component';
     BookmarkService,
     CoachingService,
     ConnectedUserService,
+    DateService,
     EmailService,
     LocalDatabaseService,
     OfflinesService,
@@ -115,6 +119,7 @@ import { UserSelectorComponent } from './../pages/user-selector-component';
     UserService,
     UserGroupService,
     VersionService,
+    XpService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

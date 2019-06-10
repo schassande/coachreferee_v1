@@ -20,6 +20,7 @@ This file lists the development task to do:
 - referee list : infinite scroll, group by short name or level
 - coaching list : infinite scroll
 - assessment list : infinite scroll
+- function sendXpReport
 
 ## Version 2.1
 
