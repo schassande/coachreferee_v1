@@ -58,7 +58,7 @@ export class AppComponent {
     }
     this.menu.close();
   }
-  private route(url: string = '/home') {
+  public route(url: string = '/home') {
     console.log('route(', url, ')');
     this.navController.navigateRoot(url);
   }

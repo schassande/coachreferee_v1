@@ -21,7 +21,7 @@ This file lists the development task to do:
 
 - XP history management
 
-## Version 2.0.14 (next)
+## Version 2.0.14 2019-06-09 (current)
 
 - bug fix about default competition saving
 - CoachingList : view by competition name & day
@@ -29,7 +29,7 @@ This file lists the development task to do:
 - RefereeView : show detail of coaching
 - referee list : sort by name or badge
 
-## Version 2.0.13 (current)
+## Version 2.0.13
 
 - bug fix about user registration
 
