@@ -16,6 +16,9 @@ This file lists the development task to do:
 - Auto detect disconnected mode.
 - referee list : show badge [color]
 - referee view : show badge  [color]
+- referee list : infinite scroll, group by short name or level
+- coaching list : infinite scroll
+- assessment list : infinite scroll
 
 ## Version 2.1
 
