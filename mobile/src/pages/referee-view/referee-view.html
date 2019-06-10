@@ -40,8 +40,12 @@
         <ion-item-divider color="light">Coachings ({{coachings.length}})</ion-item-divider>
         <ion-item *ngFor="let coaching of coachings" (click)="coachingSelected($event, coaching)" style="border: none;">
             <ion-label>
-                {{coaching.competition}}<br> {{coachingService.getCoachingDateAsString(coaching)}} {{coaching.timeSlot}}: Field {{coaching.field}}, {{coaching.gameCategory}}
+                {{coaching.competition}}<br>{{coachingService.getCoachingDateAsString(coaching)}} &nbsp;&nbsp;{{coaching.timeSlot}} &nbsp;&nbsp;Field {{coaching.field}}, &nbsp;&nbsp;{{coaching.gameCategory}}
                 <div> Referees: <span *ngFor="let referee of coaching.referees; last as isLast">{{referee.refereeShortName}}<span *ngIf="!isLast">, </span></span>
+                    <div *ngFor="let positiveFeedback of coaching.referees[getRefIdx(coaching)].positiveFeedbacks" class="feedback">+
+                        <span [ngClass]="{'delivered': positiveFeedback.deliver}">{{positiveFeedback.skillName}}</span></div>
+                    <div *ngFor="let feedback of coaching.referees[getRefIdx(coaching)].feedbacks" class="feedback">-
+                        <span [ngClass]="{'delivered': feedback.deliver}">{{feedback.problemShortDesc}}</span></div>
                 </div>
             </ion-label>
         </ion-item>

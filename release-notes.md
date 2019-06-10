@@ -15,12 +15,29 @@ This file lists the development task to do:
 - Offline photo for users & referees
 - Create a trigger to delete unused photo on storage every week end
 - Auto detect disconnected mode.
+- referee list : show badge [color]
+- referee view : show badge  [color]
+- referee list : infinite scroll, group by short name or level
+- coaching list : infinite scroll
+- assessment list : infinite scroll
 
-## Version 2.1 (next)
+## Version 2.1
 
 - XP history management
 
-## Version 2.0.12 (current)
+## Version 2.0.14 2019-06-09 (current)
+
+- bug fix about default competition saving
+- CoachingList : view by competition name & day
+- refresh coaching list by pull down
+- RefereeView : show detail of coaching
+- referee list : sort by name or badge
+
+## Version 2.0.13
+
+- bug fix about user registration
+
+## Version 2.0.12
 
 - change alertcontroller of login to modal controller
 - add link to send email to reset password.

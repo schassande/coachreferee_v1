@@ -11,10 +11,10 @@
                     <ion-button fill="clear" (click)="route()">Home</ion-button>
                 </ion-item>
                 <ion-item *ngFor="let entry of bookmarkService.getContext() |async">
-                    <ion-button fill="clear" (click)="route(entry.url)">{{entry.label}}</ion-button>
+                    <ion-button fill="clear" (click)="handleEntry(entry)">{{entry.label}}</ion-button>
                 </ion-item>
                 <ion-item *ngFor="let entry of bookmarkService.getBookmarks() |async">
-                    <ion-button fill="clear" (click)="route(entry.url)">{{entry.label}}</ion-button>
+                    <ion-button fill="clear" (click)="handleEntry(entry)">{{entry.label}}</ion-button>
                 </ion-item>
                 <ion-item>
                     <ion-button fill="clear" (click)="reloadPage()">Reload application</ion-button>

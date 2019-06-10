@@ -59,11 +59,14 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
      );
     }
 
-    /** Overide to restrict to the coachings of the user */
-    public all(): Observable<ResponseWithData<Coaching[]>> {
+    /**
+     * Overide to restrict to the coachings of the user.
+     * Provide option to define the source of the data: 'default' | 'server' | 'cache'
+     */
+    public all(options: 'default' | 'server' | 'cache' = 'default'): Observable<ResponseWithData<Coaching[]>> {
       return forkJoin(
-        this.query(this.getBaseQueryMyCoahchings(), 'default'),
-        this.query(this.getBaseQuerySharedCoahchings(), 'default')
+        this.query(this.getBaseQueryMyCoahchings(), options),
+        this.query(this.getBaseQuerySharedCoahchings(), options)
       ).pipe(
         map((list) => this.mergeObservables(list))
       );
@@ -87,10 +90,10 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
         return array;
     }
 
-    public searchCoachings(text: string): Observable<ResponseWithData<Coaching[]>> {
+    public searchCoachings(text: string, options: 'default' | 'server' | 'cache' = 'default'): Observable<ResponseWithData<Coaching[]>> {
         const str = text !== null && text && text.trim().length > 0 ? text.trim() : null;
         return str ?
-            super.filter(this.all(), (coaching: Coaching) => {
+            super.filter(this.all(options), (coaching: Coaching) => {
                 return this.stringContains(str, coaching.competition)
                 || (coaching.referees[0] && this.stringContains(str, coaching.referees[0].refereeShortName))
                 || (coaching.referees[1] && this.stringContains(str, coaching.referees[1].refereeShortName))
@@ -98,7 +101,7 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
                 || this.stringContains(str, coaching.field)
                 || this.stringContains(str, this.getCoachingDateAsString(coaching));
             })
-            : this.all();
+            : this.all(options);
     }
 
     public compareDate(day1: Date, day2: Date): number {

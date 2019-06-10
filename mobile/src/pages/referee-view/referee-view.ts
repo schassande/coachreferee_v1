@@ -24,6 +24,7 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'page-referee-view',
   templateUrl: 'referee-view.html',
+  styleUrls: ['referee-view.scss']
 })
 export class RefereeViewPage implements OnInit {
   referee: Referee;
@@ -92,6 +93,9 @@ export class RefereeViewPage implements OnInit {
     });
   }
 
+  getRefIdx(coaching: Coaching) {
+    return coaching.refereeIds.indexOf(this.referee.id);
+  }
   private bookmarkPage() {
     this.bookmarkService.addBookmarkEntry({
       id: 'referee' + this.referee.id,

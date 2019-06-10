@@ -150,6 +150,9 @@ export class CoachingEditPage implements OnInit {
 
   set competition(c: string) {
     this.coaching.competition = c;
+    // connected user instance
+    this.connectedUserService.getCurrentUser().defaultCompetition = c;
+    // save in database
     this.userService.update(this.coaching.coachId, (user: User) => { user.defaultCompetition = c; return user; }).subscribe();
   }
 
