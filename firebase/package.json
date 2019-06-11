@@ -1,0 +1,16 @@
+{
+    "name": "coachreferee-firebase",
+    "version": "0.0.1",
+    "description": "Referee Coach project",
+    "author": "Sebastien Chassande-Barrioz",
+    "homepage": "https://coachreferee.com",
+    "scripts": {
+        "noproxy": "set HTTP_PROXY= && set HTTPS_PROXY=",
+        "target-www": "firebase target:apply hosting  www coachreferee-site",
+        "target-app": "firebase target:apply hosting  app refcoach-676e3",
+        "deploy-www": "firebase deploy --only hosting:www",
+        "deploy-app": "firebase deploy --only hosting:app"
+
+    },
+    "private": true
+}

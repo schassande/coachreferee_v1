@@ -21,6 +21,7 @@ This file lists the development task to do:
 - coaching list : infinite scroll
 - assessment list : infinite scroll
 - function sendXpReport
+- web site with documentation
 
 ## Version 2.1
 
