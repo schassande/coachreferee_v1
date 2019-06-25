@@ -19,6 +19,7 @@ export class ProListPage implements OnInit {
 
   pros: PersistentPRO[];
   searchInput: string;
+  notCompleted = false;
 
   constructor(
     private navController: NavController,
@@ -44,8 +45,13 @@ export class ProListPage implements OnInit {
     this.searchPro();
   }
   private searchPro() {
+    console.log('SearchPro', this.notCompleted);
     this.proService.searchPros(this.searchInput).subscribe((response: ResponseWithData<PersistentPRO[]>) => {
-      this.pros = response.data;
+      if (response.data && this.notCompleted) {
+        this.pros = response.data.filter((pro) => !pro.complete);
+      } else {
+        this.pros = response.data;
+      }
     });
   }
   public deletePRO(pro: PersistentPRO) {
