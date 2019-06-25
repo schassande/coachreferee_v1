@@ -27,3 +27,7 @@ ion-title {
 .listItemButton .item-inner {
     border: none !important;
 }
+
+:root ion-header {
+    --ion-background-color: #ffff00;
+}
