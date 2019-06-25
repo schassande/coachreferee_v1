@@ -26,6 +26,7 @@ This file lists the development task to do:
 ## Version 2.1
 
 - XP history management
+- New logo
 
 ## Version 2.0.14 2019-06-09 (current)
 
