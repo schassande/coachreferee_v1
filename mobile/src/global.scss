@@ -27,3 +27,21 @@ ion-title {
 .listItemButton .item-inner {
     border: none !important;
 }
+
+body {
+    background: url("assets/imgs/banner.jpg") center center;
+    /* background-color: #e97770; */
+    color: white;
+}
+
+:root ion-header {
+    --ion-background-color: #ffff00;
+}
+
+.list-md {
+    padding-top: 0;
+}
+
+.sc-ion-searchbar-md-h {
+    background: none;
+}

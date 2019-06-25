@@ -24,14 +24,14 @@
             'background-color': profile.backgroundColor 
         }">{{profile.name}}</div>
 
-        <div *ngFor="let skillSet of profile.skillSets; index as skillSetIdx" style="margin-top: 20px;">
+        <div *ngFor="let skillSet of profile.skillSets; index as skillSetIdx">
             <ion-item-divider color="light" (click)="toggleGroup(skillSetIdx)">
                 <ion-icon name="{{ isGroupShown(skillSetIdx) ? 'remove' : 'add'}}"></ion-icon> &nbsp;
                 <span innerHTML="{{skillSet.name}}"></span>&nbsp;<span *ngIf="skillSet.required">*</span>
                 <span slot="end">({{requirementToString(skillSet.requirement)}})</span>
                 <ion-icon slot="end" name="star" [ngStyle]="{ color: assessment.skillSetEvaluation[skillSetIdx].competency == 'YES' ? 'green' : (assessment.skillSetEvaluation[skillSetIdx].competency == 'NO' ? 'red' : 'white') }" class="group-competency"></ion-icon>
             </ion-item-divider>
-            <div *ngIf="isGroupShown(skillSetIdx)">
+            <div *ngIf="isGroupShown(skillSetIdx)" style="margin-bottom: 20px;">
                 <ion-item *ngFor="let skill of skillSet.skills; index as skillIdx" text-wrap>
                     <ion-label>
                         <span innerHTML="{{skill.name}}"></span>
@@ -47,7 +47,7 @@
                 <ion-textarea placeholder="Comment about {{skillSet.name}}" rows="1" [(ngModel)]="assessment.skillSetEvaluation[skillSetIdx].description" (ionBlur)="saveAssessment()"></ion-textarea>
             </div>
         </div>
-        <div style="margin-top: 20px;">
+        <div>
             <ion-item-divider color="light">
                 Global <span slot="end">({{requirementToString(profile.requirement)}})</span>
                 <ion-icon slot="end" name="star" [ngStyle]="{ color: assessment.competency =='YES' ? 'green' : (assessment.competency =='NO' ? 'red' : 'white') }" class="group-competency"></ion-icon>

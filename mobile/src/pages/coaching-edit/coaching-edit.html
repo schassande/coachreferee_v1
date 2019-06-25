@@ -21,7 +21,7 @@
 <ion-content *ngIf="coaching">
     <ion-list>
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
-            <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
+            <ion-item-divider color="medium" style="text-align: center; font-size: 1.2em; padding: 10px;">
                 <ion-label>Game information</ion-label>
             </ion-item-divider>
             <ion-item>
@@ -101,7 +101,7 @@
             </ion-item>
         </ion-item-group>
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
-            <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
+            <ion-item-divider color="medium" style="text-align: center; font-size: 1.2em; padding: 10px;">
                 <ion-label>Coached referees</ion-label>
             </ion-item-divider>
             <ion-item>
@@ -142,7 +142,7 @@
             </ion-grid>
         </ion-item>
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;" *ngIf="coachingOwner">
-            <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
+            <ion-item-divider color="medium" style="text-align: center; font-size: 1.2em; padding: 10px;">
                 <ion-label>Coaching shared with</ion-label>
                 <ion-button shape="round" slot="end" (click)="shareWith()" *ngIf="coachingOwner">
                     <ion-icon ios="ios-share" md="md-share"></ion-icon>
@@ -158,5 +158,5 @@
             </ion-item>
         </ion-item-group>
     </ion-list>
-    <div color="light" style="text-align: center; font-size: 0.8em;">Coach by {{coachingCoach}}</div>
+    <div color="light" style="text-align: center; font-size: 0.8em; margin-bottom: 30px;">Coach by {{coachingCoach}}</div>
 </ion-content>
