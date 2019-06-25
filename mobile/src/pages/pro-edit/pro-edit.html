@@ -47,11 +47,15 @@
             <ion-label fixed>Complete</ion-label>
             <ion-toggle [checked]="pro.complete" (ionChange)="onToggleComplete()"></ion-toggle>
         </ion-item>
+        <ion-item>
+            <ion-label fixed>Public</ion-label>
+            <ion-toggle [checked]="pro.sharedPublic" (ionChange)="onTogglePublic()"></ion-toggle>
+        </ion-item>
     </ion-list>
-    <div style="text-align: center; margin-bottom: 50px;">
+    <div style="text-align: center; margin-bottom: 50px;" *ngIf="owner">
         <ion-button shape="round" style='--background:green;' (click)="savePRO()">Save</ion-button>
     </div>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="pro">
-        <ion-fab-button style='--background:red; font-size: 1.6em;' *ngIf="pro.dataStatus !== 'NEW'" (click)="deletePRO()">X</ion-fab-button>
+        <ion-fab-button style='--background:red; font-size: 1.6em;' *ngIf="owner && pro.dataStatus !== 'NEW'" (click)="deletePRO()">X</ion-fab-button>
     </ion-fab>
 </ion-content>

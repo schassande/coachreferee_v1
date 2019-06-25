@@ -13,6 +13,7 @@ export interface PRO {
 }
 export interface PersistentPRO extends PRO, PersistentData, SharedElement {
     complete: boolean;
+    sharedPublic?: boolean;
 }
 export interface PROLink {
     id: string;

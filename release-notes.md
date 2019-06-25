@@ -10,7 +10,6 @@ This file lists the development task to do:
 - Create user group used to simplify the sharing
 - Coaching : improve filters of the CoachingList page: choose a referee, period, Coaching of others
 - Assessment : improve filters of the CoachingList page: choose a referee, period
-- Public sharing of a pro
 - Offline photo for users & referees
 - Create a trigger to delete unused photo on storage every week end
 - Auto detect disconnected mode.
@@ -27,6 +26,7 @@ This file lists the development task to do:
 - [Web site](http://coachreferee.com)
 - referee view : show badge  [color]
 - List of pro not completly defined
+- Public sharing of a pro
 
 ## Version 2.0.14 2019-06-09 (current)
 

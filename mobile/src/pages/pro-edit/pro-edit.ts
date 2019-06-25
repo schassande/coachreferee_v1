@@ -22,6 +22,7 @@ import { flatMap, map } from 'rxjs/operators';
 export class ProEditPage implements OnInit {
 
   pro: PersistentPRO = null;
+  owner = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -55,19 +56,25 @@ export class ProEditPage implements OnInit {
             remedy: '',
             outcome: '',
             complete: false,
-            sharedWith: { users: [], groups: [] }
+            sharedWith: { users: [], groups: [] },
+            sharedPublic: false
           };
           return of({ data : pro, error: null });
         }
       }),
       map( (response: ResponseWithData<PersistentPRO>) => {
         this.pro = response.data;
+        this.owner = this.pro && this.pro.coachId === this.connectedUserService.getCurrentUser().id;
         return this.pro;
       })
     );
   }
   public onToggleComplete() {
     this.pro.complete = !this.pro.complete;
+  }
+
+  public onTogglePublic() {
+    this.pro.sharedPublic = !this.pro.sharedPublic;
   }
 
   savePRO() {

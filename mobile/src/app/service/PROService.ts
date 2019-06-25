@@ -1,6 +1,7 @@
+import { map } from 'rxjs/operators';
 import { ConnectedUserService } from './ConnectedUserService';
 import { AngularFirestore, Query } from 'angularfire2/firestore';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { ResponseWithData } from './response';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
@@ -28,12 +29,22 @@ export class PROService extends RemotePersistentDataService<PersistentPRO> {
 
     /** Overide to restrict to the coachings of the user */
     public all(): Observable<ResponseWithData<PersistentPRO[]>> {
-        return this.query(this.getBaseQueryMyAssessments(), 'default');
+        return forkJoin(
+            this.query(this.getBaseQueryMyAssessments(), 'default'),
+            this.query(this.getBaseQueryPublicAssessments(), 'default')
+         ).pipe(
+           map((list) => this.mergeObservables(list, true))
+         );
     }
 
-    /** Query basis for coaching limiting access to the coachings of the user */
+    /** Query basis for assessment limiting access to the assessments of the user */
     private getBaseQueryMyAssessments(): Query {
         return this.getCollectionRef().where('coachId', '==', this.connectedUserService.getCurrentUser().id);
+    }
+
+    /** Query basis for assessment limiting access to the public assessments */
+    private getBaseQueryPublicAssessments(): Query {
+        return this.getCollectionRef().where('sharedPublic', '==', true);
     }
 
     public searchPros(text: string): Observable<ResponseWithData<PersistentPRO[]>> {

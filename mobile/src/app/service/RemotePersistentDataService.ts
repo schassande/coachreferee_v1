@@ -278,13 +278,19 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             );
         }
     }
-    protected mergeObservables(list: ResponseWithData<D[]>[]): ResponseWithData<D[]> {
+    protected mergeObservables(list: ResponseWithData<D[]>[], unique = false): ResponseWithData<D[]> {
         const res = {data: [], error : null};
+        const ids = new Set<string>();
         list.forEach( (item) => {
           if (item.data) {
             item.data.forEach( (d: D) => {
-              this.adjustFieldOnLoad(d);
-              res.data.push(d);
+                if (!unique || !ids.has(d.id)) {
+                    this.adjustFieldOnLoad(d);
+                    res.data.push(d);
+                    if (unique) {
+                        ids.add(d.id);
+                    }
+                }
             });
           }
           if (item.error) {
