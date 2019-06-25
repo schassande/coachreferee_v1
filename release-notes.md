@@ -15,8 +15,6 @@ This file lists the development task to do:
 - Offline photo for users & referees
 - Create a trigger to delete unused photo on storage every week end
 - Auto detect disconnected mode.
-- referee list : show badge [color]
-- referee view : show badge  [color]
 - referee list : infinite scroll, group by short name or level
 - coaching list : infinite scroll
 - assessment list : infinite scroll
@@ -27,6 +25,8 @@ This file lists the development task to do:
 
 - XP history management
 - New logo
+- [Web site](http://coachreferee.com)
+- referee view : show badge  [color]
 
 ## Version 2.0.14 2019-06-09 (current)
 
@@ -35,6 +35,7 @@ This file lists the development task to do:
 - refresh coaching list by pull down
 - RefereeView : show detail of coaching
 - referee list : sort by name or badge
+- referee list : show badge [color]
 
 ## Version 2.0.13
 
