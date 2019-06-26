@@ -56,7 +56,9 @@ export class AssessmentEditPage implements OnInit {
         this.assessment = response.data;
         this.computeAssessmentValues();
         // load profiles
-        return this.skillProfileService.all().pipe(map((res: ResponseWithData<SkillProfile[]>) => {this.profiles = res.data; }));
+        return this.skillProfileService.allProfiles('REFEREE').pipe(map((res: ResponseWithData<SkillProfile[]>) => {
+          this.profiles = this.skillProfileService.sort(res.data);
+        }));
       }),
       map(() => {
         if (this.assessment) {

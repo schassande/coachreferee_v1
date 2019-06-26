@@ -12,7 +12,7 @@
                 <ion-icon name="arrow-back"></ion-icon>
             </ion-button>
         </ion-buttons>
-        <ion-title>Referee level edition</ion-title>
+        <ion-title>{{profileType == 'REFEREE_COACH' ? 'Coach' : 'Referee'}} level edition</ion-title>
         <ion-buttons slot="end">
             <ion-menu-button autoHide="false" menu="main"></ion-menu-button>
         </ion-buttons>

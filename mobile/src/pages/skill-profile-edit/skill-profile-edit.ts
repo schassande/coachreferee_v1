@@ -1,10 +1,11 @@
+import { RefereeLevel } from './../../app/model/user';
 import { AlertController, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap, Params } from '@angular/router';
 import { map, flatMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ResponseWithData } from './../../app/service/response';
-import { SkillProfile, SkillSet } from './../../app/model/skill';
+import { SkillProfile, SkillSet, ProfileType } from './../../app/model/skill';
 import { SkillProfileService } from './../../app/service/SkillProfileService';
 import { ConnectedUserService } from './../../app/service/ConnectedUserService';
 
@@ -24,6 +25,7 @@ export class SkillProfileEditPage implements OnInit {
   skillProfile: SkillProfile;
   skillSetName: string;
   readonly = false;
+  profileType: ProfileType = 'REFEREE';
 
   constructor(
     private route: ActivatedRoute,
@@ -37,6 +39,7 @@ export class SkillProfileEditPage implements OnInit {
     this.loadSkillProfile().subscribe((response: ResponseWithData<SkillProfile>) => {
       this.skillProfile = response.data;
       if (this.skillProfile) {
+        this.profileType = this.skillProfile.profileType;
         // TODO init readonly mode
       } else {
         this.initSkillProfile();
@@ -44,10 +47,23 @@ export class SkillProfileEditPage implements OnInit {
     });
   }
   private loadSkillProfile(): Observable<ResponseWithData<SkillProfile>> {
-    return this.route.paramMap.pipe(
+    return this.route.queryParams.pipe(
+      map( (param: Params) => {
+        this.profileType = param.profileType as ProfileType;
+        if (!this.profileType) {
+          this.profileType = 'REFEREE';
+        }
+        console.log('SkillProfileEditPage: profileType=', this.profileType);
+        return this.profileType;
+      }),
+      flatMap(() => this.route.paramMap),
       flatMap( (paramMap: ParamMap) => {
         this.skillProfileId = paramMap.get('skillProfileid');
-        return this.skillProfileService.get(this.skillProfileId);
+        if (this.skillProfileId) {
+          return this.skillProfileService.get(this.skillProfileId);
+        } else {
+          return of({data: null, error: null});
+        }
       })
     );
   }
@@ -62,8 +78,14 @@ export class SkillProfileEditPage implements OnInit {
       name: '',
       description: '',
       skillSets: [],
-      requirement: 'ALL_REQUIRED'
+      requirement: 'ALL_REQUIRED',
+      backgroundColor: 'black',
+      color: 'white',
+      level: 'EURO_0',
+      requiredPoints: this.profileType === 'REFEREE' ? 1 : 5,
+      profileType: this.profileType
     };
+    console.log('SkillProfileEditPageinitSkillProfile() skillProfile=', this.skillProfile);
   }
 
 
@@ -83,7 +105,7 @@ export class SkillProfileEditPage implements OnInit {
   }
 
   back() {
-    this.navController.navigateRoot('/skillprofile/list');
+    this.navController.navigateRoot(`/skillprofile/list?profileType=${this.profileType}`);
   }
 
   deleteSkillProfile(event) {
@@ -138,7 +160,8 @@ export class SkillProfileEditPage implements OnInit {
           this.skillProfileId = this.skillProfile.id;
           const newSkillSetName = this.skillSetName;
           this.skillSetName = '';
-          this.navController.navigateRoot(`/skillprofile/${this.skillProfileId}/skillset/-1?skillSetName=${newSkillSetName}`);
+          this.navController.navigateRoot(
+            `/skillprofile/${this.skillProfileId}/skillset/-1?skillSetName=${newSkillSetName}&profileType=${this.profileType}`);
         }
       );
     }

@@ -21,8 +21,11 @@
         <ion-item detail routerLink="/pro/list">
             <ion-label class="menu-entry">PROs</ion-label>
         </ion-item>
-        <ion-item detail routerLink="/skillprofile/list" *ngIf="isLevelAdmin()">
+        <ion-item detail routerLink="/skillprofile/list" [queryParams]="{profileType: 'REFEREE'}" *ngIf="isLevelAdmin()">
             <ion-label class="menu-entry">Referee levels</ion-label>
+        </ion-item>
+        <ion-item detail routerLink="/skillprofile/list" [queryParams]="{profileType: 'REFEREE_COACH'}" *ngIf="isLevelAdmin()">
+            <ion-label class="menu-entry">Coach levels</ion-label>
         </ion-item>
         <ion-item detail routerLink="/xp/list">
             <ion-label class="menu-entry">Coach XP</ion-label>

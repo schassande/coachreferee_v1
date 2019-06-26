@@ -19,6 +19,9 @@ export interface SkillSet extends Defintion {
     required: boolean;
     requiredPoints?: number;
 }
+
+export type ProfileType = 'REFEREE' | 'REFEREE_COACH';
+
 export interface SkillProfile extends Defintion, PersistentData {
     skillSets: SkillSet[];
     requirement: EvaluationRequirement;
@@ -26,4 +29,5 @@ export interface SkillProfile extends Defintion, PersistentData {
     color?: string;
     level?: RefereeLevel;
     requiredPoints?: number;
+    profileType?: ProfileType;
 }

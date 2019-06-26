@@ -1,8 +1,10 @@
+import { flatMap, map } from 'rxjs/operators';
 import { AlertController, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { ResponseWithData } from './../../app/service/response';
 import { SkillProfileService } from '../../app/service/SkillProfileService';
-import { SkillProfile } from './../../app/model/skill';
+import { SkillProfile, ProfileType } from './../../app/model/skill';
+import { ActivatedRoute, Params } from '@angular/router';
 
 /**
  * Generated class for the SkillProfileListPage page.
@@ -17,27 +19,41 @@ import { SkillProfile } from './../../app/model/skill';
 export class SkillProfileListPage implements OnInit {
 
   skillProfiles: SkillProfile[];
+  profileType: ProfileType;
+
   constructor(
+    private route: ActivatedRoute,
     private navController: NavController,
     public skillProfileService: SkillProfileService,
     public alertCtrl: AlertController) {
   }
 
   ngOnInit() {
-    this.searchSkillProfile();
+    this.route.queryParams.pipe(
+      map( (param: Params) => {
+        this.profileType = param.profileType as ProfileType;
+        if (!this.profileType) {
+          this.profileType = 'REFEREE';
+        }
+        console.log('SkillProfileListPage.profileType=' + this.profileType);
+        this.searchSkillProfile();
+        return '';
+      })
+    ).subscribe();
   }
   public newSkillProfile(): void {
-    this.navController.navigateRoot('/skillprofile/create');
+    this.navController.navigateRoot(`/skillprofile/create?profileType=${this.profileType}`);
   }
   public skillProfileSelected(skillProfile: SkillProfile): void {
     this.navController.navigateRoot(`/skillprofile/${skillProfile.id}`);
   }
+
   private searchSkillProfile() {
-    this.skillProfileService.all().subscribe((response: ResponseWithData<SkillProfile[]>) => {
+    this.skillProfileService.allProfiles(this.profileType).subscribe((response: ResponseWithData<SkillProfile[]>) => {
       if (response.error && response.error.errorCode)  {
         console.error(response.error);
       }
-      this.skillProfiles = response.data.sort((profile1, profile2) => profile1.name.localeCompare(profile2.name));
+      this.skillProfiles = this.skillProfileService.sort(response.data);
     });
   }
 

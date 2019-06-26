@@ -22,9 +22,10 @@ This file lists the development task to do:
 ## Version 2.1
 
 - XP history management
+- Coach profiles
 - New logo
 - [Web site](http://coachreferee.com)
-- referee view : show badge  [color]
+- referee view/list : show badge
 - List of pro not completly defined
 - Public sharing of a pro
 
