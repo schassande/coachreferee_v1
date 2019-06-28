@@ -1,3 +1,4 @@
+import { ProfileType } from './skill';
 import { GameCategory, GameLevel } from './game';
 import { PersistentData, SharedElement } from './common';
 export type Competency = 'YES' | 'NE' | 'NO';
@@ -17,6 +18,7 @@ export interface SkillSetEvaluation extends Evaluation {
 export interface SkillProfileEvaluation extends Evaluation {
     profileId: string;
     profileName: string;
+    profileType?: ProfileType;
     skillSetEvaluation: SkillSetEvaluation[];
 }
 export interface Assessment extends SkillProfileEvaluation, PersistentData, SharedElement {

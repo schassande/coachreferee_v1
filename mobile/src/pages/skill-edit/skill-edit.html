@@ -35,6 +35,10 @@
             <ion-label fixed>Required</ion-label>
             <ion-toggle [(ngModel)]="skill.required"></ion-toggle>
         </ion-item>
+        <ion-item text-wrap>
+            <ion-label fixed>Point values</ion-label>
+            <ion-input type="text" [(ngModel)]="pointValues"></ion-input>
+        </ion-item>
         <ion-item-group style="border: 1px solid lightgrey; margin-top: 20px;">
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em;">Associated PRO</ion-item-divider>
             <ion-item *ngFor="let pro of skill.proLinks">

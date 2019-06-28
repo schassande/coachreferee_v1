@@ -1,3 +1,5 @@
+import { NavController } from '@ionic/angular';
+import { SkillSet, HasRequiredPoint } from './../../app/model/skill';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { SkillSetEvaluation, SkillEvaluation, Competency } from './../../app/model/assessment';
 import { Component, OnInit } from '@angular/core';
@@ -13,7 +15,7 @@ import { EvaluationRequirement } from '../../app/model/skill';
 import { Referee } from '../../app/model/user';
 import { SkillProfile } from '../../app/model/skill';
 
-import { flatMap, map } from 'rxjs/operators';
+import { flatMap, map, max } from 'rxjs/operators';
 
 /**
  * Generated class for the AssessRefereePage page.
@@ -37,6 +39,7 @@ export class AssessRefereePage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private navController: NavController,
     public assessmentService: AssessmentService,
     public skillProfileService: SkillProfileService,
     public bookmarkService: BookmarkService) {
@@ -146,8 +149,55 @@ export class AssessRefereePage implements OnInit {
     this.saveAssessment();
   }
 
+  public onSkillPointchange(skillSetIdx: number, skillIdx: number, value: number) {
+    console.log('onSkillPointchange(' + skillSetIdx + ',' + skillIdx + ',' + value + ')');
+    this.assessment.skillSetEvaluation[skillSetIdx].skillEvaluations[skillIdx].competencyPoints = value;
+
+    // Step 1 : Compute SkillSet competency points
+    let sum = 0;
+    this.assessment.skillSetEvaluation[skillSetIdx].skillEvaluations.forEach((se) => { sum += this.toInt(se.competencyPoints); });
+    this.assessment.skillSetEvaluation[skillSetIdx].competencyPoints = sum;
+    this.setCompetentFromPoint(this.assessment.skillSetEvaluation[skillSetIdx], this.profile.skillSets[skillSetIdx]);
+
+    // Step 2 : Compute SkillProfile competency points
+    sum = 0;
+    this.assessment.skillSetEvaluation.forEach((sse) => { sum += sse.competencyPoints; });
+    this.assessment.competencyPoints = sum;
+    this.setCompetentFromPoint(this.assessment, this.profile);
+
+    console.log(
+      this.profile.name + '=' + this.assessment.competencyPoints
+      + '/' + this.profile.skillSets[skillSetIdx].name + '=' + this.assessment.skillSetEvaluation[skillSetIdx].competencyPoints
+      + '/' + this.profile.skillSets[skillSetIdx].skills[skillIdx].name
+      + '=' + this.assessment.skillSetEvaluation[skillSetIdx].skillEvaluations[skillIdx].competencyPoints);
+
+    this.saveAssessment();
+  }
+  private toInt(points) {
+    if (typeof points === 'string') {
+      return Number.parseInt(points, 10);
+    } else {
+      return points as number;
+    }
+  }
+  public saveNback() {
+    this.save().pipe(map(() => this.back())).subscribe();
+  }
+
   saveAssessment() {
-    this.assessmentService.save(this.assessment).subscribe(() => console.log('Assessment saved'));
+    this.save().subscribe();
+  }
+
+  save(): Observable<any> {
+    return this.assessmentService.save(this.assessment).pipe(map(() => console.log('Assessment saved')));
+  }
+
+  back() {
+    this.navController.navigateRoot(`/assessment/edit/${this.assessment.id}`);
+  }
+
+  private setCompetentFromPoint(evaluation: Evaluation, hasRequiredPoint: HasRequiredPoint) {
+    evaluation.competency = evaluation.competencyPoints >= hasRequiredPoint.requiredPoints ? 'YES' : 'NO';
   }
 
   private setCompetent(evaluation: Evaluation, requirement: EvaluationRequirement, nbYes: number, nbTot: number) {
@@ -166,5 +216,10 @@ export class AssessRefereePage implements OnInit {
       case 'ALL_REQUIRED': return 'All';
       case 'MAJORITY_REQUIRED': return 'Maj';
     }
+  }
+  public getSkillSetMaxPoints(skillSetIdx: number): number {
+    let sum = 0;
+    this.profile.skillSets[skillSetIdx].skills.forEach((skill) => sum += skill.pointValues.reduce((prev, cur) => Math.max(prev, cur)));
+    return sum;
   }
 }

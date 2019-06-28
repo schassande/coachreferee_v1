@@ -51,31 +51,43 @@ export class AssessmentEditPage implements OnInit {
 
   ngOnInit() {
     this.appCoach = this.connectedUserService.getCurrentUser();
-    this.loadAssessment().pipe(
-      flatMap((response: ResponseWithData<Assessment>) => {
+    this.loadAssessment().pipe( // load Assessment or create it
+      map((response: ResponseWithData<Assessment>) => {
         this.assessment = response.data;
         this.computeAssessmentValues();
-        // load profiles
-        return this.skillProfileService.allProfiles('REFEREE').pipe(map((res: ResponseWithData<SkillProfile[]>) => {
-          this.profiles = this.skillProfileService.sort(res.data);
-        }));
-      }),
-      map(() => {
         if (this.assessment) {
-          this.assessmentService.currentAssessment = this.assessment;
+          if (!this.assessment.profileType) {
+            this.assessment.profileType = 'REFEREE';
+          }
           this.profileId = this.assessment.profileId;
-          // load referees
-          this.updateAssessmentValid();
-          return this.assessmentService.loadingReferees(this.assessment, this.id2referee).pipe(map(() => {
-            this.refereesLoaded = true;
-          }));
         } else {
           this.initAssessment();
-          this.assessmentService.currentAssessment = this.assessment;
-          this.updateAssessmentValid();
-          return of('');
         }
-      })).subscribe(() => {});
+        this.assessmentService.currentAssessment = this.assessment;
+        console.log('this.assessment.profileType=' + this.assessment.profileType);
+        return this.assessment;
+      }),
+      // load profiles
+      flatMap(() => this.loadProfiles()),
+      // load referees
+      flatMap(() => this.assessmentService.loadingReferees(this.assessment, this.id2referee)),
+      map(() => {
+        this.refereesLoaded = true;
+        this.updateAssessmentValid();
+      })
+    ).subscribe();
+  }
+
+  private loadProfiles(): Observable<SkillProfile[]> {
+    return this.skillProfileService.allProfiles(this.assessment.profileType).pipe(
+      map((res: ResponseWithData<SkillProfile[]>) => {
+        this.profiles = this.skillProfileService.sort(res.data);
+        if (this.assessment && this.assessment.dataStatus === 'NEW') {
+          this.profileId = this.profiles && this.profiles.length ? this.profiles[0].id : null;
+        }
+        return this.profiles;
+      })
+    );
   }
 
   computeAssessmentValues() {
@@ -133,6 +145,7 @@ export class AssessmentEditPage implements OnInit {
         comment: '-',
         profileId: null,
         profileName: '-',
+        profileType: 'REFEREE',
         skillSetEvaluation: [],
         competency: 'NE',
         closed: false,
@@ -141,6 +154,7 @@ export class AssessmentEditPage implements OnInit {
           groups: []
         }
       };
+    console.log('NEW this.assessment.profileType=' + this.assessment.profileType);
   }
 
   getReferee(): string {
@@ -165,6 +179,9 @@ export class AssessmentEditPage implements OnInit {
     this.userService.update(this.assessment.coachId, (user: User) => { user.defaultCompetition = c; return user; }).subscribe();
   }
 
+  onProfileTypechange() {
+    this.loadProfiles().subscribe();
+  }
   get date() {
     return this.assessmentService.getAssessmentDateAsString(this.assessment);
   }

@@ -24,11 +24,11 @@
 <ion-content padding>
     <ion-list *ngIf="skillProfile">
         <ion-item text-wrap>
-            <ion-label fixed>Name</ion-label>
+            <ion-label fixed>Name:</ion-label>
             <ion-input type="text" [(ngModel)]="skillProfile.name" placeholder="Enter a level name"></ion-input>
         </ion-item>
         <ion-item>
-            <ion-label fixed>Description</ion-label>
+            <ion-label fixed>Description:</ion-label>
             <ion-textarea placeholder="Enter a description of the level" rows="3" [(ngModel)]="skillProfile.description"></ion-textarea>
         </ion-item>
         <ion-item>
@@ -36,6 +36,25 @@
             <ion-select [(ngModel)]="skillProfile.requirement">
                 <ion-select-option value="ALL_REQUIRED">All domain</ion-select-option>
                 <ion-select-option value="MAJORITY_REQUIRED">Domain majority</ion-select-option>
+                <ion-select-option value="POINTS">Points</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item *ngIf="skillProfile.requirement == 'POINTS'">
+            <ion-label>Required points:</ion-label>
+            <ion-input type="number" [(ngModel)]="skillProfile.requiredPoints"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Background Color:</ion-label>
+            <ion-input type="string" [(ngModel)]="skillProfile.backgroundColor"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Color:</ion-label>
+            <ion-input type="string" [(ngModel)]="skillProfile.color"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>{{profileType == 'REFEREE_COACH' ? 'Coach' : 'Referee'}} level:</ion-label>
+            <ion-select [(ngModel)]="skillProfile.level">
+                <ion-select-option *ngFor="let level of levels" value="{{level}}">{{level}}</ion-select-option>
             </ion-select>
         </ion-item>
         <ion-item-group style="border: 1px solid lightgrey; margin-top: 20px;" *ngIf="skillProfile.name">

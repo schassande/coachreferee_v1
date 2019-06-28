@@ -38,7 +38,12 @@
             <ion-select [(ngModel)]="skillSet.requirement">
                 <ion-select-option value="ALL_REQUIRED">All domain</ion-select-option>
                 <ion-select-option value="MAJORITY_REQUIRED">Domain majority</ion-select-option>
+                <ion-select-option value="POINTS">Points</ion-select-option>
             </ion-select>
+        </ion-item>
+        <ion-item *ngIf="skillSet.requirement == 'POINTS'">
+            <ion-label>Required points</ion-label>
+            <ion-input type="number" [(ngModel)]="skillSet.requiredPoints"></ion-input>
         </ion-item>
         <ion-item-group style="border: 1px solid lightgrey; margin-top: 20px;">
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em;">Skills</ion-item-divider>

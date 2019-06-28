@@ -1,3 +1,4 @@
+import { CompetencyPointsComponent } from './../pages/assess-referee/competency-points-component';
 import { DateService } from './service/DateService';
 import { XpEditComponent } from './../pages/xp-edit/xp-edit.component';
 import { XpService } from './service/XpService';
@@ -84,7 +85,8 @@ import { UserSelectorComponent } from './../pages/user-selector-component';
     SkillEditPage, SkillProfileEditPage, SkillProfileListPage, SkillSetEditPage,
     UserEditPage, UserSelectionPage, UserLogoutComponent,
     XpListComponent, XpEditComponent,
-    SharingComponent, CompetencyComponent, PeriodSelectorComponent, CameraIconComponent, UserSelectorComponent, LoginComponent],
+    SharingComponent, CompetencyComponent, CompetencyPointsComponent, PeriodSelectorComponent,
+    CameraIconComponent, UserSelectorComponent, LoginComponent],
   entryComponents: [AppComponent, HomePage, RefereeSelectPage, RefereeEditPage, UserSelectorComponent, LoginComponent],
   imports: [
     BrowserModule,

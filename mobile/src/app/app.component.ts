@@ -55,12 +55,13 @@ export class AppComponent {
       this.route(entry.url);
     } else if (entry.handler) {
       entry.handler();
+      this.menu.close();
     }
-    this.menu.close();
   }
   public route(url: string = '/home') {
     console.log('route(', url, ')');
     this.navController.navigateRoot(url);
+    this.menu.close();
   }
 
   public reloadPage() {

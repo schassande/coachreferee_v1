@@ -17,9 +17,9 @@
     <ion-list>
         <ion-item-group style="margin-top: 20px;" *ngFor="let assessmentList of assessmentLists">
             <ion-item-divider color="light">{{assessmentList.day}}</ion-item-divider>
-            <ion-item *ngFor="let assessment of assessmentList.assessments" [color]="isPast(assessment) ? 'burlywood' : ''">
+            <ion-item *ngFor="let assessment of assessmentList.assessments" [color]="isPast(assessment) ? '' : 'burlywood'">
                 <ion-label style="border: none;" class="listItemButton" (click)="assessmentSelected($event, assessment)">
-                    <p>Referee: {{assessment.refereeShortName}} assess to {{assessment.profileName}}<br> {{getAssessmentDate(assessment)}} {{assessment.timeSlot}}: Field {{assessment.field}}, {{assessment.gameCategory}}</p>
+                    <p>{{assessment.profileType == 'REFEREE_COACH' ? 'Coach' : 'Referee'}}: {{assessment.refereeShortName}} assess to {{assessment.profileName}}<br> {{getAssessmentDate(assessment)}} {{assessment.timeSlot}}: Field {{assessment.field}}, {{assessment.gameCategory}}</p>
                 </ion-label>
                 <ion-icon slot="end" name="trash" (click)="deleteAssessment(assessment)"></ion-icon>
             </ion-item>

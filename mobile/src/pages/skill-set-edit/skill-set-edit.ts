@@ -68,7 +68,7 @@ export class SkillSetEditPage implements OnInit {
         this.skillSet = {
           name: skillSetName ? skillSetName : '',
           description: 'Description of ' + (skillSetName ? skillSetName : ''),
-          requirement: 'ALL_REQUIRED',
+          requirement: this.skillProfile.requirement,
           required: false,
           skills: []
         };

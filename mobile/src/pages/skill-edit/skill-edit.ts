@@ -55,6 +55,18 @@ export class SkillEditPage implements OnInit {
     ).subscribe();
   }
 
+  get pointValues(): string {
+    return this.skill.pointValues ? this.skill.pointValues.join(',') : '';
+  }
+
+  set pointValues(pv: string) {
+    if (pv) {
+      this.skill.pointValues = pv.split(',').filter((item) => item.trim().length).map( (item) => Number.parseInt(item.trim(), 10));
+    } else {
+      this.skill.pointValues = [];
+    }
+  }
+
   setSkillProfile(skillProfile: SkillProfile) {
     this.skillProfile = skillProfile;
     if (!this.skillProfile) {

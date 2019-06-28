@@ -1,7 +1,7 @@
-import { RefereeLevel } from './../../app/model/user';
+import { REFEREE_COACH_LEVELS, REFEREE_LEVELS } from './../../app/model/user';
 import { AlertController, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap, Params } from '@angular/router';
+import { ActivatedRoute, ParamMap, Params } from '@angular/router';
 import { map, flatMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { ResponseWithData } from './../../app/service/response';
@@ -26,6 +26,7 @@ export class SkillProfileEditPage implements OnInit {
   skillSetName: string;
   readonly = false;
   profileType: ProfileType = 'REFEREE';
+  levels: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -44,6 +45,8 @@ export class SkillProfileEditPage implements OnInit {
       } else {
         this.initSkillProfile();
       }
+      this.levels = this.profileType === 'REFEREE' ? REFEREE_LEVELS : REFEREE_COACH_LEVELS;
+      console.log('SkillProfileEditPage: profileType=', this.profileType, 'levels=', this.levels);
     });
   }
   private loadSkillProfile(): Observable<ResponseWithData<SkillProfile>> {
@@ -53,7 +56,6 @@ export class SkillProfileEditPage implements OnInit {
         if (!this.profileType) {
           this.profileType = 'REFEREE';
         }
-        console.log('SkillProfileEditPage: profileType=', this.profileType);
         return this.profileType;
       }),
       flatMap(() => this.route.paramMap),
@@ -79,13 +81,12 @@ export class SkillProfileEditPage implements OnInit {
       description: '',
       skillSets: [],
       requirement: 'ALL_REQUIRED',
-      backgroundColor: 'black',
-      color: 'white',
+      backgroundColor: 'white',
+      color: 'black',
       level: 'EURO_0',
-      requiredPoints: this.profileType === 'REFEREE' ? 1 : 5,
+      requiredPoints: 0,
       profileType: this.profileType
     };
-    console.log('SkillProfileEditPageinitSkillProfile() skillProfile=', this.skillProfile);
   }
 
 

@@ -66,7 +66,7 @@ export class AssessmentListPage implements OnInit {
   public deleteAssessment(assessment: Assessment) {
     this.alertCtrl.create({
       // title: 'Confirm Deletion',
-      message: 'Do you really want to delete the assessment ' + assessment.id +  '?',
+      message: 'Do you really want to delete the assessment of ' + assessment.refereeShortName +  '?',
       buttons: [
         { text: 'Cancel', role: 'cancel'},
         {
