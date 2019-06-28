@@ -4,7 +4,6 @@ This file lists the development task to do:
 
 ## Possibles features
 
-- Assessment of coach (coach profile)
 - Mobile app installation on IOS device
 - Settings: limit to referee to a region or a group => defintion of referee group
 - Create user group used to simplify the sharing
@@ -23,6 +22,7 @@ This file lists the development task to do:
 
 - XP history management
 - Coach profiles
+- Assessment of coach (coach profile)
 - New logo
 - [Web site](http://coachreferee.com)
 - referee view/list : show badge
