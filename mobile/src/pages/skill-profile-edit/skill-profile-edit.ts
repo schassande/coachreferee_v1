@@ -46,7 +46,7 @@ export class SkillProfileEditPage implements OnInit {
         this.initSkillProfile();
       }
       this.levels = this.profileType === 'REFEREE' ? REFEREE_LEVELS : REFEREE_COACH_LEVELS;
-      console.log('SkillProfileEditPage: profileType=', this.profileType, 'levels=', this.levels);
+      // console.log('SkillProfileEditPage: profileType=', this.profileType, 'levels=', this.levels);
     });
   }
   private loadSkillProfile(): Observable<ResponseWithData<SkillProfile>> {

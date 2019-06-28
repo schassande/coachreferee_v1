@@ -24,7 +24,8 @@
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button (click)="newSkillProfile()" class="plusButton">+</ion-fab-button>
     </ion-fab>
-    <ion-list>
+    <div *ngIf="!skillProfiles || skillProfiles.length == 0">No level, please add one by using + button.</div>
+    <ion-list *ngIf="skillProfiles && skillProfiles.length">
         <ion-item *ngFor="let skillProfile of skillProfiles">
             <ion-label (click)="skillProfileSelected(skillProfile)" class="listItemButton">{{skillProfile.name}}</ion-label>
             <ion-icon slot="end" name="trash" (click)="deleteSkillProfile(skillProfile)"></ion-icon>

@@ -54,6 +54,7 @@ export class SkillProfileListPage implements OnInit {
         console.error(response.error);
       }
       this.skillProfiles = this.skillProfileService.sort(response.data);
+      console.log(JSON.stringify(this.skillProfiles, null, 2));
     });
   }
 
