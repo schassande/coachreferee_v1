@@ -17,8 +17,13 @@ This file lists the development task to do:
 - assessment list : infinite scroll
 - function sendXpReport
 - web site with documentation
+- Enter referee allocation => create coaching or assessment
+ 
+## Version 2.1.1  (current)
 
-## Version 2.1
+- show alert message when login fails.
+
+## Version 2.1.0
 
 - XP history management
 - Coach profiles
@@ -29,7 +34,7 @@ This file lists the development task to do:
 - List of pro not completly defined
 - Public sharing of a pro
 
-## Version 2.0.14 2019-06-09 (current)
+## Version 2.0.14 2019-06-09
 
 - bug fix about default competition saving
 - CoachingList : view by competition name & day

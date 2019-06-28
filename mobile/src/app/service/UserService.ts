@@ -106,6 +106,7 @@ export class UserService  extends RemotePersistentDataService<User> {
             }),
             catchError((err) => {
                 console.log('UserService.login(' + email + ', ' + password + ') error=', err);
+                this.alertCtrl.create({message: err.message}).then((alert) => alert.present());
                 return of({ error: err, data: null});
             }),
             map( (ruser: ResponseWithData<User>) => {
