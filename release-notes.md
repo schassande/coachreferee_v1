@@ -18,8 +18,14 @@ This file lists the development task to do:
 - function sendXpReport
 - web site with documentation
 - Enter referee allocation => create coaching or assessment
- 
-## Version 2.1.1  (current)
+
+## Version 2.1.2  (current)
+
+- show alert message when no password
+- disable or hide buttons on coach edit page
+
+
+## Version 2.1.1
 
 - show alert message when login fails.
 

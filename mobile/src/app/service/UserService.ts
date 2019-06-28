@@ -227,6 +227,7 @@ export class UserService  extends RemotePersistentDataService<User> {
             ).subscribe();
         } else {
             console.log('UserService.askPasswordToLogin(' + email + '): no password provided');
+            this.alertCtrl.create({message: 'Password is missing.'}).then((alert) => alert.present());
             sub.next({ error: null, data: null});
             sub.complete();
         }

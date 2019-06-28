@@ -34,7 +34,7 @@
         </ion-button>
     </div>
     <div style="margin: 20px 0 10px 0;">Or select an existing application user or create a new one with your email:</div>
-    <ion-list>
+    <ion-list style="margin-bottom: 50px;">
         <ion-item *ngFor="let user of users">
             <ion-icon slot="start" *ngIf="user.photo && !user.photo.url" name="person"></ion-icon>
             <ion-avatar slot="start" *ngIf="user.photo && user.photo.url"><img src="{{user.photo.url}}"></ion-avatar>

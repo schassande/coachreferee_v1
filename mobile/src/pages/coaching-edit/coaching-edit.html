@@ -26,7 +26,7 @@
             </ion-item-divider>
             <ion-item>
                 <ion-label position="fixed">Competition:</ion-label>
-                <ion-input type="text" [(ngModel)]="competition" [readonly]="readonly"></ion-input>
+                <ion-input type="text" [(ngModel)]="competition" [readonly]="readonly" minlength="1" required="true"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-grid fixed="true" class="coachEditGrid">
@@ -120,20 +120,20 @@
         <ion-item>
             <ion-grid>
                 <ion-row style="text-align: center; margin-top: 10px;">
-                    <ion-col style="margin-right: 10px;">
+                    <ion-col style="margin-right: 10px;" *ngIf="coaching.dataStatus !== 'NEW'">
                         <ion-button shape="round" size="large" (click)="switchLockCoaching($event)" style="width: 100%;" *ngIf="coachingOwner">
                             <ion-icon *ngIf="!closed" name="lock"></ion-icon>
                             <ion-icon *ngIf="closed" name="unlock"></ion-icon>
                         </ion-button>
                     </ion-col>
-                    <ion-col style="margin-right: 10px;">
+                    <ion-col style="margin-right: 10px;" *ngIf="coaching.dataStatus !== 'NEW'">
                         <ion-button shape="round" size="large" (click)="sendCoaching($event)" [disabled]="sending" style="width: 100%;" *ngIf="coachingOwner">
                             <ion-spinner *ngIf="sending"></ion-spinner>
                             <ion-icon name="send"></ion-icon>
                         </ion-button>
                     </ion-col>
                     <ion-col>
-                        <ion-button shape="round" size="large" (click)="coach($event)" style="width: 100%;">
+                        <ion-button shape="round" size="large" (click)="coach($event)" style="width: 100%;" [disabled]="!isValid()">
                             <span *ngIf="coachingOwner">Coach</span>
                             <span *ngIf="!coachingOwner">View</span>
                         </ion-button>
