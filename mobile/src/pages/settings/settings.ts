@@ -1,3 +1,4 @@
+import { COACH_LEVELS_EURO } from './coachLevelEuropean';
 import { OfflinesService } from './../../app/service/OfflineService';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
@@ -220,6 +221,17 @@ export class SettingsPage implements OnInit {
     });
     obs.subscribe(() => {
       this.toast('Euro levels imported.');
+    });
+  }
+
+  importCoachLevelsEuro() {
+    let obs: Observable<any> = of('');
+    COACH_LEVELS_EURO.forEach((elem) => {
+      const e = elem;
+      obs = concat(obs, this.skillProfileService.save(e).pipe(map(() => { console.log(e.id + ' imported.'); })));
+    });
+    obs.subscribe(() => {
+      this.toast('Coach Euro levels imported.');
     });
   }
 

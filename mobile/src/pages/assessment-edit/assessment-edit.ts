@@ -1,6 +1,6 @@
 import { ModalController, NavController, ToastController } from '@ionic/angular';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { SkillProfile } from './../../app/model/skill';
+import { SkillProfile, ProfileType } from './../../app/model/skill';
 import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 
@@ -64,7 +64,7 @@ export class AssessmentEditPage implements OnInit {
           this.initAssessment();
         }
         this.assessmentService.currentAssessment = this.assessment;
-        console.log('this.assessment.profileType=' + this.assessment.profileType);
+        // console.log('this.assessment.profileType=' + this.assessment.profileType);
         return this.assessment;
       }),
       // load profiles
@@ -277,6 +277,7 @@ export class AssessmentEditPage implements OnInit {
     this.assessment.profileId = this.profileId;
     this.assessment.profileName = profile.name;
     this.assessment.competency = 'NE';
+    this.assessment.competencyPoints = 0;
     this.assessment.comment = '-';
     this.assessment.skillSetEvaluation = [];
     profile.skillSets.forEach((skillSet) => {
@@ -284,6 +285,7 @@ export class AssessmentEditPage implements OnInit {
         skillSetName: skillSet.name,
         skillEvaluations: [],
         competency: 'NE',
+        competencyPoints: 0,
         comment: '-'
       };
       skillSetEvaluation.skillEvaluations = [];
@@ -291,7 +293,8 @@ export class AssessmentEditPage implements OnInit {
         skillSetEvaluation.skillEvaluations.push({
           skillName: skill.name,
           competency: 'NE',
-          comment: '-'
+          competencyPoints: 0,
+          comment: '-',
         });
       });
       this.assessment.skillSetEvaluation.push(skillSetEvaluation);

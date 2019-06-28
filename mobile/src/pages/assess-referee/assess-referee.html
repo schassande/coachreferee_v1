@@ -30,7 +30,7 @@
             <span slot="end" *ngIf="skillSet.requirement != 'POINTS'">({{requirementToString(skillSet.requirement)}})</span>
             <ion-icon slot="end" name="star" *ngIf="skillSet.requirement != 'POINTS'" [ngStyle]="{ color: assessment.skillSetEvaluation[skillSetIdx].competency == 'YES' ? 'green' : (assessment.skillSetEvaluation[skillSetIdx].competency == 'NO' ? 'red' : 'white') }"
                 class="group-competency"></ion-icon>
-            <span slot="end" *ngIf="skillSet.requirement == 'POINTS'" style="margin-right: 10px;">{{assessment.skillSetEvaluation[skillSetIdx].competencyPoints}}/{{getSkillSetMaxPoints(skillSetIdx)}}</span>
+            <span slot="end" *ngIf="skillSet.requirement == 'POINTS'" style="margin-right: 10px;">{{assessment.skillSetEvaluation[skillSetIdx].competencyPoints}}/{{getSkillSetMaxPoints(skillSetIdx)}} pts</span>
         </ion-item-divider>
         <div *ngIf="isGroupShown(skillSetIdx)">
             <ion-item *ngFor="let skill of skillSet.skills; index as skillIdx" text-wrap>
