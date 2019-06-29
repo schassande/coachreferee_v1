@@ -18,6 +18,19 @@ This file lists the development task to do:
 - function sendXpReport
 - web site with documentation
 - Enter referee allocation => create coaching or assessment
+- Show a Loading screen on login
+- Remove the delay to wait the referee list on the referee select page
+- In CoachingGame page add an icon in improvment feedback list when the problem has been fixed
+- Auto clean the context menu list
+- In coaching-list use a different color for the futur coaching
+- In context menu, of coaching game, add the next and the previous game 
+- Replace link to Coaching edit page by coaching game page
+- Show in row the buttons of period of time in coaching game page
+- Settings local to define the number of period of time during a game
+- Use a slide transition between coaching edit et coaching game
+- Validate the subscription of new user
+- Fix countr from french referee
+- Solution d'import csv de referee
 
 ## Version 2.1.2  (current)
 
