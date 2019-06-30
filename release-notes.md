@@ -31,6 +31,7 @@ This file lists the development task to do:
 - Validate the subscription of new user
 - Fix countr from french referee
 - Solution d'import csv de referee
+- find a slution to force pushing data when switch online
 
 ## Version 2.1.2  (current)
 
