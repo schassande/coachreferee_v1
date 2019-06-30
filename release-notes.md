@@ -18,7 +18,6 @@ This file lists the development task to do:
 - function sendXpReport
 - web site with documentation
 - Enter referee allocation => create coaching or assessment
-- Show a Loading screen on login
 - Remove the delay to wait the referee list on the referee select page
 - In CoachingGame page add an icon in improvment feedback list when the problem has been fixed
 - Auto clean the context menu list
@@ -32,6 +31,11 @@ This file lists the development task to do:
 - Fix countr from french referee
 - Solution d'import csv de referee
 - find a slution to force pushing data when switch online
+
+
+## Version 2.1.3
+
+- Show a Loading screen on login
 
 ## Version 2.1.2  (current)
 

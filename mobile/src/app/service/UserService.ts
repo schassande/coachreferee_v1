@@ -194,12 +194,13 @@ export class UserService  extends RemotePersistentDataService<User> {
         });
     }
 
-    private loginWithEmailNPassword(email: string, password: string, savePassword: boolean, sub: Subject<ResponseWithData<User>>) {
+    private async loginWithEmailNPassword(email: string, password: string, savePassword: boolean, sub: Subject<ResponseWithData<User>>) {
         // console.log('loginWithEmailNPassword(' + email + '): read password=', password, 'save=', savePassword);
         if (password && password.trim().length > 0) {
             // try to login with the password
             console.log('UserService.askPasswordToLogin(' + email + '): login with read password');
-            this.login(email, password).pipe(
+            from(this.loadingController.create({ message: 'Login...', translucent: true}).then((l) => l.present())).pipe(
+                flatMap(() => this.login(email, password)),
                 flatMap ( (ruser) => {
                     if (ruser.error) {
                         // login failed
@@ -224,6 +225,7 @@ export class UserService  extends RemotePersistentDataService<User> {
                     sub.next(ruser);
                     sub.complete();
                 }),
+                map(() => this.loadingController.dismiss())
             ).subscribe();
         } else {
             console.log('UserService.askPasswordToLogin(' + email + '): no password provided');
