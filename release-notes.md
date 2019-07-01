@@ -27,7 +27,7 @@ This file lists the development task to do:
 - find a slution to force pushing data when switch online
 
 
-## Version 2.1.3
+## Version 2.1.3  (current)
 
 - Auto clean the context menu list
 - Show a Loading screen on login
@@ -37,7 +37,7 @@ This file lists the development task to do:
 - Show in row the buttons of period of time in coaching game page
 - Settings local to define the number of period of time during a game
 
-## Version 2.1.2  (current)
+## Version 2.1.2 
 
 - show alert message when no password
 - disable or hide buttons on coach edit page
