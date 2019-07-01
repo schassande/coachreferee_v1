@@ -1,3 +1,5 @@
+import { LocalAppSettings } from './../../app/model/settings';
+import { AppSettingsService } from './../../app/service/AppSettingsService';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { AlertController, NavController, IonSegment } from '@ionic/angular';
@@ -33,6 +35,7 @@ export class CoachingGamePage implements OnInit {
   currentReferee: Referee;
   id2referee: Map<string, Referee> = new Map<string, Referee>();
   refereesLoaded = false;
+  periods: number[] = [1, 2];
   currentPeriod = 1;
   coachingCoach = '';
   coachingOwner = true;
@@ -49,13 +52,18 @@ export class CoachingGamePage implements OnInit {
     public connectedUserService: ConnectedUserService,
     public refereeService: RefereeService,
     public alertCtrl: AlertController,
-    private bookmarkService: BookmarkService) {
+    private bookmarkService: BookmarkService,
+    private appSettingsService: AppSettingsService) {
       this.coaching = null;
   }
 
   ngOnInit() {
-    console.log('CoachingGame.ngOnInit()');
+    // console.log('CoachingGame.ngOnInit()');
     // this.route.url
+    this.appSettingsService.get().subscribe( (setting: LocalAppSettings) => {
+      this.periods = [];
+      for (let i = 0; i < setting.nbPeriod; i++) { this.periods.push(i + 1); }
+    });
     this.coaching = null;
     this.appCoach = this.connectedUserService.getCurrentUser();
     this.loadCoaching().subscribe((response: ResponseWithData<Coaching>) => {

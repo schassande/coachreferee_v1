@@ -23,9 +23,13 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
                         serverUrl: environment.firebase.databaseURL,
                         lastUserEmail: null,
                         lastUserPassword: null,
-                        forceOffline: false
+                        forceOffline: false,
+                        nbPeriod: 2
                     };
                     super.save(result);
+                }
+                if (!result.nbPeriod) {
+                    result.nbPeriod = 2;
                 }
                 return result;
             })

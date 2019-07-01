@@ -94,11 +94,13 @@ export class SettingsPage implements OnInit {
     window.addEventListener('appinstalled', (event) => { this.launchMode += '<br>App installed'; });
   }
 
-  public saveSettings() {
+  public saveSettings(navigate = true) {
     this.appSettingsService.save(this.settings).pipe(
       map((settings: LocalAppSettings) => {
         this.settings = settings;
-        this.navController.navigateRoot(['/home']);
+        if (navigate) {
+          this.navController.navigateRoot(['/home']);
+        }
       })
     ).subscribe();
   }
@@ -305,5 +307,10 @@ export class SettingsPage implements OnInit {
   toggleDebugInfo() {
     this.showDebugInfo = ! this.showDebugInfo;
     console.log('this.showDebugInfo =', this.showDebugInfo);
+  }
+
+  onNbPeriodChange() {
+    this.settings.nbPeriod = Math.min(4, Math.max(this.settings.nbPeriod, 1));
+    this.saveSettings(false);
   }
 }

@@ -21,11 +21,9 @@
 
 <ion-content padding>
     <ion-list *ngIf="settings">
-        <ion-item *ngIf="!env.production">
-            <ion-label fixed>Server Url: {{settings.serverUrl}}</ion-label>
-        </ion-item>
-        <ion-item *ngIf="!env.production">
-            <ion-label fixed>API Key: {{settings.apiKey}}</ion-label>
+        <ion-item>
+            <ion-label>NB Period</ion-label>
+            <ion-input type="number" min="1" max="4" [(ngModel)]="settings.nbPeriod" (ionChange)="onNbPeriodChange()"></ion-input>
         </ion-item>
     </ion-list>
     <div style="text-align: center; margin-top: 10px;" *ngIf="!env.production">
@@ -48,11 +46,6 @@
         <ion-button shape="round" (click)="importCoachLevelsEuro()">Import Euro Coach Levels</ion-button>
     </div>
 
-    <!--
-    <div style="text-align: center; margin-top: 10px;">
-        <ion-button shape="round" (click)="saveSettings()" style="--background:green;">Save</ion-button>
-    </div>
-    -->
     <p *ngFor="let m of msg" class="message">{{m}}</p>
     <div color="light" style="text-align: center; font-size: 0.8em; margin-top: 10px;">
         <div>The author of application is <br><a href="mailto:chassande@gmail.com">Sebastien Chassande-Barrioz</a>.</div>

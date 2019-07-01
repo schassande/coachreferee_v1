@@ -79,10 +79,12 @@
         <ion-fab-button style='--background:green; font-size: 1.6em; margin-bottom: 10px;' (click)="newPositiveFeedback($event)">+</ion-fab-button>
         <ion-fab-button style='--background:red; font-size: 1.6em;' (click)="newFeedback($event)">+</ion-fab-button>
     </ion-fab>
-    <ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="!readonly">
-        <ion-fab-button *ngIf="coaching.currentPeriod === 1" style='--background:blue; --color: white; font-size: 1.6em; margin-bottom: 10px;'>1</ion-fab-button>
-        <ion-fab-button *ngIf="coaching.currentPeriod !== 1" style='--background:white; --color: blue; font-size: 1.6em; margin-bottom: 10px;' (click)="setPeriod(1)">1</ion-fab-button>
-        <ion-fab-button *ngIf="coaching.currentPeriod === 2" style='--background:blue; --color: white; font-size: 1.6em;'>2</ion-fab-button>
-        <ion-fab-button *ngIf="coaching.currentPeriod !== 2" style='--background:white; --color: blue; font-size: 1.6em;' (click)="setPeriod(2)">2</ion-fab-button>
+    <ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="!readonly && periods && periods.length > 1">
+        <ion-row>
+            <ion-col *ngFor="let period of periods">
+                <ion-fab-button *ngIf="coaching.currentPeriod === period" style='--background:blue; --color: white; font-size: 1.6em;'>{{period}}</ion-fab-button>
+                <ion-fab-button *ngIf="coaching.currentPeriod !== period" style='--background:white; --color: blue; font-size: 1.6em;' (click)="setPeriod(period)">{{period}}</ion-fab-button>
+            </ion-col>
+        </ion-row>
     </ion-fab>
 </ion-content>
