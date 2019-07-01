@@ -19,7 +19,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content (swipe)="onSwipe($event)">
     <ion-list *ngIf="settings">
         <ion-item>
             <ion-label>NB Period</ion-label>

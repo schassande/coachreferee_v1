@@ -18,7 +18,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content (swipe)="onSwipe($event)">
     <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
     <ion-item>
         <ion-label>Only not completed</ion-label>

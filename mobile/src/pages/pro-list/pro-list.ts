@@ -69,4 +69,10 @@ export class ProListPage implements OnInit {
       ]
     }).then( (alert) => alert.present());
   }
+  onSwipe(event) {
+    // console.log('onSwipe', event);
+    if (event.direction === 4) {
+      this.navController.navigateRoot(`/home`);
+    }
+  }
 }

@@ -115,4 +115,10 @@ export class CoachingListPage implements OnInit {
     });
     return lists;
   }
+  onSwipe(event) {
+    // console.log('onSwipe', event);
+    if (event.direction === 4) {
+      this.navController.navigateRoot(`/home`);
+    }
+  }
 }

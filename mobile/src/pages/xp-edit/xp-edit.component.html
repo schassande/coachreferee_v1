@@ -12,7 +12,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="xp">
+<ion-content *ngIf="xp" (swipe)="onSwipe($event)">
     <ion-list>
         <ion-item>
             <ion-label>Event name:</ion-label>

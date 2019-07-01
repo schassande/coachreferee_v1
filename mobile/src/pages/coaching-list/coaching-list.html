@@ -18,7 +18,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content (swipe)="onSwipe($event)">
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button (click)="newCoaching()" class="plusButton">+</ion-fab-button>
     </ion-fab>

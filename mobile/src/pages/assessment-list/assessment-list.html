@@ -12,7 +12,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content (swipe)="onSwipe($event)">
     <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
     <ion-list>
         <ion-item-group style="margin-top: 20px;" *ngFor="let assessmentList of assessmentLists">

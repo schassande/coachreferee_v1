@@ -12,7 +12,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content (swipe)="onSwipe($event)">
     <ion-item *ngIf="isAdmin">
         <ion-label>Coach</ion-label>
         <ion-select [(ngModel)]="selectedCoachId" (ionChange)="onCoachChange()">

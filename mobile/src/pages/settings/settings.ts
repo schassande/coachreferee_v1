@@ -313,4 +313,10 @@ export class SettingsPage implements OnInit {
     this.settings.nbPeriod = Math.min(4, Math.max(this.settings.nbPeriod, 1));
     this.saveSettings(false);
   }
+  onSwipe(event) {
+    // console.log('onSwipe', event);
+    if (event.direction === 4) {
+      this.navController.navigateRoot(`/home`);
+    }
+  }
 }

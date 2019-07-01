@@ -115,4 +115,10 @@ export class XpEditComponent implements OnInit {
   autoCompute() {
     // TODO
   }
+  onSwipe(event) {
+    // console.log('onSwipe', event);
+    if (event.direction === 4) {
+      this.saveNback();
+    }
+  }
 }

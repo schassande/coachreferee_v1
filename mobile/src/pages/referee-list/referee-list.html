@@ -17,7 +17,7 @@
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
-<ion-content padding>
+<ion-content (swipe)="onSwipe($event)">
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button (click)="newReferee()" class="plusButton">+</ion-fab-button>
     </ion-fab>

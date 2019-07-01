@@ -54,7 +54,7 @@ export class SkillProfileListPage implements OnInit {
         console.error(response.error);
       }
       this.skillProfiles = this.skillProfileService.sort(response.data);
-      console.log(JSON.stringify(this.skillProfiles, null, 2));
+      // console.log(JSON.stringify(this.skillProfiles, null, 2));
     });
   }
 
@@ -71,5 +71,11 @@ export class SkillProfileListPage implements OnInit {
         }
       ]
     }).then( (alert) => alert.present());
+  }
+  onSwipe(event) {
+    // console.log('onSwipe', event);
+    if (event.direction === 4) {
+      this.navController.navigateRoot(`/home`);
+    }
   }
 }

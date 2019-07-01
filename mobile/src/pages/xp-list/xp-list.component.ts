@@ -180,4 +180,10 @@ export class XpListComponent implements OnInit {
     this.selectedYear = year;
     this.onYearChange();
   }
+  onSwipe(event) {
+    // console.log('onSwipe', event);
+    if (event.direction === 4) {
+      this.navController.navigateRoot(`/home`);
+    }
+  }
 }

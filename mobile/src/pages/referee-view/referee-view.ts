@@ -118,4 +118,10 @@ export class RefereeViewPage implements OnInit {
       this.coachingService.sendCoachingByEmail(coaching.id).subscribe();
     });
   }
+  onSwipe(event) {
+    // console.log('onSwipe', event);
+    if (event.direction === 4) {
+      this.navBack();
+    }
+  }
 }

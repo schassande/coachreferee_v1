@@ -17,7 +17,7 @@
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
-<ion-content padding *ngIf="referee">
+<ion-content (swipe)="onSwipe($event)" *ngIf="referee">
     <div>
         <div *ngIf="referee.photo && referee.photo.url">
             <img src="{{referee.photo.url}}">

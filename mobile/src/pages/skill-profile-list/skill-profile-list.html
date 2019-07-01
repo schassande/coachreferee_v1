@@ -20,7 +20,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content (swipe)="onSwipe($event)">
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button (click)="newSkillProfile()" class="plusButton">+</ion-fab-button>
     </ion-fab>
