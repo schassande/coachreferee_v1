@@ -42,6 +42,7 @@
             <ion-item *ngFor="let feedback of coaching.referees[currentRefereeIdx].feedbacks; let idx = index" [ngClass]="{'period1' : feedback.period == 1, 'period2' : feedback.period == 2}">
                 <ion-icon name="alert" (click)="deliverFeedback(feedback, idx)" class="star" [ngClass]="{'yellowStar' : feedback.deliver}"></ion-icon>
                 <p (click)="selectFeedback(feedback, idx)" class="feedbackTxt">{{feedback.problemShortDesc}}</p>
+                <ion-icon slot="end" name="trending-up" *ngIf="feedback.appliedLater"></ion-icon>
                 <ion-badge slot="end" color="{{feedback.period === 1 ? 'light' : 'primary'}}">{{feedback.period}}</ion-badge>
                 <ion-icon slot="end" *ngIf="!readonly" name="trash" (click)="deleteFeedback(idx)"></ion-icon>
             </ion-item>
