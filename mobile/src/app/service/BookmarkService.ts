@@ -20,6 +20,7 @@ export class BookmarkService {
             return false;
         }
         this.entries.splice(0, 0, newEntry);
+        this.entries.slice(4);
         this.entriesSubject.next(this.entries.slice());
         return true;
     }
