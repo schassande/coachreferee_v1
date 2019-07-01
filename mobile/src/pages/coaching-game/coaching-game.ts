@@ -169,7 +169,7 @@ export class CoachingGamePage implements OnInit {
     this.bookmarkService.addBookmarkEntry({
       id: 'coach' + this.coaching.id,
       label: 'Coach ' + datestring + ' ' + refereeNames.join(','),
-      url: `/coaching/edit/${this.coaching.id}` });
+      url: `/coaching/coach/${this.coaching.id}` });
     const ctx: Bookmark[] = [];
     this.coaching.referees.forEach((referee) => {
       ctx.push(
