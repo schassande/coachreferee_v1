@@ -73,6 +73,12 @@ import { SharingComponent } from './../pages/sharing-component';
 import { UserLogoutComponent } from '../pages/user-logout/user-logout.component';
 import { UserSelectorComponent } from './../pages/user-selector-component';
 
+import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import * as Hammer from 'hammerjs';
+
+export class CustomHammerConfig extends HammerGestureConfig {
+
+}
 @NgModule({
   declarations: [AppComponent,
     AssessRefereePage, AssessmentEditPage, AssessmentListPage,
@@ -122,6 +128,7 @@ import { UserSelectorComponent } from './../pages/user-selector-component';
     UserGroupService,
     VersionService,
     XpService,
+    { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

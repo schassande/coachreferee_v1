@@ -24,7 +24,7 @@
 </ion-header>
 
 
-<ion-content *ngIf="coaching">
+<ion-content *ngIf="coaching" (swipe)="onSwipe($event)">
     <div *ngIf="currentReferee" style="text-align: center;margin: 10px 0; font-size: 1.2em;">{{currentReferee.firstName}} {{currentReferee.lastName}}, {{currentReferee.referee.refereeLevel}}/{{currentReferee.referee.refereeCategory}}</div>
     <ion-list>
         <ion-item-group>

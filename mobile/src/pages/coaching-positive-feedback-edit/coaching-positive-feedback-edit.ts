@@ -109,4 +109,10 @@ export class CoachingPositiveFeedbackEditPage implements OnInit {
   private makeNotEmpty(value: string, defaultValue: string): string {
     return value && value.trim().length > 0 ?  value : defaultValue;
   }
+  onSwipe(event) {
+    // console.log('onSwipe', event);
+    if (event.direction === 4) {
+      this.saveNback();
+    }
+  }
 }

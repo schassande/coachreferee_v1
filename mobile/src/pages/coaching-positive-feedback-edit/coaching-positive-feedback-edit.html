@@ -22,7 +22,7 @@
 
 
 <ion-content>
-    <ion-list *ngIf="feedback">
+    <ion-list *ngIf="feedback" (swipe)="onSwipe($event)">
         <ion-item>
             <ion-label fixed>Skill name:</ion-label>
             <ion-input type="text" [(ngModel)]="feedback.skillName" [readonly]="readonly" tabindex="1" autofocus></ion-input>

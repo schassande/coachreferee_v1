@@ -286,4 +286,13 @@ export class CoachingEditPage implements OnInit {
       stringArray.splice(idx, 1);
     }
   }
+  onSwipe(event) {
+    // console.log('onSwipe', event);
+    if (event.direction === 2) {
+      this.coach(null);
+
+    } else if (event.direction === 4) {
+      this.saveNback();
+    }
+  }
 }

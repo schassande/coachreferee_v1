@@ -18,7 +18,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="coaching">
+<ion-content *ngIf="coaching" (swipe)="onSwipe($event)">
     <ion-list>
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">

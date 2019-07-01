@@ -279,4 +279,10 @@ export class CoachingGamePage implements OnInit {
   public selectFeedback(feedback: Feedback, idx: number) {
     this.navController.navigateRoot([`/coaching/coach/${this.coaching.id}/referee/${this.currentRefereeIdx}/negativeFeedback/${idx}`]);
   }
+  onSwipe(event) {
+    // console.log('onSwipe', event);
+    if (event.direction === 4) {
+      this.saveNback();
+    }
+  }
 }

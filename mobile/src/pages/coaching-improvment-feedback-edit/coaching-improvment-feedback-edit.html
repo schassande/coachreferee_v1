@@ -17,7 +17,7 @@
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content (swipe)="onSwipe($event)">
     <ion-list>
         <ion-searchbar *ngIf="!readonly" [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput($event)" tabindex="1" autofocus></ion-searchbar>
         <div *ngIf="pros && pros.length === 0" style="text-align: center; font-style: italic">No PRO found.</div>
