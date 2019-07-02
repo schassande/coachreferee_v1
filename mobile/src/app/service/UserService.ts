@@ -106,6 +106,7 @@ export class UserService  extends RemotePersistentDataService<User> {
             }),
             catchError((err) => {
                 console.log('UserService.login(' + email + ', ' + password + ') error=', err);
+                this.loadingController.dismiss(null);
                 this.alertCtrl.create({message: err.message}).then((alert) => alert.present());
                 return of({ error: err, data: null});
             }),
@@ -222,10 +223,10 @@ export class UserService  extends RemotePersistentDataService<User> {
                             this.appSettingsService.setLastUser(email, password);
                         }
                     }
+                    this.loadingController.dismiss();
                     sub.next(ruser);
                     sub.complete();
-                }),
-                map(() => this.loadingController.dismiss())
+                })
             ).subscribe();
         } else {
             console.log('UserService.askPasswordToLogin(' + email + '): no password provided');
