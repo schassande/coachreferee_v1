@@ -15,16 +15,16 @@ This file lists the development task to do:
 - referee list : infinite scroll, group by short name or level
 - coaching list : infinite scroll
 - assessment list : infinite scroll
-- function sendXpReport
-- web site with documentation
+- Function sendXpReport
+- Write a documentation of the application on the web site
 - Enter referee allocation => create coaching or assessment
 - Remove the delay to wait the referee list on the referee select page
 - In coaching-list use a different color for the futur coaching
 - In context menu, of coaching game, add the next and the previous game
 - Validate the subscription of new user
 - Fix country from french referee
-- Solution d'import csv de referee
-- find a slution to force pushing data when switch online
+- Solution to import csv of referees
+- find a solution to force pushing data when switch online
 
 
 ## Version 2.1.3  (current)
