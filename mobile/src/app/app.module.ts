@@ -2,7 +2,7 @@ import { CompetencyPointsComponent } from './../pages/assess-referee/competency-
 import { DateService } from './service/DateService';
 import { XpEditComponent } from './../pages/xp-edit/xp-edit.component';
 import { XpService } from './service/XpService';
-import { NgModule } from '@angular/core';
+import { NgModule, Injectable, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicStorageModule } from '@ionic/storage';
@@ -76,6 +76,21 @@ import { UserSelectorComponent } from './../pages/user-selector-component';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import * as Hammer from 'hammerjs';
 
+import * as Sentry from '@sentry/browser';
+
+Sentry.init({
+  dsn: 'https://3ed91127c7144b5eb0820e8998f7f6ae@sentry.io/1496905'
+});
+
+@Injectable()
+export class SentryErrorHandler implements ErrorHandler {
+  constructor() {}
+  handleError(error) {
+    const eventId = Sentry.captureException(error.originalError || error);
+    Sentry.showReportDialog({ eventId });
+  }
+}
+
 export class CustomHammerConfig extends HammerGestureConfig {
 
 }
@@ -129,6 +144,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     VersionService,
     XpService,
     { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig },
+    { provide: ErrorHandler, useClass: SentryErrorHandler },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

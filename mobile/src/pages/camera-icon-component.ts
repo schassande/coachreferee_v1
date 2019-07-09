@@ -4,6 +4,7 @@ import { Component, Input, forwardRef, Output, EventEmitter, ViewChild, ElementR
 import { AngularFireStorage } from 'angularfire2/storage';
 import { ToastController } from '@ionic/angular';
 import { v4 as uuid } from 'uuid';
+import * as firebase from 'firebase/app';
 
 import { environment } from '../environments/environment';
 
@@ -77,8 +78,25 @@ export class CameraIconComponent  {
             obs = this.encodeImageUri(imageURI).pipe(
                 flatMap( (image64) => {
                     // console.log('uploadImage: image64.length=', image64.length, imageURI);
-                        // Perhaps this syntax might change, it's no error here!
-                    return from(child.put(image64, {contentType: 'image/jpeg'}).then().then());
+                    // Perhaps this syntax might change, it's no error here!
+                    const task = child.put(image64, {contentType: 'image/jpeg'});
+                    try {
+                        task.on(firebase.storage.TaskEvent.STATE_CHANGED, (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            console.log('Upload is ' + progress + '% done');
+                            switch (snapshot.state) {
+                            case firebase.storage.TaskState.PAUSED: // or 'paused'
+                                console.log('Upload is paused');
+                                break;
+                            case firebase.storage.TaskState.RUNNING: // or 'running'
+                                console.log('Upload is running');
+                                break;
+                            }
+                        });
+                    } catch ( err) {
+                        console.log('', err);
+                    }
+                    return from(task.then().then());
                 })
             );
         }

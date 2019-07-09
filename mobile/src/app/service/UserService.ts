@@ -15,6 +15,8 @@ import { flatMap, map, catchError } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
 import { LoginComponent } from 'src/pages/login-component';
 
+import * as Sentry from '@sentry/browser';
+
 @Injectable()
 export class UserService  extends RemotePersistentDataService<User> {
 
@@ -59,6 +61,7 @@ export class UserService  extends RemotePersistentDataService<User> {
                     return super.save(user);
                 }),
                 catchError((err) => {
+                    Sentry.captureMessage('UserService.save()' + JSON.stringify(err);
                     console.error(err);
                     return of({ error: err, data: null});
                 }),
@@ -106,6 +109,7 @@ export class UserService  extends RemotePersistentDataService<User> {
             }),
             catchError((err) => {
                 console.log('UserService.login(' + email + ', ' + password + ') error=', err);
+                Sentry.captureMessage('UserService.login(' + email + ', ' + password + ') error=' + JSON.stringify(err));
                 this.loadingController.dismiss(null);
                 this.alertCtrl.create({message: err.message}).then((alert) => alert.present());
                 return of({ error: err, data: null});
@@ -206,6 +210,7 @@ export class UserService  extends RemotePersistentDataService<User> {
                     if (ruser.error) {
                         // login failed
                         savePassword = false; // don't save the password if error occurs
+                        Sentry.captureMessage('UserService.loginWithEmailNPassword(' + email + ') error=' + JSON.stringify(ruser.error));
                         if (ruser.error.code === 'auth/network-request-failed') {
                             console.log('UserService.askPasswordToLogin(' + email + '): no network');
                             // no network => check the email/password with local storage
