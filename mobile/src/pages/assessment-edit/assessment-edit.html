@@ -115,13 +115,13 @@
     <ion-item>
         <ion-grid>
             <ion-row style="text-align: center; margin-top: 10px;">
-                <ion-col offset-2 col-2 style="margin-right: 10px;">
+                <ion-col offset-2 col-2 style="margin-right: 10px;" *ngIf="assessment.dataStatus !== 'NEW'">
                     <ion-button shape="round" size="large" [disabled]="!assessmentValid" (click)="switchLockCoaching($event)" *ngIf="assessmentOwner" style="width: 100%;">
                         <ion-icon *ngIf="!closed" name="lock"></ion-icon>
                         <ion-icon *ngIf="closed" name="unlock"></ion-icon>
                     </ion-button>
                 </ion-col>
-                <ion-col col-2 style="margin-right: 10px;">
+                <ion-col col-2 style="margin-right: 10px;" *ngIf="assessment.dataStatus !== 'NEW'">
                     <ion-button shape="round" size="large" [disabled]="!assessmentValid && sending" (click)="sendAssessment($event)" style="width: 100%;">
                         <ion-spinner *ngIf="sending"></ion-spinner>
                         <ion-icon name="send"></ion-icon>
