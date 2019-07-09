@@ -7,24 +7,24 @@ This file lists the development task to do:
 - Mobile app installation on IOS device
 - Settings: limit to referee to a region or a group => defintion of referee group
 - Create user group used to simplify the sharing
-- Coaching : improve filters of the CoachingList page: choose a referee, period, Coaching of others
-- Assessment : improve filters of the CoachingList page: choose a referee, period
 - Offline photo for users & referees
 - Create a trigger to delete unused photo on storage every week end
 - Auto detect disconnected mode.
-- referee list : infinite scroll, group by short name or level
-- coaching list : infinite scroll
-- assessment list : infinite scroll
+- Referee list : infinite scroll, group by short name or level
+- Coaching list : infinite scroll
+- Assessment list : infinite scroll
 - Function sendXpReport
 - Write a documentation of the application on the web site
 - Enter referee allocation => create coaching or assessment
-- Remove the delay to wait the referee list on the referee select page
 - In coaching-list use a different color for the futur coaching
 - In context menu, of coaching game, add the next and the previous game
 - Validate the subscription of new user
-- Fix country from french referee
 - Solution to import csv of referees
-- find a solution to force pushing data when switch online
+- Find a solution to force pushing data when switch online
+
+## Version 2.1.4
+
+- Remove the delay to wait the referee list on the referee select page
 
 
 ## Version 2.1.3  (current)

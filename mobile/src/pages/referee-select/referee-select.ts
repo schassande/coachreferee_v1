@@ -29,7 +29,7 @@ export class RefereeSelectPage implements OnInit {
   }
 
   ngOnInit() {
-    this.searchReferee();
+    setTimeout(() => this.searchReferee(), 500);
   }
 
   private searchReferee() {
