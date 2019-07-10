@@ -1,7 +1,9 @@
+import { ResponseWithData } from './../../../app/service/response';
 import { Competition } from './../../../app/model/competition';
-import { NavController } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 import { CompetitionService } from './../../../app/service/CompetitionService';
 import { Component, OnInit } from '@angular/core';
+import { DateService } from 'src/app/service/DateService';
 
 /**
  * Generated class for the CompetitionListPage page.
@@ -19,23 +21,62 @@ export class CompetitionListPage implements OnInit {
   competitions: Competition[];
   error;
   searchInput: string;
+  loading = false;
 
   constructor(
     private navController: NavController,
-    public competitionService: CompetitionService) {
+    private competitionService: CompetitionService,
+    private dateService: DateService,
+    private alertCtrl: AlertController) {
   }
 
   ngOnInit() {
     console.log('ionViewDidLoad CompetitionListPage');
   }
+  doRefresh(event) {
+    this.searchCompetition(false, event);
+  }
   onSearchBarInput() {
     // TODO
   }
+  private searchCompetition(forceServer: boolean = false, event: any = null) {
+    this.loading = true;
+    console.log('searchCompetition(' + this.searchInput + ')');
+    this.competitionService.searchCompetitions(this.searchInput, forceServer ? 'server' : 'default')
+      .subscribe((response: ResponseWithData<Competition[]>) => {
+        this.competitions = this.competitionService.sortCompetitions(response.data, true);
+        this.loading = false;
+        if (event) {
+          event.target.complete();
+        }
+        this.error = response.error;
+        if (this.error) {
+          console.log('searchCompetition(' + this.searchInput + ') error=' + this.error);
+        }
+      });
+  }
 
   competitionSelected(competition: Competition) {
-
+    this.navController.navigateRoot(`/competition/edit/${competition.id}`);
   }
-  deleteCompetition(competition) {
+
+  deleteCompetition(competition: Competition) {
+    this.alertCtrl.create({
+      message: 'Do you reaaly want to delete the competition ' + this.getCompetitionDate(competition) + ':' + competition.date + ' ?',
+      buttons: [
+        { text: 'Cancel', role: 'cancel'},
+        {
+          text: 'Delete',
+          handler: () => {
+            this.competitionService.delete(competition.id).subscribe(() => this.searchCompetition());
+          }
+        }
+      ]
+    }).then( (alert) => alert.present() );
+  }
+
+  getCompetitionDate(competition: Competition) {
+    return this.dateService.date2string(competition.date);
   }
 
   onSwipe(event) {

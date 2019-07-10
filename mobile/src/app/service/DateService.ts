@@ -5,6 +5,18 @@ const DATE_SEP = '-';
 @Injectable()
 export class DateService {
 
+    public compareDate(day1: Date, day2: Date): number {
+        // Compare date
+        let res: number = day1.getFullYear() - day2.getFullYear();
+        if (res === 0) {
+          res = day1.getMonth() - day2.getMonth();
+          if (res === 0) {
+            res = day1.getDate() - day2.getDate();
+          }
+        }
+        return res;
+      }
+
     public date2string(aDate: Date) {
         return aDate.getFullYear()
           + DATE_SEP + this.to2Digit(aDate.getMonth() + 1)

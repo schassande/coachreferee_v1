@@ -1,3 +1,4 @@
+import { DateService } from './DateService';
 import { ConnectedUserService } from './ConnectedUserService';
 import { AngularFirestore, Query } from 'angularfire2/firestore';
 import { Referee } from './../model/user';
@@ -22,6 +23,7 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
       protected refereeService: RefereeService,
       private connectedUserService: ConnectedUserService,
       private angularFireFunctions: AngularFireFunctions,
+      private dateService: DateService,
       toastController: ToastController
     ) {
         super(db, toastController);
@@ -104,22 +106,11 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
             : this.all(options);
     }
 
-    public compareDate(day1: Date, day2: Date): number {
-      // Compare date
-      let res: number = day1.getFullYear() - day2.getFullYear();
-      if (res === 0) {
-        res = day1.getMonth() - day2.getMonth();
-        if (res === 0) {
-          res = day1.getDate() - day2.getDate();
-        }
-      }
-      return res;
-    }
     public compareCoaching(coaching1: Coaching, coaching2: Coaching): number {
       let res = 0;
       if (res === 0) {
         // Compare date
-        res = this.compareDate(coaching1.date, coaching2.date);
+        res = this.dateService.compareDate(coaching1.date, coaching2.date);
       }
       if (res === 0) {
         // compare competition name
