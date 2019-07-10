@@ -4,7 +4,6 @@ import { AlertController, NavController } from '@ionic/angular';
 import { ResponseWithData } from './../../app/service/response';
 import { Coaching } from './../../app/model/coaching';
 import { CoachingService } from './../../app/service/CoachingService';
-import { BookmarkService, Bookmark } from './../../app/service/BookmarkService';
 
 
 export interface CoachingList {

@@ -101,6 +101,7 @@ export interface Referee extends Person {
         refereeLevel: RefereeLevel;
         refereeCategory: RefereeCategory;
         nextRefereeLevel: RefereeLevel;
+        region?: string;
     };
     refereeCoach ?: {
         refereeCoachLevel: RefereeCoachLevel;

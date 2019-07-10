@@ -1,7 +1,3 @@
-import { CompetencyPointsComponent } from './../pages/assess-referee/competency-points-component';
-import { DateService } from './service/DateService';
-import { XpEditComponent } from './../pages/xp-edit/xp-edit.component';
-import { XpService } from './service/XpService';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -24,7 +20,9 @@ import { AppSettingsService } from './service/AppSettingsService';
 import { AssessmentService } from './service/AssessmentService';
 import { BookmarkService } from './service/BookmarkService';
 import { CoachingService } from './service/CoachingService';
+import { CompetitionService } from './service/CompetitionService';
 import { ConnectedUserService } from './service/ConnectedUserService';
+import { DateService } from './service/DateService';
 import { EmailService } from './service/EmailService';
 import { LocalDatabaseService } from './service/LocalDatabaseService';
 import { OfflinesService } from './service/OfflineService';
@@ -35,6 +33,7 @@ import { ToolService } from './service/ToolService';
 import { UserService } from './service/UserService';
 import { UserGroupService } from './service/UserGroupService';
 import { VersionService } from './service/VersionService';
+import { XpService } from './service/XpService';
 
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
@@ -48,7 +47,8 @@ import { CoachingGamePage } from './../pages/coaching-game/coaching-game';
 import { CoachingImprovmentFeedbackEditPage } from './../pages/coaching-improvment-feedback-edit/coaching-improvment-feedback-edit';
 import { CoachingListPage } from './../pages/coaching-list/coaching-list';
 import { CoachingPositiveFeedbackEditPage } from './../pages/coaching-positive-feedback-edit/coaching-positive-feedback-edit';
-import { CompetitionListPage } from './../pages/competition-list/competition-list';
+import { CompetitionListPage } from '../pages/competition/competition-list/competition-list';
+import { CompetitionEditComponent } from '../pages/competition/competition-edit/competition-edit.component';
 import { HomePage } from '../pages/home/home';
 import { PeriodSelectorComponent } from './../pages/period-selector-component';
 import { ProEditPage } from './../pages/pro-edit/pro-edit';
@@ -65,9 +65,11 @@ import { SkillSetEditPage } from './../pages/skill-set-edit/skill-set-edit';
 import { UserEditPage } from '../pages/user-edit/user-edit';
 import { UserSelectionPage } from '../pages/user-selection/user-selection';
 import { XpListComponent } from '../pages/xp-list/xp-list.component';
+import { XpEditComponent } from './../pages/xp-edit/xp-edit.component';
 
 import { AppComponent } from './app.component';
 import { CameraIconComponent } from './../pages/camera-icon-component';
+import { CompetencyPointsComponent } from './../pages/assess-referee/competency-points-component';
 import { LoginComponent } from 'src/pages/login-component';
 import { SharingComponent } from './../pages/sharing-component';
 import { UserLogoutComponent } from '../pages/user-logout/user-logout.component';
@@ -83,7 +85,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
   declarations: [AppComponent,
     AssessRefereePage, AssessmentEditPage, AssessmentListPage,
     CoachingEditPage, CoachingGamePage, CoachingImprovmentFeedbackEditPage, CoachingListPage, CoachingPositiveFeedbackEditPage,
-    CompetitionListPage,
+    CompetitionListPage, CompetitionEditComponent,
     HomePage,
     ProEditPage, ProListPage,
     RefereeListPage, RefereeViewPage, RefereeSelectPage, RefereeEditPage,
@@ -112,6 +114,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     AssessmentService,
     BookmarkService,
     CoachingService,
+    CompetitionService,
     ConnectedUserService,
     DateService,
     EmailService,

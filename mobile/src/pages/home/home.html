@@ -9,6 +9,9 @@
 </ion-header>
 <ion-content>
     <ion-list *ngIf="connected">
+        <ion-item detail routerLink="/competition/list">
+            <ion-label class="menu-entry">Competitions</ion-label>
+        </ion-item>
         <ion-item detail routerLink="/coaching/list">
             <ion-label class="menu-entry">Coach a game</ion-label>
         </ion-item>
@@ -36,7 +39,7 @@
         <ion-item detail (click)="gotToMyAccount()" *ngIf="this.connectedUserService.isConnected()">
             <ion-label class="menu-entry">My account</ion-label>
         </ion-item>
-        <ion-item detail routerLink="/user/select">
+        <ion-item detail routerLink="/user/select" *ngIf="isLevelAdmin()">
             <ion-label class="menu-entry">Change of account</ion-label>
         </ion-item>
         <ion-item (click)="addToHome()" *ngIf="showInstallBtn">

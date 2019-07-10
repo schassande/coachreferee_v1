@@ -1,4 +1,6 @@
-import { CoachingService } from './../../app/service/CoachingService';
+import { Competition } from './../../../app/model/competition';
+import { NavController } from '@ionic/angular';
+import { CompetitionService } from './../../../app/service/CompetitionService';
 import { Component, OnInit } from '@angular/core';
 
 /**
@@ -7,10 +9,6 @@ import { Component, OnInit } from '@angular/core';
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
-export interface Competition {
-  name: string;
-  begin: Date;
-}
 
 @Component({
   selector: 'page-competition-list',
@@ -23,7 +21,8 @@ export class CompetitionListPage implements OnInit {
   searchInput: string;
 
   constructor(
-    public coachingService: CoachingService) {
+    private navController: NavController,
+    public competitionService: CompetitionService) {
   }
 
   ngOnInit() {
@@ -31,5 +30,18 @@ export class CompetitionListPage implements OnInit {
   }
   onSearchBarInput() {
     // TODO
+  }
+
+  competitionSelected(competition: Competition) {
+
+  }
+  deleteCompetition(competition) {
+  }
+
+  onSwipe(event) {
+    // console.log('onSwipe', event);
+    if (event.direction === 4) {
+      this.navController.navigateRoot(`/home`);
+    }
   }
 }

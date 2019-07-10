@@ -11,7 +11,8 @@ import { CoachingGamePage } from './../pages/coaching-game/coaching-game';
 import { CoachingImprovmentFeedbackEditPage } from './../pages/coaching-improvment-feedback-edit/coaching-improvment-feedback-edit';
 import { CoachingListPage } from './../pages/coaching-list/coaching-list';
 import { CoachingPositiveFeedbackEditPage } from './../pages/coaching-positive-feedback-edit/coaching-positive-feedback-edit';
-import { CompetitionListPage } from './../pages/competition-list/competition-list';
+import { CompetitionListPage } from '../pages/competition/competition-list/competition-list';
+import { CompetitionEditComponent } from '../pages/competition/competition-edit/competition-edit.component';
 import { HomePage } from '../pages/home/home';
 import { ProEditPage } from './../pages/pro-edit/pro-edit';
 import { ProListPage } from './../pages/pro-list/pro-list';
@@ -44,6 +45,8 @@ const routes: Routes = [
         component: CoachingPositiveFeedbackEditPage, canActivate: [AuthGuard] },
 
   { path: 'competition/list', component: CompetitionListPage, canActivate: [AuthGuard] },
+  { path: 'competition/edit/:id', component: CompetitionEditComponent, canActivate: [AuthGuard] },
+
   { path: 'home', component: HomePage},
 
   { path: 'pro/edit/:id', component: ProEditPage, canActivate: [AuthGuard] },
