@@ -31,14 +31,17 @@ export class CompetitionListPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ionViewDidLoad CompetitionListPage');
+    setTimeout(() => { this.doRefresh(null); }, 500);
   }
+
   doRefresh(event) {
     this.searchCompetition(false, event);
   }
+
   onSearchBarInput() {
-    // TODO
+    this.doRefresh(null);
   }
+
   private searchCompetition(forceServer: boolean = false, event: any = null) {
     this.loading = true;
     console.log('searchCompetition(' + this.searchInput + ')');
@@ -55,14 +58,16 @@ export class CompetitionListPage implements OnInit {
         }
       });
   }
-
+  newCompetition() {
+    this.navController.navigateRoot(`/competition/edit/-1`);
+  }
   competitionSelected(competition: Competition) {
     this.navController.navigateRoot(`/competition/edit/${competition.id}`);
   }
 
   deleteCompetition(competition: Competition) {
     this.alertCtrl.create({
-      message: 'Do you reaaly want to delete the competition ' + this.getCompetitionDate(competition) + ':' + competition.date + ' ?',
+      message: 'Do you really want to delete the competition ' + competition.name + '-' + competition.year + '?',
       buttons: [
         { text: 'Cancel', role: 'cancel'},
         {

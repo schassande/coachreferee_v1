@@ -30,11 +30,16 @@ export class CompetitionService extends RemotePersistentDataService<Competition>
     }
     protected adjustFieldOnLoad(item: Competition) {
         const d: any = item.date;
-        if (!(d instanceof Date) ) {
-          item.date = d.toDate();
+        if (d && !(d instanceof Date) ) {
+            if (typeof d === 'string') {
+                item.date = this.dateService.string2date(d as string, null);
+            } else {
+                item.date = d.toDate();
+            }
         }
     }
-    public searchCompetitions(text: string, options: 'default' | 'server' | 'cache' = 'default'): Observable<ResponseWithData<Coaching[]>> {
+    public searchCompetitions(text: string,
+                              options: 'default' | 'server' | 'cache' = 'default'): Observable<ResponseWithData<Competition[]>> {
         const str = text !== null && text && text.trim().length > 0 ? text.trim() : null;
         return str ?
             super.filter(this.allO(options), (item: Competition) => {
@@ -43,6 +48,9 @@ export class CompetitionService extends RemotePersistentDataService<Competition>
             : this.allO(options);
     }
     public sortCompetitions(competitions: Competition[], reverse: boolean = false): Competition[] {
+        if (!competitions) {
+            return competitions;
+        }
         let array: Competition[] = competitions.sort(this.compareCompetition.bind(this));
         if (reverse) {
             array = array.reverse();

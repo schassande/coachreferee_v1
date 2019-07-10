@@ -37,3 +37,13 @@ export interface SharedWith {
     /** List of group */
     groups: UserGroup[];
 }
+
+export type DataRegion =
+    'Europe'
+    |'Australlia'
+    |'New Zealand'
+    |'Others'
+    | ''
+    ;
+
+export const DATA_REGIONS =  [ 'Europe', 'Australlia', 'New Zealand', 'Others'];

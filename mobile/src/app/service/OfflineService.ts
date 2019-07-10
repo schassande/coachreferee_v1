@@ -1,3 +1,4 @@
+import { CompetitionService } from './CompetitionService';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable, from, of } from 'rxjs';
@@ -20,6 +21,7 @@ export class OfflinesService  {
         private skillProfileService: SkillProfileService,
         private coachingService: CoachingService,
         private assessmentService: AssessmentService,
+        private competitionService: CompetitionService,
         private firestore: AngularFirestore,
         private appSettingsService: AppSettingsService
     ) {}
@@ -38,6 +40,7 @@ export class OfflinesService  {
                         flatMap(() => this.proService.preload()),
                         flatMap(() => this.coachingService.preload()),
                         flatMap(() => this.assessmentService.preload()),
+                        flatMap(() => this.competitionService.preload()),
                         // then disable the network
                         flatMap(() => from(this.firestore.firestore.disableNetwork())),
                     );

@@ -2,29 +2,33 @@
 
 This file lists the development task to do:
 
-## Possibles features
+## Possibles features by priority
 
 - Mobile app installation on IOS device
+- Write a documentation of the application on the web site
+- Create a login page (Remove the feature to select an user on login page: only email/password, Logout navigate on Login page, move autologin into that page)
+- Add an admin page : migrate profile and account management links on this page
+- On User edit page, as admin, be able to reset password, ask the reset of the password, un/block an account and validate the subscription of new user
+- Organize Angular code in submodules with lazy loading.
 - Settings: limit to referee to a region or a group => defintion of referee group
+- Find a solution to force pushing data when switch online
+- Function sendXpReport
 - Create user group used to simplify the sharing
+- Solution to import csv of referees
+- Enter referee allocation => create coaching or assessment
 - Offline photo for users & referees
 - Create a trigger to delete unused photo on storage every week end
-- Auto detect disconnected mode.
 - Referee list : infinite scroll, group by short name or level
 - Coaching list : infinite scroll
 - Assessment list : infinite scroll
-- Function sendXpReport
-- Write a documentation of the application on the web site
-- Enter referee allocation => create coaching or assessment
 - In coaching-list use a different color for the futur coaching
 - In context menu, of coaching game, add the next and the previous game
-- Validate the subscription of new user
-- Solution to import csv of referees
-- Find a solution to force pushing data when switch online
+- Auto detect disconnected mode.
 
 ## Version 2.1.4
 
 - Remove the delay to wait the referee list on the referee select page
+- Backups of data everyday over last 30 days
 
 
 ## Version 2.1.3  (current)

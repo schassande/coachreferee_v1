@@ -1,8 +1,6 @@
-import { LocalAppSettings } from './../model/settings';
 import { AppSettingsService } from './AppSettingsService';
 import { Injectable, EventEmitter } from '@angular/core';
 import { User } from './../model/user';
-import { HttpHeaders, HttpParams } from '@angular/common/http';
 import * as firebase from 'firebase/app';
 
 @Injectable()

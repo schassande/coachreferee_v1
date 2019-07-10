@@ -1,5 +1,5 @@
 import { CoachDataSharingAgreement, RefereeDataSharingAgreement } from './privacy';
-import { PersistentData } from './common';
+import { PersistentData, DataRegion } from './common';
 import { GameCategory } from './game';
 
 export type RefereeCoachLevel = 'NONE' | 'EURO_0' | 'EURO_1' | 'EURO_2' | 'EURO_3' |'EURO_4' |'EURO_5'
@@ -101,7 +101,7 @@ export interface Referee extends Person {
         refereeLevel: RefereeLevel;
         refereeCategory: RefereeCategory;
         nextRefereeLevel: RefereeLevel;
-        region?: string;
+        region?: DataRegion;
     };
     refereeCoach ?: {
         refereeCoachLevel: RefereeCoachLevel;

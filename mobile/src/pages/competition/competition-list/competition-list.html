@@ -21,7 +21,7 @@
 
 <ion-content (swipe)="onSwipe($event)">
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button (click)="newCoaching()" class="plusButton">+</ion-fab-button>
+        <ion-fab-button (click)="newCompetition()" class="plusButton">+</ion-fab-button>
     </ion-fab>
     <div slot="fixed" style="width: 100%;     background: white;">
         <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
@@ -32,11 +32,9 @@
     <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" closeDuration="700ms">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-    <ion-list>
+    <ion-list style="margin: 60px 0 60px 0;">
         <ion-item *ngFor="let competition of competitions">
-            <button ion-item (click)="competitionSelected(competition)" style="border: none;"> 
-                {{competition.name}}
-            </button>
+            <ion-label style="border: none;" class="listItemButton" (click)="competitionSelected(competition)">{{competition.name}}</ion-label>
             <ion-icon slot="end" name="trash" (click)="deleteCompetition(competition)"></ion-icon>
         </ion-item>
     </ion-list>

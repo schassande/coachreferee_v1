@@ -73,7 +73,7 @@ export class RefereeEditPage implements OnInit {
           refereeLevel: 'EURO_1',
           refereeCategory : 'OPEN',
           nextRefereeLevel: null,
-          region: ''
+          region: 'Others'
       },
       refereeCoach: {
           refereeCoachLevel: 'NONE'

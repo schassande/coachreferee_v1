@@ -103,7 +103,7 @@ export class UserEditPage implements OnInit {
           refereeLevel: null,
           refereeCategory : 'OPEN',
           nextRefereeLevel: null,
-          region: ''
+          region: 'Others'
       },
       refereeCoach: {
           refereeCoachLevel: null

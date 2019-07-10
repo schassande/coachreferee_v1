@@ -1,3 +1,4 @@
+import { DateService } from 'src/app/service/DateService';
 import { Component, OnInit } from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
 
@@ -33,6 +34,7 @@ export class CoachingListPage implements OnInit {
 
   constructor(
     private navController: NavController,
+    private dateService: DateService,
     public coachingService: CoachingService,
     public alertCtrl: AlertController) {
   }
@@ -80,7 +82,7 @@ export class CoachingListPage implements OnInit {
     this.searchCoaching();
   }
   public isPast(coaching: Coaching): boolean {
-    return this.coachingService.compareDate(coaching.date, new Date()) < 0;
+    return this.dateService.compareDate(coaching.date, new Date()) < 0;
   }
   public deleteCoaching(coaching: Coaching) {
     this.alertCtrl.create({
