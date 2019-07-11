@@ -42,6 +42,9 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
         if (!(d instanceof Date) ) {
             item.date = d.toDate();
         }
+        if (item.competitionId === undefined) {
+            item.competitionId = '';
+        }
     }
 
     getAssessmentByReferee(refereeId: string): Observable<ResponseWithData<Assessment[]>> {

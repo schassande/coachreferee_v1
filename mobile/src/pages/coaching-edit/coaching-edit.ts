@@ -1,3 +1,5 @@
+import { CompetitionSelectorComponent } from './../widget/competition-selector';
+import { CompetitionService } from './../../app/service/CompetitionService';
 import { UserGroup } from './../../app/model/user';
 import { UserGroupService } from './../../app/service/UserGroupService';
 import { UserSelectorComponent } from './../user-selector-component';
@@ -15,7 +17,6 @@ import { AppSettingsService } from '../../app/service/AppSettingsService';
 import { ConnectedUserService } from '../../app/service/ConnectedUserService';
 import { Coaching } from '../../app/model/coaching';
 import { User, Referee } from '../../app/model/user';
-import { UserSelectionPage } from './../user-selection/user-selection';
 import { SharedWith } from 'src/app/model/common';
 
 /**
@@ -51,6 +52,7 @@ export class CoachingEditPage implements OnInit {
     public userGroupService: UserGroupService,
     public refereeService: RefereeService,
     public coachingService: CoachingService,
+    private competitionService: CompetitionService,
     public appSettingsService: AppSettingsService,
     public toastController: ToastController) {
   }
@@ -87,30 +89,41 @@ export class CoachingEditPage implements OnInit {
   }
 
   initCoaching() {
-    this.coaching = {
-        id: null,
-        version: 0,
-        creationDate : new Date(),
-        lastUpdate : new Date(),
-        dataStatus: 'NEW',
-        competition: this.appCoach.defaultCompetition,
-        field: '1',
-        date : new Date(),
-        timeSlot: this.computeTimeSlot(new Date()),
-        coachId: this.appCoach.id,
-        gameCategory: 'OPEN',
-        gameSpeed: 'Medium',
-        gameSkill: 'Medium',
-        referees : [],
-        refereeIds: [],
-        currentPeriod : 1,
-        closed: false,
-        sharedWith: {
-          users: [],
-          groups: []
+    this.competitionService.get(this.appCoach.defaultCompetitionId).pipe(
+      map((rcompetition) => {
+        let defaultCompetitionName = this.appCoach.defaultCompetition;
+        let defaultCompetitionId = '';
+        if (rcompetition.data) {
+          defaultCompetitionName = rcompetition.data.name;
+          defaultCompetitionId = rcompetition.data.id;
         }
-      };
-    this.computeCoachingValues();
+        this.coaching = {
+          id: null,
+          version: 0,
+          creationDate : new Date(),
+          lastUpdate : new Date(),
+          dataStatus: 'NEW',
+          competition: defaultCompetitionName,
+          competitionId: defaultCompetitionId,
+          field: '1',
+          date : new Date(),
+          timeSlot: this.computeTimeSlot(new Date()),
+          coachId: this.appCoach.id,
+          gameCategory: 'OPEN',
+          gameSpeed: 'Medium',
+          gameSkill: 'Medium',
+          referees : [],
+          refereeIds: [],
+          currentPeriod : 1,
+          closed: false,
+          sharedWith: {
+            users: [],
+            groups: []
+          }
+        };
+        this.computeCoachingValues();
+      })
+    ).subscribe();
   }
 
   computeCoachingValues() {
@@ -144,16 +157,27 @@ export class CoachingEditPage implements OnInit {
     }
   }
 
-  get competition() {
-    return this.coaching.competition;
+  async onClickCompetition() {
+    const modal = await this.modalController.create({
+      component: CompetitionSelectorComponent,
+      componentProps: { name: this.coaching.competition}
+    });
+    modal.onDidDismiss().then( (result) => {
+      this.competitionInfoSelected(result.data.name, result.data.id).subscribe();
+    });
+    modal.present();
   }
 
-  set competition(c: string) {
-    this.coaching.competition = c;
-    // connected user instance
-    this.connectedUserService.getCurrentUser().defaultCompetition = c;
-    // save in database
-    this.userService.update(this.coaching.coachId, (user: User) => { user.defaultCompetition = c; return user; }).subscribe();
+  competitionInfoSelected(competitionName: string, competitionId: string): Observable<any> {
+    this.coaching.competition = competitionName;
+    this.coaching.competitionId = competitionId;
+    this.connectedUserService.getCurrentUser().defaultCompetition = competitionName;
+    this.connectedUserService.getCurrentUser().defaultCompetitionId = competitionId;
+    return this.userService.update(this.coaching.coachId, (user: User) => {
+      user.defaultCompetition = competitionName;
+      user.defaultCompetitionId = competitionId;
+      return user;
+    });
   }
 
   get date() {

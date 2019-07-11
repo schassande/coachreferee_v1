@@ -115,8 +115,10 @@ export interface User extends Referee {
     accountId: string;
     token?: string;
     defaultCompetition: string;
+    defaultCompetitionId?: string;
     defaultGameCatory: GameCategory;
     dataSharingAgreement?: CoachDataSharingAgreement;
+    region?: DataRegion;
     role: AppRole;
     groupIds: string[];
     authProvider?: AuthProvider;

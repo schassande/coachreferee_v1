@@ -23,6 +23,7 @@ export interface SkillProfileEvaluation extends Evaluation {
 }
 export interface Assessment extends SkillProfileEvaluation, PersistentData, SharedElement {
     competition: string;
+    competitionId?: string;
     date: Date;
     field: string;
     timeSlot: string;

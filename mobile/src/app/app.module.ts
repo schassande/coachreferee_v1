@@ -49,6 +49,7 @@ import { CoachingListPage } from './../pages/coaching-list/coaching-list';
 import { CoachingPositiveFeedbackEditPage } from './../pages/coaching-positive-feedback-edit/coaching-positive-feedback-edit';
 import { CompetitionListPage } from '../pages/competition/competition-list/competition-list';
 import { CompetitionEditComponent } from '../pages/competition/competition-edit/competition-edit.component';
+import { CompetitionSelectorComponent } from './../pages/widget/competition-selector';
 import { HomePage } from '../pages/home/home';
 import { PeriodSelectorComponent } from './../pages/period-selector-component';
 import { ProEditPage } from './../pages/pro-edit/pro-edit';
@@ -93,9 +94,10 @@ export class CustomHammerConfig extends HammerGestureConfig {
     SkillEditPage, SkillProfileEditPage, SkillProfileListPage, SkillSetEditPage,
     UserEditPage, UserSelectionPage, UserLogoutComponent,
     XpListComponent, XpEditComponent,
-    SharingComponent, CompetencyComponent, CompetencyPointsComponent, PeriodSelectorComponent,
+    SharingComponent, CompetencyComponent, CompetencyPointsComponent, PeriodSelectorComponent, CompetitionSelectorComponent,
     CameraIconComponent, UserSelectorComponent, LoginComponent],
-  entryComponents: [AppComponent, HomePage, RefereeSelectPage, RefereeEditPage, UserSelectorComponent, LoginComponent],
+  entryComponents: [AppComponent, HomePage, RefereeSelectPage,
+    RefereeEditPage, UserSelectorComponent, LoginComponent, CompetitionSelectorComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

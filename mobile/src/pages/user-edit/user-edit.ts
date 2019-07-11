@@ -111,6 +111,8 @@ export class UserEditPage implements OnInit {
       password: '',
       token: null,
       defaultCompetition: '',
+      defaultCompetitionId: '',
+      region: 'Others',
       defaultGameCatory: 'OPEN',
       dataSharingAgreement: {
         personnalInfoSharing: 'YES',

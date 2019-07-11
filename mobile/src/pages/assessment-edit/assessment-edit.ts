@@ -1,3 +1,5 @@
+import { CompetitionService } from './../../app/service/CompetitionService';
+import { CompetitionSelectorComponent } from './../widget/competition-selector';
 import { ModalController, NavController, ToastController } from '@ionic/angular';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { SkillProfile, ProfileType } from './../../app/model/skill';
@@ -41,6 +43,7 @@ export class AssessmentEditPage implements OnInit {
     private route: ActivatedRoute,
     private navController: NavController,
     public connectedUserService: ConnectedUserService,
+    private competitionService: CompetitionService,
     public userService: UserService,
     public refereeService: RefereeService,
     public assessmentService: AssessmentService,
@@ -125,35 +128,46 @@ export class AssessmentEditPage implements OnInit {
   }
 
   initAssessment() {
-    const coach: User = this.connectedUserService.getCurrentUser();
-    this.assessment = {
-        id: null,
-        version: 0,
-        creationDate : new Date(),
-        lastUpdate : new Date(),
-        dataStatus: 'NEW',
-        competition: coach.defaultCompetition,
-        field: '1',
-        date : new Date(),
-        timeSlot: this.computeTimeSlot(new Date()),
-        coachId: coach.id,
-        gameCategory: 'OPEN',
-        gameSpeed: 'Medium',
-        gameSkill: 'Medium',
-        refereeId : null,
-        refereeShortName: '-',
-        comment: '-',
-        profileId: null,
-        profileName: '-',
-        profileType: 'REFEREE',
-        skillSetEvaluation: [],
-        competency: 'NE',
-        closed: false,
-        sharedWith: {
-          users: [],
-          groups: []
+    this.competitionService.get(this.appCoach.defaultCompetitionId).pipe(
+      map((rcompetition) => {
+        let defaultCompetitionName = this.appCoach.defaultCompetition;
+        let defaultCompetitionId = '';
+        if (rcompetition.data) {
+          defaultCompetitionName = rcompetition.data.name;
+          defaultCompetitionId = rcompetition.data.id;
         }
-      };
+        this.assessment = {
+            id: null,
+            version: 0,
+            creationDate : new Date(),
+            lastUpdate : new Date(),
+            dataStatus: 'NEW',
+            competition: defaultCompetitionName,
+            competitionId: defaultCompetitionId,
+            field: '1',
+            date : new Date(),
+            timeSlot: this.computeTimeSlot(new Date()),
+            coachId: this.appCoach.id,
+            gameCategory: 'OPEN',
+            gameSpeed: 'Medium',
+            gameSkill: 'Medium',
+            refereeId : null,
+            refereeShortName: '-',
+            comment: '-',
+            profileId: null,
+            profileName: '-',
+            profileType: 'REFEREE',
+            skillSetEvaluation: [],
+            competency: 'NE',
+            closed: false,
+            sharedWith: {
+              users: [],
+              groups: []
+            }
+          };
+        }
+      )
+    ).subscribe();
     console.log('NEW this.assessment.profileType=' + this.assessment.profileType);
   }
 
@@ -177,6 +191,28 @@ export class AssessmentEditPage implements OnInit {
   set competition(c: string) {
     this.assessment.competition = c;
     this.userService.update(this.assessment.coachId, (user: User) => { user.defaultCompetition = c; return user; }).subscribe();
+  }
+  async onClickCompetition() {
+    const modal = await this.modalController.create({
+      component: CompetitionSelectorComponent,
+      componentProps: { name: this.assessment.competition}
+    });
+    modal.onDidDismiss().then( (result) => {
+      this.competitionInfoSelected(result.data.name, result.data.id).subscribe();
+    });
+    modal.present();
+  }
+
+  competitionInfoSelected(competitionName: string, competitionId: string): Observable<any> {
+    this.assessment.competition = competitionName;
+    this.assessment.competitionId = competitionId;
+    this.connectedUserService.getCurrentUser().defaultCompetition = competitionName;
+    this.connectedUserService.getCurrentUser().defaultCompetitionId = competitionId;
+    return this.userService.update(this.assessment.coachId, (user: User) => {
+      user.defaultCompetition = competitionName;
+      user.defaultCompetitionId = competitionId;
+      return user;
+    });
   }
 
   onProfileTypechange() {

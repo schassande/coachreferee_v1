@@ -18,11 +18,10 @@
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em;">Game info</ion-item-divider>
             <ion-item>
                 <ion-label>Competition:</ion-label>
-                <ion-input type="text" [(ngModel)]="competition" [readonly]="readonly"></ion-input>
+                <a (click)="onClickCompetition()">{{assessment.competition ? assessment.competition : 'Click here'}}</a>
             </ion-item>
             <ion-item *ngIf="assessment.dataStatus == 'NEW'">
                 <ion-label>Type:</ion-label>
-                <ion-input type="text" [(ngModel)]="assessement" [readonly]="readonly"></ion-input>
                 <ion-select item-content *ngIf="!readonly" [(ngModel)]="assessment.profileType" (ionChange)="onProfileTypechange()" style="text-align: center;">
                     <ion-select-option value="REFEREE">Referee</ion-select-option>
                     <ion-select-option value="REFEREE_COACH">Coach</ion-select-option>

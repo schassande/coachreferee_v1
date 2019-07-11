@@ -26,7 +26,7 @@
             </ion-item-divider>
             <ion-item>
                 <ion-label position="fixed">Competition:</ion-label>
-                <ion-input type="text" [(ngModel)]="competition" [readonly]="readonly" minlength="1" required="true"></ion-input>
+                <a (click)="onClickCompetition()">{{coaching.competition ? coaching.competition : 'Click here'}}</a>
             </ion-item>
             <ion-item>
                 <ion-grid fixed="true" class="coachEditGrid">

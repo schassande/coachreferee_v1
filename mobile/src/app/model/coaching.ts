@@ -35,6 +35,7 @@ export interface PositiveFeedback {
 
 export interface Coaching extends PersistentData, SharedElement {
     competition: string;
+    competitionId?: string;
     date: Date;
     field: string;
     timeSlot: string;

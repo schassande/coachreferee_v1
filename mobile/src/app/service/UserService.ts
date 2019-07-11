@@ -25,7 +25,6 @@ export class UserService  extends RemotePersistentDataService<User> {
         private appSettingsService: AppSettingsService,
         private alertCtrl: AlertController,
         private loadingController: LoadingController,
-        private afAuth: AngularFireAuth,
         private modalController: ModalController,
     ) {
         super(db, toastController);
@@ -37,6 +36,15 @@ export class UserService  extends RemotePersistentDataService<User> {
 
     getPriority(): number {
         return 1;
+    }
+
+    protected adjustFieldOnLoad(item: User) {
+        if (item.defaultCompetitionId === undefined || item.defaultCompetitionId === null) {
+            item.defaultCompetitionId = '';
+        }
+        if (item.region === undefined || item.region === null) {
+            item.region = 'Others';
+        }
     }
 
     public save(user: User, cred: firebase.auth.UserCredential = null): Observable<ResponseWithData<User>> {
@@ -356,6 +364,8 @@ export class UserService  extends RemotePersistentDataService<User> {
             password: '',
             token: null,
             defaultCompetition: '',
+            defaultCompetitionId: '',
+            region: 'Others',
             defaultGameCatory: 'OPEN',
             dataSharingAgreement: {
               personnalInfoSharing: 'YES',
