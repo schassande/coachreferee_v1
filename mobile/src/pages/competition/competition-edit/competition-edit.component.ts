@@ -1,6 +1,3 @@
-import { CONSTANTES } from './../../../../../firebase/functions/src/model/user';
-import { UserSelectorComponent } from './../../user-selector-component';
-import { SharedWith, DATA_REGIONS } from './../../../app/model/common';
 import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -16,8 +13,10 @@ import { Referee, User } from './../../../app/model/user';
 import { ResponseWithData } from 'src/app/service/response';
 import { flatMap, map, catchError } from 'rxjs/operators';
 
-import { RefereeSelectPage } from './../../referee-select/referee-select';
-import { resetComponentState } from '@angular/core/src/render3/state';
+import { RefereeSelectPage } from './../../referee/referee-select/referee-select';
+import { CONSTANTES } from './../../../../../firebase/functions/src/model/user';
+import { UserSelectorComponent } from './../../widget/user-selector-component';
+import { SharedWith, DATA_REGIONS } from './../../../app/model/common';
 
 @Component({
   selector: 'app-competition-edit',
