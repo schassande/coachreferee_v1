@@ -99,7 +99,7 @@ export class RefereeSelectPage implements OnInit {
   }
 
   public refereeSelected(referee: Referee): void {
-    console.log('refereeSelected', referee);
+    // console.log('refereeSelected', referee);
     this.refereeService.lastSelectedReferee.referee = referee;
     this.modalCtrl.dismiss( { referee});
   }
