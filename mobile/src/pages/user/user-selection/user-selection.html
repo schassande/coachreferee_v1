@@ -1,0 +1,45 @@
+<!--
+  Generated template for the UserSelectionPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button routerLink="/home" detail>
+                <ion-icon name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title style="text-align: center;">Select an account</ion-title>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" menu="main"></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="newUser()" class="plusButton">+</ion-fab-button>
+    </ion-fab>
+    <div style="margin-bottom: 20px;">Choose an account provider:</div>
+    <div style="text-align: center;">
+        <ion-button color="primary" (click)="authWithGoogle()">
+            Sign In with Google
+            <ion-icon slot="start" name="logo-google"></ion-icon>
+        </ion-button>
+        <ion-button color="danger" (click)="authWithFacebook()">Sign In with Facebook
+            <ion-icon slot="start" name="logo-facebook"></ion-icon>
+        </ion-button>
+    </div>
+    <div style="margin: 20px 0 10px 0;">Or select an existing application user or create a new one with your email:</div>
+    <ion-list style="margin-bottom: 50px;">
+        <ion-item *ngFor="let user of users">
+            <ion-icon slot="start" *ngIf="user.photo && !user.photo.url" name="person"></ion-icon>
+            <ion-avatar slot="start" *ngIf="user.photo && user.photo.url"><img src="{{user.photo.url}}"></ion-avatar>
+            <ion-label (click)="userSelected(user)">{{user.firstName}} {{user.lastName}}<br><span style="font-size: 0.7em;">{{user.email}}</span></ion-label>
+            <ion-icon slot="end" [name]="getAuthProviderIcon(user)"></ion-icon>
+        </ion-item>
+    </ion-list>
+</ion-content>
