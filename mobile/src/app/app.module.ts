@@ -38,8 +38,8 @@ import { XpService } from './service/XpService';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
 
+import { AdminHomeComponent } from './../pages/admin/admin-home/admin-home.component';
 import { AssessRefereePage } from '../pages/assessment/assess-referee/assess-referee';
-import { CompetencyComponent } from '../pages/assessment/assess-referee/competency-component';
 import { AssessmentEditPage } from '../pages/assessment/assessment-edit/assessment-edit';
 import { AssessmentListPage } from '../pages/assessment/assessment-list/assessment-list';
 import { CoachingEditPage } from '../pages/coaching/coaching-edit/coaching-edit';
@@ -50,6 +50,7 @@ import { CoachingPositiveFeedbackEditPage } from '../pages/coaching/coaching-pos
 import { CompetitionListPage } from '../pages/competition/competition-list/competition-list';
 import { CompetitionEditComponent } from '../pages/competition/competition-edit/competition-edit.component';
 import { CompetitionSelectorComponent } from './../pages/widget/competition-selector';
+import { CompetencyComponent } from '../pages/assessment/assess-referee/competency-component';
 import { HomePage } from '../pages/home/home';
 import { PeriodSelectorComponent } from '../pages/widget/period-selector-component';
 import { ProEditPage } from '../pages/pro/pro-edit/pro-edit';
@@ -84,6 +85,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
 }
 @NgModule({
   declarations: [AppComponent,
+    AdminHomeComponent,
     AssessRefereePage, AssessmentEditPage, AssessmentListPage,
     CoachingEditPage, CoachingGamePage, CoachingImprovmentFeedbackEditPage, CoachingListPage, CoachingPositiveFeedbackEditPage,
     CompetitionListPage, CompetitionEditComponent,

@@ -24,12 +24,6 @@
         <ion-item detail routerLink="/pro/list">
             <ion-label class="menu-entry">PROs</ion-label>
         </ion-item>
-        <ion-item detail routerLink="/skillprofile/list" [queryParams]="{profileType: 'REFEREE'}" *ngIf="isLevelAdmin()">
-            <ion-label class="menu-entry">Referee levels</ion-label>
-        </ion-item>
-        <ion-item detail routerLink="/skillprofile/list" [queryParams]="{profileType: 'REFEREE_COACH'}" *ngIf="isLevelAdmin()">
-            <ion-label class="menu-entry">Coach levels</ion-label>
-        </ion-item>
         <ion-item detail routerLink="/xp/list">
             <ion-label class="menu-entry">Coach XP</ion-label>
         </ion-item>
@@ -39,8 +33,8 @@
         <ion-item detail (click)="gotToMyAccount()" *ngIf="this.connectedUserService.isConnected()">
             <ion-label class="menu-entry">My account</ion-label>
         </ion-item>
-        <ion-item detail routerLink="/user/select" *ngIf="isLevelAdmin()">
-            <ion-label class="menu-entry">Change of account</ion-label>
+        <ion-item detail routerLink="/admin">
+            <ion-label class="menu-entry">Admin</ion-label>
         </ion-item>
         <ion-item (click)="addToHome()" *ngIf="showInstallBtn">
             <ion-label class="menu-entry">Install on device</ion-label>

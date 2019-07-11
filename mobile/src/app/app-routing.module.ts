@@ -1,8 +1,7 @@
-import { XpEditComponent } from '../pages/xp/xp-edit/xp-edit.component';
-import { XpListComponent } from '../pages/xp/xp-list/xp-list.component';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
+import { AdminHomeComponent } from '../pages/admin/admin-home/admin-home.component';
 import { AssessRefereePage } from '../pages/assessment/assess-referee/assess-referee';
 import { AssessmentEditPage } from '../pages/assessment/assessment-edit/assessment-edit';
 import { AssessmentListPage } from '../pages/assessment/assessment-list/assessment-list';
@@ -26,10 +25,15 @@ import { SkillSetEditPage } from '../pages/skill-profile/skill-set-edit/skill-se
 import { UserEditPage } from '../pages/user/user-edit/user-edit';
 import { UserSelectionPage } from '../pages/user/user-selection/user-selection';
 import { UserLogoutComponent } from '../pages/user/user-logout/user-logout.component';
+import { XpEditComponent } from '../pages/xp/xp-edit/xp-edit.component';
+import { XpListComponent } from '../pages/xp/xp-list/xp-list.component';
 
 import { AuthGuard } from './AuthGuard';
+import { AdminGuard } from './AdminGuard';
 
 const routes: Routes = [
+  { path: 'admin', component: AdminHomeComponent, canActivate: [AdminGuard] },
+
   { path: 'assessment/list', component: AssessmentListPage, canActivate: [AuthGuard] },
   { path: 'assessment/create', component: AssessmentEditPage, canActivate: [AuthGuard] },
   { path: 'assessment/edit/:id', component: AssessmentEditPage, canActivate: [AuthGuard] },
