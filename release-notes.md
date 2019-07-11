@@ -29,6 +29,7 @@ This file lists the development task to do:
 
 - Remove the delay to wait the referee list on the referee select page
 - Backups of data everyday over last 30 days
+- Add competitions feature
 
 
 ## Version 2.1.3  (current)
