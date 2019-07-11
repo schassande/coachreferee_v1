@@ -35,6 +35,7 @@ export class RefereeEditPage implements OnInit {
   }
 
   ngOnInit() {
+    this.refereeService.lastSelectedReferee.referee = null;
     if (this.referee) {
       this.setReferee(this.referee);
     } else {
@@ -170,6 +171,11 @@ export class RefereeEditPage implements OnInit {
     if (event && event.url) {
       this.referee.photo.url = event.url;
       this.referee.photo.path = event.path;
+    }
+  }
+  onSwipe(event) {
+    if (event.direction === 4) {
+      this.cancel();
     }
   }
 }

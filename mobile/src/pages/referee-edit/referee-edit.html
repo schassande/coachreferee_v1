@@ -6,12 +6,17 @@
 -->
 <ion-header>
     <ion-toolbar>
-        <ion-title>Referee Edition</ion-title>
+        <ion-buttons slot="start">
+            <ion-button (click)="cancel()" detail>
+                <ion-icon name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title style="text-align: center;">Referee Edition</ion-title>
     </ion-toolbar>
 </ion-header>
 
 
-<ion-content *ngIf="referee">
+<ion-content *ngIf="referee" (swipe)="onSwipe($event)">
     <ion-slides centeredSlides="false" loop="true" pager="true" paginationType="bullets" effect="slide" styles="height:inherit; width: 100%;" style="width: 100%;">
         <ion-slide style="width: 100%;">
             <ion-list style="margin-bottom: 50px; width: 100%;">

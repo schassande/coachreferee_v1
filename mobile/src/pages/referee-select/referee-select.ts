@@ -39,6 +39,7 @@ export class RefereeSelectPage implements OnInit {
   }
 
   ngOnInit() {
+    this.refereeService.lastSelectedReferee.referee = null;
     setTimeout(() => this.searchReferee(), 500);
   }
 
@@ -104,6 +105,11 @@ export class RefereeSelectPage implements OnInit {
     this.modalCtrl.dismiss( { referee});
   }
 
+  public cancel() {
+    this.refereeService.lastSelectedReferee.referee = null;
+    this.modalCtrl.dismiss( { referee: null});
+  }
+
   public newReferee(): void {
     this.modalCtrl.create({ component: RefereeEditPage })
       .then( (modal) => modal.present() );
@@ -127,5 +133,10 @@ export class RefereeSelectPage implements OnInit {
         }
       ]
     }).then((alert) => alert.present());
+  }
+  onSwipe(event) {
+    if (event.direction === 4) {
+      this.cancel();
+    }
   }
 }

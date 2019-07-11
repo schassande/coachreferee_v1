@@ -246,9 +246,12 @@ export class AssessmentEditPage implements OnInit {
           this.assessment.refereeShortName = referee.shortName;
           this.id2referee.set(referee.id, referee);
           this.updateAssessmentValid();
-          if (!this.profileId && referee.referee.nextRefereeLevel) {
+          if (referee.referee.nextRefereeLevel) {
             // try to find the right profile from the referee
-            const foundProfiles = this.profiles.filter((profile) => profile.level === referee.referee.nextRefereeLevel);
+            const foundProfiles = this.profiles.filter((profile) => {
+              // console.log('profile.level=', profile.level, 'referee.referee.nextRefereeLevel', referee.referee.nextRefereeLevel);
+              return profile.level === referee.referee.nextRefereeLevel;
+            });
             if (foundProfiles.length > 0) {
               // a profile has been found => use it
               this.profileId = foundProfiles[0].id;
