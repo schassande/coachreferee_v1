@@ -1,9 +1,10 @@
+import { CONSTANTES } from './../../../../../firebase/functions/src/model/user';
 import { UserSelectorComponent } from './../../user-selector-component';
 import { SharedWith, DATA_REGIONS } from './../../../app/model/common';
 import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 
 import { CompetitionService } from './../../../app/service/CompetitionService';
 import { DateService } from './../../../app/service/DateService';
@@ -13,9 +14,10 @@ import { UserService } from './../../../app/service/UserService';
 import { Competition } from './../../../app/model/competition';
 import { Referee, User } from './../../../app/model/user';
 import { ResponseWithData } from 'src/app/service/response';
-import { flatMap, map } from 'rxjs/operators';
+import { flatMap, map, catchError } from 'rxjs/operators';
 
 import { RefereeSelectPage } from './../../referee-select/referee-select';
+import { resetComponentState } from '@angular/core/src/render3/state';
 
 @Component({
   selector: 'app-competition-edit',
@@ -29,6 +31,8 @@ export class CompetitionEditComponent implements OnInit {
   coaches: User[] = [];
   loading = false;
   regions = DATA_REGIONS;
+  constantes = CONSTANTES;
+  errors: string[] = [];
 
   constructor(
     private alertCtrl: AlertController,
@@ -48,6 +52,7 @@ export class CompetitionEditComponent implements OnInit {
 
   private loadCompetition(): Observable<Competition> {
     this.loading = true;
+    console.log('loadCompetition begin');
     // load id from url path
     return this.route.paramMap.pipe(
       // load competition from the id
@@ -64,7 +69,13 @@ export class CompetitionEditComponent implements OnInit {
       flatMap(() => this.loadReferees()),
       // load coaches
       flatMap(() => this.loadCoaches()),
+      catchError((err) => {
+        console.log('loadCompetition error: ', err);
+        this.loading = false;
+        return of(this.competition);
+      }),
       map (() => {
+        console.log('loadCompetition end');
         this.loading = false;
         return this.competition;
       })
@@ -89,6 +100,11 @@ export class CompetitionEditComponent implements OnInit {
   }
 
   private loadReferees(): Observable<Referee[]> {
+    console.log('loadReferees');
+    if (!this.competition.referees || this.competition.referees.length === 0) {
+      this.referees = [];
+      return of(this.referees);
+    }
     const obs: Observable<Referee>[] = [];
     const newReferees: Referee[] = [];
     this.competition.referees.forEach((ref) => {
@@ -103,8 +119,14 @@ export class CompetitionEditComponent implements OnInit {
                   return res.data;
               }))
             );
+      } else {
+        console.log('null refereeId, ref.refereeShortName', ref.refereeShortName);
       }
     });
+    if (obs.length === 0) {
+      this.referees = [];
+      return of(this.referees);
+    }
     return forkJoin(obs).pipe(
       map(() => {
         this.referees = newReferees;
@@ -114,8 +136,13 @@ export class CompetitionEditComponent implements OnInit {
   }
 
   private loadCoaches(): Observable<User[]> {
+    console.log('loadCoaches');
     const obs: Observable<Referee>[] = [];
     const newCoaches: User[] = [];
+    if (!this.competition.referees || this.competition.referees.length === 0) {
+      this.coaches = newCoaches;
+      return of(this.coaches);
+    }
     this.competition.refereeCoaches.forEach((coach) => {
       if (coach.coachId !== null) {
         obs.push(this.userService.get(coach.coachId).pipe(
@@ -130,6 +157,10 @@ export class CompetitionEditComponent implements OnInit {
            );
       }
     });
+    if (obs.length === 0) {
+      this.coaches = newCoaches;
+      return of(this.coaches);
+    }
     return forkJoin(obs).pipe(
       map(() => {
         this.coaches = newCoaches;
@@ -224,16 +255,57 @@ export class CompetitionEditComponent implements OnInit {
   }
 
   saveNback() {
-    this.competitionService.save(this.competition).pipe(
-      map((rcompetition) => {
-        if (rcompetition.data) {
-          this.navController.navigateRoot(`/competition/list`);
+    this.isValid().pipe(
+      flatMap((valid) => {
+        if (valid) {
+          return this.competitionService.save(this.competition).pipe(
+            map((rcompetition) => {
+              if (rcompetition.data) {
+                this.back();
+              } else {
+                this.alertCtrl.create({ message: 'Error when saving the competition: ' + rcompetition.error.error })
+                  .then( (alert) => alert.present() );
+              }
+            })
+          );
         } else {
-          this.alertCtrl.create({ message: 'Error when saving the competition: ' + rcompetition.error.error })
-            .then( (alert) => alert.present() );
+          return of('');
         }
       })
     ).subscribe();
+  }
+
+  back() {
+    this.navController.navigateRoot(`/competition/list`);
+  }
+
+  isValid(): Observable<boolean> {
+    const errors: string[] = [];
+    if (!this.competition.name) {
+      errors.push('Name field is missing');
+    } else if (this.competition.name.indexOf('' + this.competition.year) < 0) {
+      errors.push('The competition name must include the year number ' + this.competition.year);
+    } else if (this.competition.name.trim() === ('' + this.competition.year)) {
+      errors.push('The competition name contains more than the year number.');
+    }
+    if (!this.competition.region) {
+      errors.push('Region field is missing');
+    }
+    if (!this.competition.country) {
+      errors.push('Country field is missing');
+    }
+    return this.competitionService.getCompetitionByName(this.competition.name).pipe(
+      map((rcomp) => {
+        if (rcomp.data && rcomp.data.id !== this.competition.id) {
+          errors.push('The competition name already exist');
+        }
+        return rcomp;
+      }),
+      map(() => {
+        this.errors = errors;
+        return this.errors.length === 0;
+      })
+    );
   }
 
   onSwipe(event) {

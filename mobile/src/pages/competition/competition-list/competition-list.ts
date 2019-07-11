@@ -44,7 +44,7 @@ export class CompetitionListPage implements OnInit {
 
   private searchCompetition(forceServer: boolean = false, event: any = null) {
     this.loading = true;
-    console.log('searchCompetition(' + this.searchInput + ')');
+    // console.log('searchCompetition(' + this.searchInput + ')');
     this.competitionService.searchCompetitions(this.searchInput, forceServer ? 'server' : 'default')
       .subscribe((response: ResponseWithData<Competition[]>) => {
         this.competitions = this.competitionService.sortCompetitions(response.data, true);
@@ -58,9 +58,11 @@ export class CompetitionListPage implements OnInit {
         }
       });
   }
+
   newCompetition() {
     this.navController.navigateRoot(`/competition/edit/-1`);
   }
+
   competitionSelected(competition: Competition) {
     this.navController.navigateRoot(`/competition/edit/${competition.id}`);
   }

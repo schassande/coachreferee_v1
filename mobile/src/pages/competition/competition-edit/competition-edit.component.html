@@ -12,7 +12,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="competition && loading" (swipe)="onSwipe($event)">
+<ion-content *ngIf="competition && !loading" (swipe)="onSwipe($event)">
     <ion-list>
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
@@ -32,7 +32,23 @@
                     <ion-select-option *ngFor="let region of regions" value="{{region}}">{{region}}</ion-select-option>
                 </ion-select>
             </ion-item>
+            <ion-item>
+                <ion-label position="fixed">Country:</ion-label>
+                <ion-select [(ngModel)]="competition.country">
+                    <ion-select-option *ngFor="let country of constantes.countries" value="{{country[0]}}">{{country[1]}}</ion-select-option>
+                </ion-select>
+            </ion-item>
         </ion-item-group>
+        <div *ngIf="errors && errors.length" style="margin: 5px 20px">
+            <div style="color: red;">Detected errors:</div>
+            <ul>
+                <li *ngFor="let error of errors">{{error}}</li>
+            </ul>
+        </div>
+        <div style="text-align: center">
+            <ion-button shape="round" (click)="back()">Cancel</ion-button>
+            <ion-button shape="round" (click)="saveNback()">Save</ion-button>
+        </div>
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
                 <ion-label>Referees ({{referees.length}})</ion-label>

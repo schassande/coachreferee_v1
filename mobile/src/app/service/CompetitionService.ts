@@ -3,7 +3,7 @@ import { Competition } from './../model/competition';
 import { map } from 'rxjs/operators';
 import { ConnectedUserService } from './ConnectedUserService';
 import { AngularFirestore, Query } from 'angularfire2/firestore';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { ResponseWithData } from './response';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
@@ -69,5 +69,11 @@ export class CompetitionService extends RemotePersistentDataService<Competition>
           res = competition1.name.localeCompare(competition2.name);
         }
         return res;
+    }
+    public getCompetitionByName(name: string): Observable<ResponseWithData<Competition>> {
+        if (!name) {
+            return of({data: null, error: null});
+        }
+        return this.queryOne(this.getCollectionRef().where('name', '==', name), 'default');
     }
 }
