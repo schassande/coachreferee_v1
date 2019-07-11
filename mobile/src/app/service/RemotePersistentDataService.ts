@@ -226,7 +226,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     protected filter(obs: Observable<ResponseWithData<D[]>>, filter: PersistentDataFilter<D>) {
         return obs.pipe(
             map((result: ResponseWithData<D[]>) => {
-                if (!result.error) {
+                if (!result.error && filter !== null) {
                     result.data = result.data.filter( (elem: D) => filter(elem));
                 }
                 return result;

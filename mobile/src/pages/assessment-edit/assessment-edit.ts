@@ -55,7 +55,7 @@ export class AssessmentEditPage implements OnInit {
   ngOnInit() {
     this.appCoach = this.connectedUserService.getCurrentUser();
     this.loadAssessment().pipe( // load Assessment or create it
-      map((response: ResponseWithData<Assessment>) => {
+      flatMap((response: ResponseWithData<Assessment>) => {
         this.assessment = response.data;
         this.computeAssessmentValues();
         if (this.assessment) {
@@ -63,11 +63,14 @@ export class AssessmentEditPage implements OnInit {
             this.assessment.profileType = 'REFEREE';
           }
           this.profileId = this.assessment.profileId;
+          return of(this.assessment);
         } else {
-          this.initAssessment();
+          return this.initAssessment();
         }
+      }),
+      map(() => {
         this.assessmentService.currentAssessment = this.assessment;
-        // console.log('this.assessment.profileType=' + this.assessment.profileType);
+        console.log('this.assessment.profileType=' + this.assessment.profileType);
         return this.assessment;
       }),
       // load profiles
@@ -127,8 +130,8 @@ export class AssessmentEditPage implements OnInit {
     );
   }
 
-  initAssessment() {
-    this.competitionService.get(this.appCoach.defaultCompetitionId).pipe(
+  initAssessment(): Observable<Assessment> {
+    return this.competitionService.get(this.appCoach.defaultCompetitionId).pipe(
       map((rcompetition) => {
         let defaultCompetitionName = this.appCoach.defaultCompetition;
         let defaultCompetitionId = '';
@@ -164,11 +167,11 @@ export class AssessmentEditPage implements OnInit {
               users: [],
               groups: []
             }
-          };
-        }
-      )
-    ).subscribe();
-    console.log('NEW this.assessment.profileType=' + this.assessment.profileType);
+        };
+        console.log('NEW this.assessment.profileType=' + this.assessment.profileType);
+        return this.assessment;
+      })
+    );
   }
 
   getReferee(): string {
@@ -225,11 +228,15 @@ export class AssessmentEditPage implements OnInit {
   set date(dateStr: string) {
     this.assessmentService.setStringDate(this.assessment, dateStr);
   }
+
   get closed() {
     return this.assessment.closed;
   }
+
   async searchReferee(idx: number) {
-    const modal = await this.modalController.create({ component: RefereeSelectPage});
+    const modal = await this.modalController.create({
+      component: RefereeSelectPage,
+      componentProps: { competitionId: this.assessment.competitionId }});
     modal.onDidDismiss().then( (data) => {
         const referee: Referee = this.refereeService.lastSelectedReferee.referee;
         this.refereeService.lastSelectedReferee.referee = null; // clean

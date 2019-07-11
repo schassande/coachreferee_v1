@@ -189,7 +189,9 @@ export class CoachingEditPage implements OnInit {
   }
 
   async searchReferee(idx: number) {
-    const modal = await this.modalController.create({ component: RefereeSelectPage});
+    const modal = await this.modalController.create({
+      component: RefereeSelectPage,
+      componentProps: { competitionId: this.coaching.competitionId }});
     modal.onDidDismiss().then( (data) => {
       const referee = this.refereeService.lastSelectedReferee.referee;
       if (referee) {

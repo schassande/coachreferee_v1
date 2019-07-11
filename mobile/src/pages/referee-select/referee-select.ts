@@ -1,9 +1,15 @@
+import { CompetitionService } from './../../app/service/CompetitionService';
+import { Competition } from './../../app/model/competition';
+import { DataRegion } from './../../app/model/common';
 import { AlertController, ModalController } from '@ionic/angular';
 import { RefereeEditPage } from './../referee-edit/referee-edit';
 import { ResponseWithData } from './../../app/service/response';
 import { RefereeService } from './../../app/service/RefereeService';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Referee } from '../../app/model/user';
+import { flatMap, map } from 'rxjs/operators';
+import { Observable, forkJoin, of } from 'rxjs';
+import { PersistentDataFilter } from 'src/app/service/PersistentDataFonctions';
 
 /**
  * Generated class for the RefereeSelectPage page.
@@ -18,12 +24,16 @@ import { Referee } from '../../app/model/user';
 })
 export class RefereeSelectPage implements OnInit {
 
+  @Input() competitionId: string;
+  @Input() region: DataRegion;
   referees: Referee[];
   error: any;
   searchInput: string;
+  refereesDatabase: Referee[] = null;
 
   constructor(
     public refereeService: RefereeService,
+    public competitionService: CompetitionService,
     public modalCtrl: ModalController,
     public alertCtrl: AlertController) {
   }
@@ -32,8 +42,57 @@ export class RefereeSelectPage implements OnInit {
     setTimeout(() => this.searchReferee(), 500);
   }
 
+  private getRefereesDatabase(): Observable<Referee[]> {
+    // console.log('RefereeSelectPage.getRefereesDatabase(): competitionId=', this.competitionId);
+    if (this.competitionId && this.competitionId.length > 0 && this.refereesDatabase == null) {
+      // console.log('RefereeSelectPage.getRefereesDatabase(): load competition');
+      // load the competition
+      return this.competitionService.get(this.competitionId).pipe(
+        flatMap((rcomp) => {
+          // console.log('RefereeSelectPage.getRefereesDatabase(): competition=', rcomp.data);
+          this.refereesDatabase = [];
+          if (rcomp.data) {
+            const obss: Observable<ResponseWithData<Referee>>[] = [];
+            rcomp.data.referees.forEach((ref) => {
+              obss.push(this.refereeService.get(ref.refereeId).pipe(
+                map( (rref) => {
+                  if (rref.data) {
+                    this.refereesDatabase.push(rref.data);
+                  }
+                  return rref;
+                })
+              ));
+            });
+            return forkJoin(obss);
+          } else {
+            return of('');
+          }
+        }),
+        map(() => this.refereesDatabase)
+      );
+    } else {
+      return of(this.refereesDatabase);
+    }
+  }
+
   private searchReferee() {
-    this.refereeService.searchReferees(this.searchInput).subscribe((response: ResponseWithData<Referee[]>) => {
+    this.getRefereesDatabase().pipe(
+      flatMap( (refDb: Referee[]) => {
+        if (!refDb || refDb.length === 0) {
+          // search in the global database of referees through the service
+          return this.refereeService.searchReferees(this.searchInput);
+        } else {
+          // search in the sub set of referes
+          // get the filter from search word
+          const filter: PersistentDataFilter<Referee> = this.refereeService.getFilterByText(this.searchInput);
+          if (filter === null) { // no filter then return the ref db
+            return of({data: refDb, error: null});
+          } else { // use the filter to filter the ref db
+            return of({data: refDb.filter(filter), error: null});
+          }
+        }
+      })
+    ).subscribe((response: ResponseWithData<Referee[]>) => {
       this.referees = response.data;
       this.error = response.error;
     });

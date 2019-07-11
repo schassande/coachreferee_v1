@@ -5,6 +5,7 @@ import { ResponseWithData } from './response';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { Referee } from './../model/user';
+import { PersistentDataFilter } from './PersistentDataFonctions';
 
 @Injectable()
 export class RefereeService extends RemotePersistentDataService<Referee> {
@@ -27,16 +28,15 @@ export class RefereeService extends RemotePersistentDataService<Referee> {
     }
 
     public searchReferees(text: string): Observable<ResponseWithData<Referee[]>> {
+        return super.filter(super.all(), this.getFilterByText(text));
+    }
+
+    public getFilterByText(text: string): PersistentDataFilter<Referee> {
         const validText = text && text !== null  && text.trim().length > 0 ? text.trim() : null;
-        // console.log('RefereeService.searchReferees(' + validText + ')');
-        if (validText !== null) {
-            return super.filter(super.all(), (referee: Referee) => {
-                return this.stringContains(validText, referee.shortName)
-                    || this.stringContains(validText, referee.firstName)
-                    || this.stringContains(validText, referee.lastName);
-            });
-        } else {
-            return super.all();
-        }
+        return validText === null ? null : (referee: Referee) => {
+            return this.stringContains(validText, referee.shortName)
+                || this.stringContains(validText, referee.firstName)
+                || this.stringContains(validText, referee.lastName);
+        };
     }
 }
