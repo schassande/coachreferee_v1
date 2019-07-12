@@ -48,8 +48,9 @@
             </ion-row>
         </ion-grid>
     </div>
-    <p *ngIf="!years || years.length == 0" style="margin: 10px; text-align: center; font-style: italic;">
-        No Xp registered.<br>Use the + button to add a new Xp.
+    <p *ngIf="!years || years.length == 0" style="margin: 20px 10px; text-align: center; font-style: italic;">
+        Use the Xp feature to record your coaching experience over the year.
+        <br>Please use the + button to register your coaching experience for each tournament/competition.
     </p>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button (click)="newXp()" class="plusButton">+</ion-fab-button>
