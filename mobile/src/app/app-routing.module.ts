@@ -23,10 +23,9 @@ import { SkillProfileEditPage } from '../pages/skill-profile/skill-profile-edit/
 import { SkillProfileListPage } from '../pages/skill-profile/skill-profile-list/skill-profile-list';
 import { SkillSetEditPage } from '../pages/skill-profile/skill-set-edit/skill-set-edit';
 import { UserEditPage } from '../pages/user/user-edit/user-edit';
-import { UserSelectionPage } from '../pages/user/user-selection/user-selection';
-import { UserLogoutComponent } from '../pages/user/user-logout/user-logout.component';
 import { XpEditComponent } from '../pages/xp/xp-edit/xp-edit.component';
 import { XpListComponent } from '../pages/xp/xp-list/xp-list.component';
+import { UserLoginComponent } from 'src/pages/user/user-login/user-login.component';
 
 import { AuthGuard } from './AuthGuard';
 import { AdminGuard } from './AdminGuard';
@@ -51,7 +50,7 @@ const routes: Routes = [
   { path: 'competition/list', component: CompetitionListPage, canActivate: [AuthGuard] },
   { path: 'competition/edit/:id', component: CompetitionEditComponent, canActivate: [AuthGuard] },
 
-  { path: 'home', component: HomePage},
+  { path: 'home', component: HomePage, canActivate: [AuthGuard]},
 
   { path: 'pro/edit/:id', component: ProEditPage, canActivate: [AuthGuard] },
   { path: 'pro/list', component: ProListPage, canActivate: [AuthGuard] },
@@ -69,10 +68,9 @@ const routes: Routes = [
   { path: 'skillprofile/:skillProfileid/skillset/:skillSetIdx', component: SkillSetEditPage, canActivate: [AuthGuard] },
   { path: 'skillprofile/:skillProfileid/skillset/:skillSetIdx/skill/:skillIdx', component: SkillEditPage, canActivate: [AuthGuard] },
 
+  { path: 'user/login', component: UserLoginComponent},
   { path: 'user/create', component: UserEditPage},
   { path: 'user/edit/:id', component: UserEditPage, canActivate: [AuthGuard] },
-  { path: 'user/select', component: UserSelectionPage},
-  { path: 'user/logout', component: UserLogoutComponent},
 
   { path: 'xp/list', component: XpListComponent, canActivate: [AuthGuard]},
   { path: 'xp/edit/:id', component: XpEditComponent, canActivate: [AuthGuard]},

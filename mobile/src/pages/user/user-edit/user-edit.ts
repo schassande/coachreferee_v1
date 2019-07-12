@@ -2,7 +2,7 @@ import { PersistentDataUpdater } from '../../../app/service/PersistentDataFoncti
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { LoadingController, NavController, ToastController } from '@ionic/angular';
+import { LoadingController, NavController, ToastController, AlertController } from '@ionic/angular';
 import { ConnectedUserService } from '../../../app/service/ConnectedUserService';
 import { ResponseWithData } from '../../../app/service/response';
 import { UserService } from '../../../app/service/UserService';
@@ -28,6 +28,7 @@ export class UserEditPage implements OnInit {
   saving = false;
 
   constructor(
+    private alertCtrl: AlertController,
     private navController: NavController,
     private route: ActivatedRoute,
     public userService: UserService,
@@ -181,6 +182,28 @@ export class UserEditPage implements OnInit {
     if (event && event.url) {
       this.user.photo.url = event.url;
       this.user.photo.path = event.path;
+    }
+  }
+  deleteAccount() {
+    this.alertCtrl.create({
+      message: 'Do you really want to delete your account ' + this.user.shortName  +  '?<br>All data will be removed !!',
+      buttons: [
+        { text: 'Cancel', role: 'cancel'},
+        {
+          text: 'Delete',
+          handler: () => {
+            this.userService.deleteAccount(this.user);
+            this.navController.navigateRoot('/user/login');
+          }
+        }
+      ]
+    }).then( (alert) => alert.present() );
+  }
+  cancel() {
+    if (this.user.dataStatus === 'NEW') {
+      this.navController.navigateRoot('/user/login');
+    } else {
+      this.navController.navigateRoot('/home');
     }
   }
 }

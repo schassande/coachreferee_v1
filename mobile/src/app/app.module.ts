@@ -65,7 +65,7 @@ import { SkillProfileEditPage } from '../pages/skill-profile/skill-profile-edit/
 import { SkillProfileListPage } from '../pages/skill-profile/skill-profile-list/skill-profile-list';
 import { SkillSetEditPage } from '../pages/skill-profile/skill-set-edit/skill-set-edit';
 import { UserEditPage } from '../pages/user/user-edit/user-edit';
-import { UserSelectionPage } from '../pages/user/user-selection/user-selection';
+import { UserLoginComponent } from '../pages/user/user-login/user-login.component';
 import { XpListComponent } from '../pages/xp/xp-list/xp-list.component';
 import { XpEditComponent } from '../pages/xp/xp-edit/xp-edit.component';
 
@@ -74,11 +74,9 @@ import { CameraIconComponent } from '../pages/widget/camera-icon-component';
 import { CompetencyPointsComponent } from '../pages/assessment/assess-referee/competency-points-component';
 import { LoginComponent } from 'src/pages/user/login-component';
 import { SharingComponent } from '../pages/widget/sharing-component';
-import { UserLogoutComponent } from '../pages/user/user-logout/user-logout.component';
 import { UserSelectorComponent } from '../pages/widget/user-selector-component';
 
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
-import * as Hammer from 'hammerjs';
 
 export class CustomHammerConfig extends HammerGestureConfig {
 
@@ -94,7 +92,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     RefereeListPage, RefereeViewPage, RefereeSelectPage, RefereeEditPage,
     SettingsPage,
     SkillEditPage, SkillProfileEditPage, SkillProfileListPage, SkillSetEditPage,
-    UserEditPage, UserSelectionPage, UserLogoutComponent,
+    UserEditPage, UserLoginComponent,
     XpListComponent, XpEditComponent,
     SharingComponent, CompetencyComponent, CompetencyPointsComponent, PeriodSelectorComponent, CompetitionSelectorComponent,
     CameraIconComponent, UserSelectorComponent, LoginComponent],

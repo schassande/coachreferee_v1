@@ -18,47 +18,27 @@ import { NavController, AlertController, LoadingController } from '@ionic/angula
 })
 export class HomePage implements OnInit {
 
-  connected = false;
+  currentUser: User = null;
   showInstallBtn = false;
   deferredPrompt;
 
   constructor(
-      private navController: NavController,
-      private userService: UserService,
       private connectedUserService: ConnectedUserService,
-      private alertCtrl: AlertController,
       private bookmarkService: BookmarkService,
-      private loadingController: LoadingController,
       private changeDetectorRef: ChangeDetectorRef) {
-    this.connectedUserService.$userConnectionEvent.subscribe((user: User) => {
-      this.connected = user != null;
-      this.changeDetectorRef.detectChanges();
-      this.bookmarkService.addBookmarkEntry({
-        id: 'logout',
-        label: 'Logout',
-        url: '/user/logout'});
-      });
   }
   public getShortName(): string {
-    return this.connected
-      ? this.connectedUserService.getCurrentUser().shortName
-      : '';
+    return this.currentUser.shortName;
   }
 
   public isLevelAdmin() {
-    if (this.connected) {
-      const role = this.connectedUserService.getCurrentUser().role;
+      const role = this.currentUser.role;
       return role === 'PROFILE_ADMIN' || role === 'ADMIN';
-    } else {
-      return false;
-    }
   }
 
   ngOnInit() {
-    this.connected = this.connectedUserService.isConnected();
-    if (!this.connected) {
-      this.tryToAutoLogin();
-    }
+    this.currentUser = this.connectedUserService.getCurrentUser();
+    this.changeDetectorRef.detectChanges();
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent Chrome 67 and earlier from automatically showing the prompt
       e.preventDefault();
@@ -84,45 +64,5 @@ export class HomePage implements OnInit {
         }
         this.deferredPrompt = null;
       });
-  }
-
-  private async tryToAutoLogin() {
-    // get last user connection info from the application settings store on device
-    this.userService.autoLogin().pipe(
-      map((ruser) => {
-        if (!this.connectedUserService.isConnected()) {
-          this.autoLoginNotPossible();
-        }
-      })
-    ).subscribe();
-  }
-
-  private async autoLoginNotPossible() {
-    // this.loadingController.getTop()
-    const loading = await this.loadingController.create({ message: 'Searching users...'});
-    loading.present();
-    console.log('autologin: no => search users');
-    this.userService.all().pipe(
-      map((rusers: ResponseWithData<User[]>) => {
-        console.log('search users.dismiss');
-        loading.dismiss();
-        if (rusers.data && rusers.data.length > 0) {
-          console.log('autologin: Ask to select an user: ', rusers.data);
-          this.navController.navigateRoot('/user/select');
-        } else {
-          console.log('autologin: no users => create an user');
-          this.alertCtrl.create({
-            message: 'Welcome to RefCoach app !<br>You have to create an account to use the application.',
-            buttons: [ { text: 'Ok', handler: () => this.navController.navigateRoot('/user/create') } ]
-          }).then( (alert) => alert.present() );
-        }
-      })
-    ).subscribe();
-  }
-
-  public gotToMyAccount() {
-    if (this.connectedUserService.isConnected()) {
-      this.navController.navigateRoot(`/user/edit/${this.connectedUserService.getCurrentUser().id}`);
-    }
   }
 }

@@ -1,3 +1,5 @@
+import { UserService } from './service/UserService';
+import { ConnectedUserService } from './service/ConnectedUserService';
 import { LocalAppSettings } from './model/settings';
 import { AppSettingsService } from './service/AppSettingsService';
 import { Component } from '@angular/core';
@@ -27,6 +29,8 @@ export class AppComponent {
     public bookmarkService: BookmarkService,
     public appSettingsService: AppSettingsService,
     private offlinesService: OfflinesService,
+    private userService: UserService,
+    public connectedUserService: ConnectedUserService,
     private menu: MenuController,
     private firestore: AngularFirestore
   ) {
@@ -43,6 +47,7 @@ export class AppComponent {
       this.appSettingsService.get().subscribe((appSetttings) => {
         this.appSetttings = appSetttings;
         if (appSetttings.forceOffline) {
+          console.log('Switch offline');
           this.firestore.firestore.disableNetwork();
         } else {
           this.firestore.firestore.enableNetwork();
@@ -73,5 +78,9 @@ export class AppComponent {
       this.appSetttings = app;
       this.menu.close();
     });
+  }
+  public logout() {
+    this.userService.logout();
+    this.route('/user/login');
   }
 }

@@ -8,12 +8,19 @@
         <ion-content id="ctt">
             <ion-list>
                 <ion-item>
+                    <ion-icon name="home" scope="start"></ion-icon>
                     <ion-button fill="clear" (click)="route()">Home</ion-button>
                 </ion-item>
                 <ion-item>
+                    <ion-icon name="log-out" scope="start"></ion-icon>
+                    <ion-button fill="clear" (click)="logout()">Log out</ion-button>
+                </ion-item>
+                <ion-item>
+                    <ion-icon name="refresh" scope="start"></ion-icon>
                     <ion-button fill="clear" (click)="reloadPage()">Reload application</ion-button>
                 </ion-item>
                 <ion-item *ngIf="appSetttings">
+                    <ion-icon name="sync" scope="start"></ion-icon>
                     <ion-button fill="clear" (click)="onToggleForceOffline()">Switch {{ appSetttings.forceOffline ? 'offline' : 'online'}}</ion-button>
                 </ion-item>
                 <ion-item *ngFor="let entry of bookmarkService.getContext() |async">
@@ -25,5 +32,10 @@
             </ion-list>
         </ion-content>
     </ion-menu>
-    <ion-router-outlet style="max-width: 500px; margin: 0 auto;"></ion-router-outlet>
+    <ion-router-outlet style="max-width: 500px; margin: 0 auto;">
+        <div style="text-align: center; margin-top: 50px; font-size: 1.5em; color: red;" *ngIf="!connectedUserService || !connectedUserService.isConnected()">
+            <p>Referee Coach Application</p>
+            <img src="assets/imgs/logo.png" height="200" />
+        </div>
+    </ion-router-outlet>
 </ion-app>

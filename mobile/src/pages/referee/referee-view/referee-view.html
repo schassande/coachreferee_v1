@@ -19,18 +19,23 @@
 </ion-header>
 <ion-content (swipe)="onSwipe($event)" *ngIf="referee">
     <div>
-        <div *ngIf="referee.photo && referee.photo.url">
-            <img src="{{referee.photo.url}}">
+        <div style="text-align: center; margin-top: 20px;">
+            <ion-icon *ngIf="!referee.photo || !referee.photo.url" size="large" name="person"></ion-icon>
+            <img src="{{referee.photo.url}}" *ngIf="referee.photo && referee.photo.url" height="100">
         </div>
-        <div>{{referee.firstName}} {{referee.lastName}} from {{refereeCountry}}</div>
+
+        <div style="margin: 20px 0 0 10px; text-align: center;">
+            <span style="font-size: 1.4em;">{{referee.firstName}} {{referee.lastName}}</span>
+            <br>from {{refereeCountry}}
+        </div>
         <ul>
-            <li>Contact: {{referee.mobilePhones}}, {{referee.email}}</li>
+            <li>Contact: {{referee.mobilePhones}} {{referee.email}}</li>
             <li>Speaking languages : {{refereeLanguage.join(", ")}}</li>
             <li>Gender: {{referee.gender == 'M' ? 'Male' : (referee.gender == 'F' ? 'Female' : '-')}}</li>
             <li>Referee Level: {{referee.referee.refereeLevel}}</li>
             <li>Referee category: {{referee.referee.refereeCategory}}</li>
-            <li>Looking for upgrade?: {{referee.referee.nextRefereeLevel}}</li>
-            <li>Referee coach Level: {{referee.refereeCoach.refereeCoachLevel}}</li>
+            <li *ngIf="referee.referee.nextRefereeLevel !== 'NONE'">Looking for upgrade?: {{referee.referee.nextRefereeLevel}}</li>
+            <li *ngIf="referee.refereeCoach.refereeCoachLevel !== 'NONE'">Referee coach Level: {{referee.refereeCoach.refereeCoachLevel}}</li>
         </ul>
         <div style="text-align: center; margin: 10px;"><img src="assets/imgs/badge/{{referee.referee.refereeLevel}}.png" height="100" /></div>
         <div style="text-align: right;" padding>

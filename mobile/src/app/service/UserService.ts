@@ -66,6 +66,14 @@ export class UserService  extends RemotePersistentDataService<User> {
                     user.accountId = userCred.user.uid;
                     return super.save(user);
                 }),
+                flatMap((ruser) => {
+                    if (ruser.data) {
+                        this.appSettingsService.setLastUser(user.email, password);
+                        return this.autoLogin();
+                    } else {
+                        return of(ruser);
+                    }
+                }),
                 catchError((err) => {
                     console.error(err);
                     return of({ error: err, data: null});
@@ -119,12 +127,20 @@ export class UserService  extends RemotePersistentDataService<User> {
                 return of({ error: err, data: null});
             }),
             map( (ruser: ResponseWithData<User>) => {
+                // console.log('UserService.login(' + email + ', ' + password + ') ruser=', ruser);
                 if (ruser.data) {
                     this.connectedUserService.userConnected(ruser.data, credential);
+                } else if (firebase.auth().currentUser && ruser.error === null) {
+                    ruser.error = { error : 'The account \'' + email + '\' has been removed.', errorCode : 1234 };
                 }
                 return ruser;
             })
         );
+    }
+
+    public logout() {
+        console.log('UserService.logout()');
+        this.connectedUserService.userDisconnected();
     }
 
     /**
@@ -141,7 +157,7 @@ export class UserService  extends RemotePersistentDataService<User> {
             flatMap((settings: LocalAppSettings) => {
                 const email = settings.lastUserEmail;
                 const password = settings.lastUserPassword;
-                console.log('UserService.autoLogin(): lastUserEmail=' + email + ', lastUserPassword=' + password);
+                // console.log('UserService.autoLogin(): lastUserEmail=' + email + ', lastUserPassword=' + password);
                 if (!email) {
                     loading.dismiss();
                     return of({ error: null, data: null});
@@ -153,95 +169,60 @@ export class UserService  extends RemotePersistentDataService<User> {
                 }
                 if (password) {
                     // password is defined => try to login
-                    console.log('UserService.autoLogin(): login(' + email + ', ' + password + ')');
+                    // console.log('UserService.autoLogin(): login(' + email + ', ' + password + ')');
                     return this.login(email, password).pipe(
-                        flatMap((ruser) =>  {
+                        map((ruser) =>  {
                             loading.dismiss();
-                            return ruser.data ?  of(ruser) : this.askPasswordAndLogin(email);
+                            return ruser;
                         })
                     );
                 }
                 loading.dismiss();
-                return this.askPasswordAndLogin(email);
+                return of({data: null, error: null});
             })
         );
     }
 
-    /**
-     * There is an email but no password. Then ask the password to the user with a confirmation popup.
-     * Try to login with the read password.
-     * @param email is the email of the user
-     */
-    public askPasswordAndLogin(email: string): Observable<ResponseWithData<User>> {
-        const sub = new Subject<ResponseWithData<User>>(); // use subject due to async actions
-        this.modalController.create({ component: LoginComponent, componentProps: { email}}).then( (modal) => {
-            modal.onDidDismiss().then( (modalData: any) => {
-                const loginData: LoginData = modalData.data as LoginData;
-                console.log('askPasswordAndLogin(' + email + ') user response=' + JSON.stringify(loginData));
-                if (loginData.action === 'LOGIN') {
-                    this.loginWithEmailNPassword(email, loginData.password, loginData.savePassword, sub);
-                } else if (loginData.action === 'RESET_PASSWORD') {
-                    this.resetPassword(email, sub);
-                } else {
-                    console.log('Cancel');
-                    sub.next({ error: null, data: null});
-                    sub.complete();
-                }
-            });
-            modal.present();
-        });
-        return sub;
-    }
-
-    private resetPassword(email, sub: Subject<ResponseWithData<User>>) {
+    public resetPassword(email, sub: Subject<ResponseWithData<User>> = null) {
         // console.log('Reset password of the account', email);
         firebase.auth().sendPasswordResetEmail(email).then(() => {
-            this.alertCtrl.create({message: 'An email to reset the password of the account ' + email})
+            this.alertCtrl.create({message: 'An email has been sent to \'' + email + '\' to reset the password.'})
                 .then((alert) => alert.present());
-            sub.next({ error: null, data: null});
-            sub.complete();
+            if (sub) {
+                sub.next({ error: null, data: null});
+                sub.complete();
+            }
         });
     }
 
-    private async loginWithEmailNPassword(email: string, password: string, savePassword: boolean, sub: Subject<ResponseWithData<User>>) {
-        // console.log('loginWithEmailNPassword(' + email + '): read password=', password, 'save=', savePassword);
-        if (password && password.trim().length > 0) {
-            // try to login with the password
-            console.log('UserService.askPasswordToLogin(' + email + '): login with read password');
-            from(this.loadingController.create({ message: 'Login...', translucent: true}).then((l) => l.present())).pipe(
-                flatMap(() => this.login(email, password)),
-                flatMap ( (ruser) => {
-                    if (ruser.error) {
-                        // login failed
-                        savePassword = false; // don't save the password if error occurs
-                        if (ruser.error.code === 'auth/network-request-failed') {
-                            console.log('UserService.askPasswordToLogin(' + email + '): no network');
-                            // no network => check the email/password with local storage
-                            return this.connectByEmail(email, password);
-                        }
+    public loginWithEmailNPassword(email: string,
+                                   password: string,
+                                   savePassword: boolean): Observable<ResponseWithData<User>> {
+        console.log('loginWithEmailNPassword(' + email + ', ' + password + ', ' + savePassword + ')');
+        return this.login(email, password).pipe(
+            flatMap ( (ruser) => {
+                if (ruser.error) {
+                    // login failed
+                    savePassword = false; // don't save the password if error occurs
+                    if (ruser.error.code === 'auth/network-request-failed') {
+                        // no network => check the email/password with local storage
+                        return this.connectByEmail(email, password);
                     }
-                    return of(ruser);
-                }),
-                map( (ruser) => {
-                    if (ruser.data) { // Login with success
-                        console.log('UserService.askPasswordToLogin(' + email + '): login with success');
-                        if (savePassword) {
-                            console.log('UserService.askPasswordToLogin(' + email + '): store password.');
-                            // The user is ok to store password in settings on local device
-                            this.appSettingsService.setLastUser(email, password);
-                        }
+                }
+                return of(ruser);
+            }),
+            map( (ruser) => {
+                if (ruser.data) { // Login with success
+                    console.log('UserService.loginWithEmailNPassword(' + email + '): login with success');
+                    if (savePassword) {
+                        console.log('UserService.askPasswordToLogin(' + email + '): store password.');
+                        // The user is ok to store password in settings on local device
+                        this.appSettingsService.setLastUser(email, password);
                     }
-                    this.loadingController.dismiss();
-                    sub.next(ruser);
-                    sub.complete();
-                })
-            ).subscribe();
-        } else {
-            console.log('UserService.askPasswordToLogin(' + email + '): no password provided');
-            this.alertCtrl.create({message: 'Password is missing.'}).then((alert) => alert.present());
-            sub.next({ error: null, data: null});
-            sub.complete();
-        }
+                }
+                return ruser;
+            })
+        );
     }
 
     private connectByEmail(email: string, password: string = null): Observable<ResponseWithData<User>> {
@@ -378,5 +359,15 @@ export class UserService  extends RemotePersistentDataService<User> {
             },
             groupIds: []
         };
+    }
+    deleteAccount(user: User) {
+        if (user.id ===  this.connectedUserService.getCurrentUser().id) {
+            from(firebase.auth().currentUser.delete()).pipe(
+                flatMap(() => this.delete(user.id)),
+                map(() => this.connectedUserService.userDisconnected())
+            ).subscribe();
+        } else {
+            this.delete(user.id).subscribe();
+        }
     }
 }

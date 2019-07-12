@@ -7,7 +7,7 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-button routerLink="/home" detail>
+            <ion-button (click)="cancel()" detail>
                 <ion-icon name="arrow-back"></ion-icon>
             </ion-button>
         </ion-buttons>
@@ -129,6 +129,7 @@
         </ul>
     </div>
     <div style="text-align: center;">
-        <ion-button (click)="newUser($event)" [disabled]="firstName.invalid && lastName.invalid && !saving">Save</ion-button>
+        <ion-button shape="round" color="danger" (click)="deleteAccount()" *ngIf="user.dataStatus !== 'NEW'">Delete Account</ion-button>
+        <ion-button shape="round" (click)="newUser($event)" [disabled]="firstName.invalid && lastName.invalid && !saving">Save</ion-button>
     </div>
 </ion-content>
