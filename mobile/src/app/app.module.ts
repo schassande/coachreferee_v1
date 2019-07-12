@@ -72,7 +72,6 @@ import { XpEditComponent } from '../pages/xp/xp-edit/xp-edit.component';
 import { AppComponent } from './app.component';
 import { CameraIconComponent } from '../pages/widget/camera-icon-component';
 import { CompetencyPointsComponent } from '../pages/assessment/assess-referee/competency-points-component';
-import { LoginComponent } from 'src/pages/user/login-component';
 import { SharingComponent } from '../pages/widget/sharing-component';
 import { UserSelectorComponent } from '../pages/widget/user-selector-component';
 
@@ -95,9 +94,9 @@ export class CustomHammerConfig extends HammerGestureConfig {
     UserEditPage, UserLoginComponent,
     XpListComponent, XpEditComponent,
     SharingComponent, CompetencyComponent, CompetencyPointsComponent, PeriodSelectorComponent, CompetitionSelectorComponent,
-    CameraIconComponent, UserSelectorComponent, LoginComponent],
+    CameraIconComponent, UserSelectorComponent],
   entryComponents: [AppComponent, HomePage, RefereeSelectPage,
-    RefereeEditPage, UserSelectorComponent, LoginComponent, CompetitionSelectorComponent],
+    RefereeEditPage, UserSelectorComponent, CompetitionSelectorComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

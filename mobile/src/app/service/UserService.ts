@@ -1,9 +1,7 @@
-import { LoginData } from '../../pages/user/login-component';
 import { LocalAppSettings } from './../model/settings';
 import { AppSettingsService } from './AppSettingsService';
 import { AlertController, ToastController, LoadingController, ModalController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { AngularFireAuth } from '@angular/fire/auth';
 
 import { ResponseWithData, Response } from './response';
 import { Observable, of, from, Subject } from 'rxjs';
@@ -13,7 +11,6 @@ import { User, CONSTANTES, AuthProvider } from './../model/user';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { flatMap, map, catchError } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
-import { LoginComponent } from 'src/pages/user/login-component';
 
 @Injectable()
 export class UserService  extends RemotePersistentDataService<User> {
