@@ -14,6 +14,8 @@
     "devDependencies": {
         "grunt": "^1.0.4",
         "grunt-contrib-jshint": "^2.1.0",
-        "grunt-exec": "^3.0.0"
+        "grunt-copy": "^0.1.0",
+        "grunt-exec": "^3.0.0",
+        "grunt-markdown": "^0.7.0"
     }
 }

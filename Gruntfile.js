@@ -46,10 +46,34 @@ module.exports = function(grunt) {
             'deploy-function': {
                 cwd: 'firebase',
                 cmd: 'firebase deploy',
+            },
+            'delete-help': {
+                cwd: '.',
+                cmd: 'rm -rf html',
             }
-        }
+        },
+        markdown: {
+            'www-help-build': {
+                files: [{
+                    expand: true,
+                    src: 'mobile/src/assets/help/*.md',
+                    dest: 'html/',
+                    ext: '.html',
+                }]
+            }
+        },
+        copy: {
+            copyHelp: {
+                src: ['html/mobile/src/assets/help/*.html'],
+                dest: 'firebase/hosting/www/help/',
+                expand: true,
+                flatten: true
+            }
+        },
     });
     grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-markdown');
+    grunt.loadNpmTasks('grunt-copy');
 
     grunt.registerTask('app-build', 'Build the mobile app', ['exec:app-build']);
 
@@ -76,5 +100,10 @@ module.exports = function(grunt) {
     ]);
     grunt.registerTask('www-deploy', 'Deploy the web site only', [
         'exec:deploy-www'
+    ]);
+    grunt.registerTask('www-help-build', 'Build help pages of the web site', [
+        'markdown:www-help-build',
+        'copy:copyHelp',
+        'exec:delete-help'
     ]);
 }
