@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { ModalController, LoadingController, NavController } from '@ionic/angular';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -39,6 +40,7 @@ export class RefereeViewPage implements OnInit {
     public modalCtrl: ModalController,
     private route: ActivatedRoute,
     private navController: NavController,
+    private helpService: HelpService,
     public refereeService: RefereeService,
     public coachingService: CoachingService,
     public connectedUserService: ConnectedUserService,
@@ -49,6 +51,7 @@ export class RefereeViewPage implements OnInit {
   }
 
   ngOnInit() {
+    this.helpService.setHelp('referee-view');
     this.route.paramMap.pipe(
       map((params: ParamMap) => {
         const id = params.get('id');

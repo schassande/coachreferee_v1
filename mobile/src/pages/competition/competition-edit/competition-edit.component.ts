@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -37,6 +38,7 @@ export class CompetitionEditComponent implements OnInit {
     private alertCtrl: AlertController,
     private competitionService: CompetitionService,
     private dateService: DateService,
+    private helpService: HelpService,
     private modalController: ModalController,
     private navController: NavController,
     private refereeService: RefereeService,
@@ -46,6 +48,7 @@ export class CompetitionEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.helpService.setHelp('competition-list');
     this.loadCompetition().subscribe();
   }
 

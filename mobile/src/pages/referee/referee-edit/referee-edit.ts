@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { Component, OnInit } from '@angular/core';
 import { AngularFireStorage } from 'angularfire2/storage';
 import { ActivatedRoute, ParamMap } from '@angular/router';
@@ -27,6 +28,7 @@ export class RefereeEditPage implements OnInit {
 
   constructor(public modalController: ModalController,
               private route: ActivatedRoute,
+              private helpService: HelpService,
               public refereeService: RefereeService,
               public connectedUserService: ConnectedUserService,
               private afStorage: AngularFireStorage,
@@ -35,6 +37,7 @@ export class RefereeEditPage implements OnInit {
   }
 
   ngOnInit() {
+    this.helpService.setHelp('referee-edit');
     this.refereeService.lastSelectedReferee.referee = null;
     if (this.referee) {
       this.setReferee(this.referee);

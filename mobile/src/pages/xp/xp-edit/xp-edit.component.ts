@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { DateService } from '../../../app/service/DateService';
 import { NavController } from '@ionic/angular';
 import { ConnectedUserService } from '../../../app/service/ConnectedUserService';
@@ -24,6 +25,7 @@ export class XpEditComponent implements OnInit {
 
   constructor(
     private navController: NavController,
+    private helpService: HelpService,
     private route: ActivatedRoute,
     private connectedUserService: ConnectedUserService,
     private dateService: DateService,
@@ -31,6 +33,7 @@ export class XpEditComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.helpService.setHelp('xp-edit');
     return this.route.paramMap.pipe(
       flatMap( (paramMap: ParamMap) => {
         this.xpId = paramMap.get('id');

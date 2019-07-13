@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { Component, OnInit } from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
 import { ResponseWithData } from '../../../app/service/response';
@@ -23,11 +24,13 @@ export class ProListPage implements OnInit {
 
   constructor(
     private navController: NavController,
+    private helpService: HelpService,
     public proService: PROService,
     public alertCtrl: AlertController) {
   }
 
   ngOnInit() {
+    this.helpService.setHelp('pro-edit');
     this.searchPro();
   }
 

@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { ResponseWithData } from './../../../app/service/response';
 import { Competition } from './../../../app/model/competition';
 import { NavController, AlertController } from '@ionic/angular';
@@ -26,11 +27,13 @@ export class CompetitionListPage implements OnInit {
   constructor(
     private navController: NavController,
     private competitionService: CompetitionService,
+    private helpService: HelpService,
     private dateService: DateService,
     private alertCtrl: AlertController) {
   }
 
   ngOnInit() {
+    this.helpService.setHelp('competition-list');
     setTimeout(() => { this.doRefresh(null); }, 500);
   }
 

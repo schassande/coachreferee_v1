@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { RefereeEditPage } from '../referee-edit/referee-edit';
@@ -25,12 +26,14 @@ export class RefereeListPage implements OnInit {
 
   constructor(
     public modalController: ModalController,
+    private helpService: HelpService,
     private navController: NavController,
     public refereeService: RefereeService,
     public alertCtrl: AlertController) {
   }
 
   ngOnInit() {
+    this.helpService.setHelp('referee-list');
     this.searchReferee();
   }
 

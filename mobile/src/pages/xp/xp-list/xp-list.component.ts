@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { DateService } from '../../../app/service/DateService';
 import { NavController, ToastController } from '@ionic/angular';
 import { UserService } from '../../../app/service/UserService';
@@ -40,6 +41,7 @@ export class XpListComponent implements OnInit {
 
   constructor(
     private navController: NavController,
+    private helpService: HelpService,
     private xpService: XpService,
     private connectedUserService: ConnectedUserService,
     private userService: UserService,
@@ -48,6 +50,7 @@ export class XpListComponent implements OnInit {
     ) { }
 
   public ngOnInit() {
+    this.helpService.setHelp('xp-list');
     this.computeCoaches().pipe(
       flatMap(() => this.computeXps())
     ).subscribe();

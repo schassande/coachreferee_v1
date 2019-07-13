@@ -1,6 +1,6 @@
 # Pre Game Coaching
 
-This page permits to create or to edit the general information about coaching: 
+This page permits to create or to edit the general information about coaching:
 
 * You have to define the competition. Either you select an existing competition either you simply set a competition name.
 * You define the date, the time slot and the field of the game.

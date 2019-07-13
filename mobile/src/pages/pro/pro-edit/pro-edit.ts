@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute} from '@angular/router';
 import { AlertController, NavController } from '@ionic/angular';
@@ -27,12 +28,14 @@ export class ProEditPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private navController: NavController,
+    private helpService: HelpService,
     public proService: PROService,
     public connectedUserService: ConnectedUserService,
     public alertCtrl: AlertController) {
   }
 
   ngOnInit() {
+    this.helpService.setHelp('pro-edit');
     this.loadPRO().subscribe();
   }
 
