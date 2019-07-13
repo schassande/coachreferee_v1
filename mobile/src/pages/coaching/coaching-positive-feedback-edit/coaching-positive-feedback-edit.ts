@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { Component, OnInit } from '@angular/core';
 import { flatMap, map } from 'rxjs/operators';
 import { ActivatedRoute, ParamMap } from '@angular/router';
@@ -36,11 +37,13 @@ export class CoachingPositiveFeedbackEditPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private navController: NavController,
+    private helpService: HelpService,
     public connectedUserService: ConnectedUserService,
     private coachingService: CoachingService) {
   }
 
   ngOnInit() {
+    this.helpService.setHelp('coaching-game-positive-point');
     this.appCoach = this.connectedUserService.getCurrentUser();
     this.route.paramMap.pipe(
       flatMap( (paramMap: ParamMap) => {

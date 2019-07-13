@@ -32,7 +32,7 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
-    this.helpService.addHelp('home');
+    this.helpService.setHelp('home');
     this.currentUser = this.connectedUserService.getCurrentUser();
     this.changeDetectorRef.detectChanges();
     window.addEventListener('beforeinstallprompt', (e) => {

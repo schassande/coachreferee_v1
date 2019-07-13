@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { CoachingService } from '../../../app/service/CoachingService';
 import { User } from '../../../app/model/user';
 import { Coaching } from '../../../app/model/coaching';
@@ -44,6 +45,7 @@ export class CoachingImprovmentFeedbackEditPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private navController: NavController,
+    private helpService: HelpService,
     public connectedUserService: ConnectedUserService,
     private coachingService: CoachingService,
     public proService: PROService,
@@ -51,7 +53,8 @@ export class CoachingImprovmentFeedbackEditPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ionViewDidLoad CoachingImprovmentFeedbackEditPage');
+    this.helpService.setHelp('coaching-game-axis-improvment');
+    // console.log('ionViewDidLoad CoachingImprovmentFeedbackEditPage');
     this.appCoach = this.connectedUserService.getCurrentUser();
     this.route.paramMap.pipe(
       flatMap( (paramMap: ParamMap) => {

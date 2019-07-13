@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HelpWidgetComponent } from './../../pages/widget/help-widget-component';
-import { BookmarkService } from './BookmarkService';
+import { BookmarkService, Bookmark } from './BookmarkService';
 import { ModalController } from '@ionic/angular';
 
 @Injectable()
 export class HelpService {
 
+    public entry: Bookmark = null;
+
     constructor(
-        private modalController: ModalController,
-        private bookmarkService: BookmarkService) {
+        private modalController: ModalController) {
+    }
+    public noHelp() {
+        this.entry = null;
     }
 
-    public addHelp(topic: string) {
-        this.bookmarkService.addBookmarkEntry({
+    public setHelp(topic: string) {
+        this.entry = {
             id: topic + 'Help',
             label : 'Help',
             iconName: 'help',
@@ -22,6 +26,6 @@ export class HelpService {
                     componentProps : { topic}}
                     ).then((mod) => mod.present());
             }
-        });
+        };
     }
 }

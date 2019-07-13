@@ -70,7 +70,7 @@ export class AssessmentEditPage implements OnInit {
       }),
       map(() => {
         this.assessmentService.currentAssessment = this.assessment;
-        console.log('this.assessment.profileType=' + this.assessment.profileType);
+        // console.log('this.assessment.profileType=' + this.assessment.profileType);
         return this.assessment;
       }),
       // load profiles

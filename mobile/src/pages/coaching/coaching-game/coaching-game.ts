@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { LocalAppSettings } from '../../../app/model/settings';
 import { AppSettingsService } from '../../../app/service/AppSettingsService';
 import { ActivatedRoute, ParamMap } from '@angular/router';
@@ -48,6 +49,7 @@ export class CoachingGamePage implements OnInit {
     private route: ActivatedRoute,
     private navController: NavController,
     public coachingService: CoachingService,
+    private helpService: HelpService,
     public userService: UserService,
     public connectedUserService: ConnectedUserService,
     public refereeService: RefereeService,
@@ -58,6 +60,7 @@ export class CoachingGamePage implements OnInit {
   }
 
   ngOnInit() {
+    this.helpService.setHelp('coaching-game');
     // console.log('CoachingGame.ngOnInit()');
     // this.route.url
     this.appSettingsService.get().subscribe( (setting: LocalAppSettings) => {

@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { CompetitionSelectorComponent } from '../../widget/competition-selector';
 import { CompetitionService } from '../../../app/service/CompetitionService';
 import { UserGroup } from '../../../app/model/user';
@@ -48,6 +49,7 @@ export class CoachingEditPage implements OnInit {
     private route: ActivatedRoute,
     private navController: NavController,
     public connectedUserService: ConnectedUserService,
+    private helpService: HelpService,
     public userService: UserService,
     public userGroupService: UserGroupService,
     public refereeService: RefereeService,
@@ -59,6 +61,7 @@ export class CoachingEditPage implements OnInit {
 
   ngOnInit() {
     console.log('CoachingEdit.ngOnInit()');
+    this.helpService.setHelp('coaching-edit');
     this.appCoach = this.connectedUserService.getCurrentUser();
     this.loadCoaching().subscribe((response: ResponseWithData<Coaching>) => {
       // console.log('CoachingEdit: loaded coaching, response=' + JSON.stringify(response));
@@ -220,7 +223,6 @@ export class CoachingEditPage implements OnInit {
       this.navController.navigateRoot(`/coaching/list`);
     } else {
       this.coachingService.save(this.coaching).subscribe(() => {
-        console.log('saved');
         this.navController.navigateRoot(`/coaching/list`);
       });
     }
@@ -247,7 +249,7 @@ export class CoachingEditPage implements OnInit {
           this.toastController.create({ message : 'An email has been sent with the assessment sheet.',
           position: 'bottom', color: 'light',
           duration: 3000 }).then((toast) => toast.present());
-          console.log('sendCoaching =>' + JSON.stringify(res));
+          // console.log('sendCoaching =>' + JSON.stringify(res));
         }),
         catchError( (err: any) => {
           this.sending = false;

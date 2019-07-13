@@ -1,3 +1,4 @@
+import { HelpService } from './../../../app/service/HelpService';
 import { DateService } from 'src/app/service/DateService';
 import { Component, OnInit } from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
@@ -36,10 +37,12 @@ export class CoachingListPage implements OnInit {
     private navController: NavController,
     private dateService: DateService,
     public coachingService: CoachingService,
+    private helpService: HelpService,
     public alertCtrl: AlertController) {
   }
 
   ngOnInit() {
+    this.helpService.setHelp('coaching-list');
     this.searchCoaching();
   }
   doRefresh(event) {
@@ -47,7 +50,7 @@ export class CoachingListPage implements OnInit {
   }
   private searchCoaching(forceServer: boolean = false, event: any = null) {
     this.loading = true;
-    console.log('searchCoaching(' + this.searchInput + ')');
+    // console.log('searchCoaching(' + this.searchInput + ')');
     this.coachingService.searchCoachings(this.searchInput, forceServer ? 'server' : 'default')
       .subscribe((response: ResponseWithData<Coaching[]>) => {
         this.coachings = this.coachingService.sortCoachings(response.data, true);

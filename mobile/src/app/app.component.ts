@@ -1,3 +1,4 @@
+import { HelpService } from './service/HelpService';
 import { UserService } from './service/UserService';
 import { ConnectedUserService } from './service/ConnectedUserService';
 import { LocalAppSettings } from './model/settings';
@@ -27,6 +28,7 @@ export class AppComponent {
     private statusBar: StatusBar,
     private versionService: VersionService,
     public bookmarkService: BookmarkService,
+    public helpService: HelpService,
     public appSettingsService: AppSettingsService,
     private offlinesService: OfflinesService,
     private userService: UserService,
