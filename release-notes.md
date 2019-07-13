@@ -6,6 +6,7 @@ This file lists the development task to do:
 
 - Mobile app installation on IOS device
 - Write a documentation of the application on the web site
+- Online help via context menu and popup
 - On User edit page, as admin, be able to reset password, ask the reset of the password, un/block an account and validate the subscription of new user
 - Organize Angular code in submodules with lazy loading.
 - Settings: limit to referee to a region or a group => defintion of referee group

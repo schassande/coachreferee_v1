@@ -10,8 +10,9 @@ export class BookmarkService {
     private entriesSubject = new Subject<Bookmark[]>();
     private contextSubject = new Subject<Bookmark[]>();
 
+
     public addBookmarkEntry(newEntry: Bookmark): boolean {
-        if (!newEntry || !newEntry.id || !newEntry.url || !newEntry.label) {
+        if (!newEntry || !newEntry.id || (!newEntry.url && !newEntry.handler) || !newEntry.label) {
             console.log('BookmarkService: Entry malformed: ' + JSON.stringify(newEntry));
             return false;
         }
@@ -66,4 +67,5 @@ export interface Bookmark {
     label: string;
     url?: string;
     handler?: any;
+    iconName?: string;
 }

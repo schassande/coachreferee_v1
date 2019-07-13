@@ -32,7 +32,7 @@
     <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" closeDuration="700ms">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-    <ion-list style="margin: 60px 0 60px 0;" *nIf="competitions && competitions.length">
+    <ion-list style="margin: 60px 0 60px 0;" *ngIf="competitions && competitions.length">
         <ion-item *ngFor="let competition of competitions">
             <ion-label style="border: none;" class="listItemButton" (click)="competitionSelected(competition)">{{competition.name}}
                 <br>{{dateService.date2string(competition.date)}}, {{competition.country}}</ion-label>

@@ -1,14 +1,9 @@
-import { SkillProfileService } from './../../app/service/SkillProfileService';
-import { BookmarkService } from './../../app/service/BookmarkService';
+import { HelpService } from './../../app/service/HelpService';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { ConnectedUserService } from './../../app/service/ConnectedUserService';
-import { UserService } from './../../app/service/UserService';
 
 import { User } from './../../app/model/user';
-import { ResponseWithData } from './../../app/service/response';
-import { map } from 'rxjs/operators';
-import { NavController, AlertController, LoadingController } from '@ionic/angular';
 
 
 @Component({
@@ -24,7 +19,7 @@ export class HomePage implements OnInit {
 
   constructor(
       private connectedUserService: ConnectedUserService,
-      private bookmarkService: BookmarkService,
+      private helpService: HelpService,
       private changeDetectorRef: ChangeDetectorRef) {
   }
   public getShortName(): string {
@@ -37,6 +32,7 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
+    this.helpService.addHelp('home');
     this.currentUser = this.connectedUserService.getCurrentUser();
     this.changeDetectorRef.detectChanges();
     window.addEventListener('beforeinstallprompt', (e) => {

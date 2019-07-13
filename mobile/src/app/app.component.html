@@ -24,9 +24,11 @@
                     <ion-button fill="clear" (click)="onToggleForceOffline()">Switch {{ appSetttings.forceOffline ? 'offline' : 'online'}}</ion-button>
                 </ion-item>
                 <ion-item *ngFor="let entry of bookmarkService.getContext() |async">
+                    <ion-icon name="{{entry.iconName}}" scope="start" ngIf="entry.iconName"></ion-icon>
                     <ion-button fill="clear" (click)="handleEntry(entry)">{{entry.label}}</ion-button>
                 </ion-item>
                 <ion-item *ngFor="let entry of bookmarkService.getBookmarks() |async">
+                    <ion-icon name="{{entry.iconName}}" scope="start" *ngIf="entry.iconName"></ion-icon>
                     <ion-button fill="clear" (click)="handleEntry(entry)">{{entry.label}}</ion-button>
                 </ion-item>
             </ion-list>

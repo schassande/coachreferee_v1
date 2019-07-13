@@ -1,10 +1,13 @@
+import { HelpService } from './service/HelpService';
+import { HelpWidgetComponent } from './../pages/widget/help-widget-component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicStorageModule } from '@ionic/storage';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { MarkdownModule } from 'ngx-markdown';
 
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireModule } from 'angularfire2';
@@ -86,7 +89,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     AssessRefereePage, AssessmentEditPage, AssessmentListPage,
     CoachingEditPage, CoachingGamePage, CoachingImprovmentFeedbackEditPage, CoachingListPage, CoachingPositiveFeedbackEditPage,
     CompetitionListPage, CompetitionEditComponent,
-    HomePage,
+    HelpWidgetComponent, HomePage,
     ProEditPage, ProListPage,
     RefereeListPage, RefereeViewPage, RefereeSelectPage, RefereeEditPage,
     SettingsPage,
@@ -96,7 +99,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     SharingComponent, CompetencyComponent, CompetencyPointsComponent, PeriodSelectorComponent, CompetitionSelectorComponent,
     CameraIconComponent, UserSelectorComponent],
   entryComponents: [AppComponent, HomePage, RefereeSelectPage,
-    RefereeEditPage, UserSelectorComponent, CompetitionSelectorComponent],
+    RefereeEditPage, UserSelectorComponent, CompetitionSelectorComponent, HelpWidgetComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -109,7 +112,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     AngularFireAuthModule,
     AngularFirestoreModule.enablePersistence(),
     AngularFireStorageModule,
-    AngularFireFunctionsModule],
+    AngularFireFunctionsModule,
+    MarkdownModule.forRoot({ loader: HttpClient })],
   providers: [
     AppSettingsService,
     AssessmentService,
@@ -119,6 +123,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     ConnectedUserService,
     DateService,
     EmailService,
+    HelpService,
     LocalDatabaseService,
     OfflinesService,
     PROService,
