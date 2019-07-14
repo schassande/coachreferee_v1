@@ -51,7 +51,7 @@ export class VersionService {
                     console.log(`Set locally new version to ${this.applicationVersion}`);
                     this.appSettingsService.setApplicationVersion(this.applicationVersion);
                 } else {
-                    console.log(`No migration tasks (current version is ${local.applicationVersion}).`);
+                    // console.log(`No migration tasks (current version is ${local.applicationVersion}).`);
                 }
             })
         );

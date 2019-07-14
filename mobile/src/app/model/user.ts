@@ -110,6 +110,8 @@ export interface Referee extends Person {
 }
 export type AuthProvider = 'EMAIL' | 'GOOGLE' | 'FACEBOOK';
 export type AppRole = 'USER' | 'PROFILE_ADMIN' | 'ADMIN';
+export type AccountStatus = 'VALIDATION_REQUIRED' | 'ACTIVE' | 'LOCKED' | 'DELETED';
+
 export interface User extends Referee {
     password?: string;
     accountId: string;
@@ -122,6 +124,7 @@ export interface User extends Referee {
     role: AppRole;
     groupIds: string[];
     authProvider?: AuthProvider;
+    accountStatus: AccountStatus;
 }
 
 export interface UserGroup extends PersistentData {

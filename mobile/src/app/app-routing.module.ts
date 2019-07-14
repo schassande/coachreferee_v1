@@ -1,3 +1,4 @@
+import { UserManagerComponent } from './../pages/admin/user-manager/user-manager.component';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
@@ -32,6 +33,7 @@ import { AdminGuard } from './AdminGuard';
 
 const routes: Routes = [
   { path: 'admin', component: AdminHomeComponent, canActivate: [AdminGuard] },
+  { path: 'admin/user-manager', component: UserManagerComponent, canActivate: [AdminGuard] },
 
   { path: 'assessment/list', component: AssessmentListPage, canActivate: [AuthGuard] },
   { path: 'assessment/create', component: AssessmentEditPage, canActivate: [AuthGuard] },

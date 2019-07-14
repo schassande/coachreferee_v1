@@ -83,6 +83,7 @@ export class UserEditPage implements OnInit {
     this.user = {
       id: null,
       accountId: null,
+      accountStatus: 'VALIDATION_REQUIRED',
       role: 'USER',
       version: 0,
       creationDate : new Date(),

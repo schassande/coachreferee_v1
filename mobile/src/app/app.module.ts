@@ -1,3 +1,4 @@
+import { UserManagerComponent } from './../pages/admin/user-manager/user-manager.component';
 import { HelpService } from './service/HelpService';
 import { HelpWidgetComponent } from './../pages/widget/help-widget-component';
 import { NgModule } from '@angular/core';
@@ -85,7 +86,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
 }
 @NgModule({
   declarations: [AppComponent,
-    AdminHomeComponent,
+    AdminHomeComponent, UserManagerComponent,
     AssessRefereePage, AssessmentEditPage, AssessmentListPage,
     CoachingEditPage, CoachingGamePage, CoachingImprovmentFeedbackEditPage, CoachingListPage, CoachingPositiveFeedbackEditPage,
     CompetitionListPage, CompetitionEditComponent,

@@ -6,7 +6,7 @@ import { ConnectedUserService } from './../../../app/service/ConnectedUserServic
 import { ResponseWithData } from './../../../app/service/response';
 import { User } from './../../../app/model/user';
 import { Subject, from } from 'rxjs';
-import { NavController, LoadingController } from '@ionic/angular';
+import { NavController, LoadingController, AlertController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/service/UserService';
 
@@ -23,9 +23,9 @@ export class UserLoginComponent implements OnInit {
   errors: any[] = [];
 
   constructor(
+    private alertCtrl: AlertController,
     private appSettingsService: AppSettingsService,
     private connectedUserService: ConnectedUserService,
-    private firestore: AngularFirestore,
     private loadingController: LoadingController,
     private navController: NavController,
     private userService: UserService,
@@ -39,7 +39,7 @@ export class UserLoginComponent implements OnInit {
       map((settings: LocalAppSettings) => {
         this.email = settings.lastUserEmail;
         this.password = settings.lastUserPassword;
-        console.log('Set email and password from local settings: ', this.email, this.password);
+        // console.log('Set email and password from local settings: ', this.email, this.password);
       })).subscribe();
   }
 
@@ -62,7 +62,10 @@ export class UserLoginComponent implements OnInit {
           this.loadingController.dismiss();
           if (this.connectedUserService.isConnected()) {
             this.navController.navigateRoot(['/home']);
-          } else {
+          } else if (ruser.error && ruser.error.error) {
+            this.errors = [ruser.error.error];
+            this.alertCtrl.create({message: ruser.error.error}).then( (alert) => alert.present() );
+          } else if (ruser.error) {
             this.errors = [ruser.error];
           }
         })

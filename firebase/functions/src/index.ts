@@ -149,6 +149,235 @@ export const sendAssessment = func.https.onRequest((request, response) => {
     });
 })
 
+export const sendNewAccountToAdmin = func.https.onRequest((request, response) => {
+    console.log('sendAssessment: request=' + request.method 
+        + ', \nheaders=' + JSON.stringify(request.headers, null, 2) 
+        + ', \nbody=' + JSON.stringify(request.body, null, 2));
+    const corsOptions: any = {
+        origin: (origin: string, callback: any) => {
+            // console.log('sendAssessment: origin=' + origin);
+            callback(null, true);
+            // ['*', 'https://app.coachreferee.com'],
+        },
+        optionsSuccessStatus: 200
+    }
+    cors(corsOptions)(request, response, () => {
+        //get token
+        const tokenStr = request.get('Authorization');
+        if(!tokenStr) {
+            throw new Error('Token required');
+        }
+        const tokenId = tokenStr.split('Bearer ')[1];
+        // console.log('sendAssessment: token=' + tokenId);
+        //Verify token
+        return admin.auth().verifyIdToken(tokenId)
+            .then((decoded: admin.auth.DecodedIdToken) => {
+                // console.log('decoded: ' + decoded);
+                // load data from datastore
+                return loadUser(request, response)
+                    .then( (user: User) => {
+                        //Build email
+                        const subject = `[CoachReferee.com] Account validation required: ${user.firstName} ${user.lastName}`;
+                        const email = {
+                            from: gmailEmail,
+                            to: user.email,
+                            subject,
+                            html: `Hi Admin, 
+                                    <br>${user.firstName} ${user.lastName} has created an account. A validation from an admin is required.
+                                    <br><a href="https://app.coachreferee.com/admin/users">https://app.coachreferee.com/admin/users</a>
+                                    <br>
+                                    <br>Best regard
+                                    <br>Coach Referee App`
+                        };
+                        //Send email
+                        transporter.sendMail(email, 
+                            (erro: any) => {
+                                if(erro){
+                                    return response.send(erro.toString());
+                                } else {
+                                    return response.send({ data: 'ok', error: null});
+                                }
+                            });
+                        return 'ok';
+                    }).catch((err: any) => {
+                        console.log(err);
+                        response.status(500).send({ error: err});
+                    })
+            })
+    });
+})
+
+export const sendNewAccountToUser = func.https.onRequest((request, response) => {
+    console.log('sendAssessment: request=' + request.method 
+        + ', \nheaders=' + JSON.stringify(request.headers, null, 2) 
+        + ', \nbody=' + JSON.stringify(request.body, null, 2));
+    const corsOptions: any = {
+        origin: (origin: string, callback: any) => {
+            // console.log('sendAssessment: origin=' + origin);
+            callback(null, true);
+            // ['*', 'https://app.coachreferee.com'],
+        },
+        optionsSuccessStatus: 200
+    }
+    cors(corsOptions)(request, response, () => {
+        //get token
+        const tokenStr = request.get('Authorization');
+        if(!tokenStr) {
+            throw new Error('Token required');
+        }
+        const tokenId = tokenStr.split('Bearer ')[1];
+        // console.log('sendAssessment: token=' + tokenId);
+        //Verify token
+        return admin.auth().verifyIdToken(tokenId)
+            .then((decoded: admin.auth.DecodedIdToken) => {
+                // console.log('decoded: ' + decoded);
+                // load data from datastore
+                return loadUser(request, response)
+                    .then( (user: User) => {
+                        //Build email
+                        const subject = `[CoachReferee.com] Account created`;
+                        const email = {
+                            from: gmailEmail,
+                            to: user.email,
+                            subject,
+                            html: `Hi ${user.firstName} ${user.lastName}, 
+                                    <br>You created an account on the app CoachRefere.com. Welcome !
+                                    <br>In order to control the data access a validation is required by the application admin.
+                                    <br>
+                                    <br>Best regard
+                                    <br>Coach Referee App`
+                        };
+                        //Send email
+                        transporter.sendMail(email, 
+                            (erro: any) => {
+                                if(erro){
+                                    return response.send(erro.toString());
+                                } else {
+                                    return response.send({ data: 'ok', error: null});
+                                }
+                            });
+                        return 'ok';
+                    }).catch((err: any) => {
+                        console.log(err);
+                        response.status(500).send({ error: err});
+                    })
+            })
+    });
+})
+
+export const sendAccountValidated = func.https.onRequest((request, response) => {
+    console.log('sendAssessment: request=' + request.method 
+        + ', \nheaders=' + JSON.stringify(request.headers, null, 2) 
+        + ', \nbody=' + JSON.stringify(request.body, null, 2));
+    const corsOptions: any = {
+        origin: (origin: string, callback: any) => {
+            // console.log('sendAssessment: origin=' + origin);
+            callback(null, true);
+            // ['*', 'https://app.coachreferee.com'],
+        },
+        optionsSuccessStatus: 200
+    }
+    cors(corsOptions)(request, response, () => {
+        //get token
+        const tokenStr = request.get('Authorization');
+        if(!tokenStr) {
+            throw new Error('Token required');
+        }
+        const tokenId = tokenStr.split('Bearer ')[1];
+        // console.log('sendAssessment: token=' + tokenId);
+        //Verify token
+        return admin.auth().verifyIdToken(tokenId)
+            .then((decoded: admin.auth.DecodedIdToken) => {
+                // console.log('decoded: ' + decoded);
+                // load data from datastore
+                return loadUser(request, response)
+                    .then( (user: User) => {
+                        //Build email
+                        const subject = `[CoachReferee.com] Account validated`;
+                        const email = {
+                            from: gmailEmail,
+                            to: user.email,
+                            subject,
+                            html: `Hi ${user.firstName} ${user.lastName}, 
+                                    <br>Your account on the app CoachRefere.com has been validated !
+                                    <br>Now you can go on app: <a href="https://app.coachreferee.com">https://app.coachreferee.com</a>
+                                    <br>
+                                    <br>Best regard
+                                    <br>Coach Referee App`
+                        };
+                        //Send email
+                        transporter.sendMail(email, 
+                            (erro: any) => {
+                                if(erro){
+                                    return response.send(erro.toString());
+                                } else {
+                                    return response.send({ data: 'ok', error: null});
+                                }
+                            });
+                        return 'ok';
+                    }).catch((err: any) => {
+                        console.log(err);
+                        response.status(500).send({ error: err});
+                    })
+            })
+    });
+})
+export const sendAccountNotValidated = func.https.onRequest((request, response) => {
+    console.log('sendAssessment: request=' + request.method 
+        + ', \nheaders=' + JSON.stringify(request.headers, null, 2) 
+        + ', \nbody=' + JSON.stringify(request.body, null, 2));
+    const corsOptions: any = {
+        origin: (origin: string, callback: any) => {
+            // console.log('sendAssessment: origin=' + origin);
+            callback(null, true);
+            // ['*', 'https://app.coachreferee.com'],
+        },
+        optionsSuccessStatus: 200
+    }
+    cors(corsOptions)(request, response, () => {
+        //get token
+        const tokenStr = request.get('Authorization');
+        if(!tokenStr) {
+            throw new Error('Token required');
+        }
+        const tokenId = tokenStr.split('Bearer ')[1];
+        // console.log('sendAssessment: token=' + tokenId);
+        //Verify token
+        return admin.auth().verifyIdToken(tokenId)
+            .then((decoded: admin.auth.DecodedIdToken) => {
+                // console.log('decoded: ' + decoded);
+                // load data from datastore
+                return loadUser(request, response)
+                    .then( (user: User) => {
+                        //Build email
+                        const subject = `[CoachReferee.com] Account not validated`;
+                        const email = {
+                            from: gmailEmail,
+                            to: user.email,
+                            subject,
+                            html: `Hi ${user.firstName} ${user.lastName}, 
+                                    <br>Your account on the app CoachRefere.com has NOT been validated !
+                                    <br>
+                                    <br>Best regard
+                                    <br>Coach Referee App`
+                        };
+                        //Send email
+                        transporter.sendMail(email, 
+                            (erro: any) => {
+                                if(erro){
+                                    return response.send(erro.toString());
+                                } else {
+                                    return response.send({ data: 'ok', error: null});
+                                }
+                            });
+                        return 'ok';
+                    }).catch((err: any) => {
+                        console.log(err);
+                        response.status(500).send({ error: err});
+                    })
+            })
+    });
+})
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////// PRIVATE FUNCTIONS /////////////////////////////////////////
@@ -373,7 +602,7 @@ function coachingAsEmailBody(data: CoachingData): string {
 }
 
 function coachingAsEmailSubject(coaching: Coaching): string {
-    return `Referee Coaching ${coaching.competition}, ${getCoachingDateAsString(coaching)}, ${
+    return `[CoachReferee.com] Referee Coaching ${coaching.competition}, ${getCoachingDateAsString(coaching)}, ${
         coaching.timeSlot}, Field ${coaching.field}`;
 }
 function getCoachingDateAsString(coaching: Coaching) {
@@ -386,6 +615,10 @@ function getCoachingDateAsString(coaching: Coaching) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // ASSESSMENT PRIVATE FUNCTIONS //
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+async function loadUser(request:any, response: any): Promise<User> {
+    const user: User = await loadFromDb(collectionUser, request.body.data.userId, response) as User;
+    return user;
+}
 
 async function loadAssessmentData(request:any, response: any): Promise<AssessmentData> {
     const assessment: Assessment = await loadFromDb(collectionAssessment, request.body.data.assessmentId, response) as Assessment;
@@ -503,7 +736,7 @@ function competency2str(comp: Competency): string {
 }
 
 function assessmentAsEmailSubject(assessment: Assessment): string {
-    return `Referee Assessment ${assessment.competition} ${assessment.profileName} ${getAssessmentDateAsString(assessment)} ${assessment.refereeShortName}`;
+    return `[CoachReferee.com] Referee Assessment ${assessment.competition} ${assessment.profileName} ${getAssessmentDateAsString(assessment)} ${assessment.refereeShortName}`;
 }
 
 function getAssessmentDateAsString(assessment: Assessment) {

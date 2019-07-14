@@ -99,6 +99,12 @@ module.exports = function(grunt) {
     grunt.registerTask('function-deploy', 'Deploy the backend function only', [
         'exec:deploy-function'
     ]);
+    /* 
+    lancer la compile ts=> js
+    Copy firebase/functions/lib/firebase/functions/src firebase/functions/lib 
+    dans firebase lancer firebase deploy --only functions
+    */
+
     grunt.registerTask('www-deploy', 'Deploy the web site only', [
         'exec:deploy-www'
     ]);

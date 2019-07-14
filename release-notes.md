@@ -6,8 +6,6 @@ This file lists the development task to do:
 
 Priority 1:
 
-- Mobile app installation on IOS device
-- On User edit page, as admin, be able to reset password, ask the reset of the password, un/block an account and validate the subscription of new user
 - Create user group used to simplify the sharing
 - Solution to import csv of referees for a competition
 - Enter referee allocation => create coaching or assessment
@@ -27,12 +25,14 @@ Priority 2:
 - Auto detect disconnected mode.
 - Organize Angular code in submodules with lazy loading.
 
-## Versin 2.2.2  (current)
+## Versin 2.2.2
 
 - API key is no more in Git repository
 - Write a documentation of the application on the web site
+- Create an admin page of users: delete account, ask the reset of the password, un/block an account and validate the subscription of new user
+- On User edit page the user can delete his account
 
-## Versin 2.2.1
+## Versin 2.2.1 (current)
 
 - On any page, an help is available via context menu. Help is based on markdown file.
 

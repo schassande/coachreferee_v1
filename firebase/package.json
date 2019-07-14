@@ -9,8 +9,8 @@
         "target-www": "firebase target:apply hosting  www coachreferee-site",
         "target-app": "firebase target:apply hosting  app refcoach-676e3",
         "deploy-www": "firebase deploy --only hosting:www",
-        "deploy-app": "firebase deploy --only hosting:app"
-
+        "deploy-app": "firebase deploy --only hosting:app",
+        "deploy-function": "firebase deploy --only functions"
     },
     "private": true
 }

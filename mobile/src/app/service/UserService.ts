@@ -1,6 +1,7 @@
+import { AngularFireFunctions } from '@angular/fire/functions';
 import { LocalAppSettings } from './../model/settings';
 import { AppSettingsService } from './AppSettingsService';
-import { AlertController, ToastController, LoadingController, ModalController } from '@ionic/angular';
+import { AlertController, ToastController, LoadingController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 
 import { ResponseWithData, Response } from './response';
@@ -22,7 +23,7 @@ export class UserService  extends RemotePersistentDataService<User> {
         private appSettingsService: AppSettingsService,
         private alertCtrl: AlertController,
         private loadingController: LoadingController,
-        private modalController: ModalController,
+        private angularFireFunctions: AngularFireFunctions
     ) {
         super(db, toastController);
     }
@@ -41,6 +42,9 @@ export class UserService  extends RemotePersistentDataService<User> {
         }
         if (item.region === undefined || item.region === null) {
             item.region = 'Others';
+        }
+        if (!item.accountStatus) {
+            item.accountStatus = 'ACTIVE';
         }
     }
 
@@ -65,6 +69,9 @@ export class UserService  extends RemotePersistentDataService<User> {
                 }),
                 flatMap((ruser) => {
                     if (ruser.data) {
+                        // TODO send an email to admin with the account to validate
+                        this.sendNewAccountToAdmin(ruser.data.id);
+                        this.sendNewAccountToUser(ruser.data.id);
                         this.appSettingsService.setLastUser(user.email, password);
                         return this.autoLogin();
                     } else {
@@ -126,7 +133,25 @@ export class UserService  extends RemotePersistentDataService<User> {
             map( (ruser: ResponseWithData<User>) => {
                 // console.log('UserService.login(' + email + ', ' + password + ') ruser=', ruser);
                 if (ruser.data) {
-                    this.connectedUserService.userConnected(ruser.data, credential);
+                    switch (ruser.data.accountStatus) {
+                    case 'ACTIVE':
+                        this.connectedUserService.userConnected(ruser.data, credential);
+                        break;
+                    case 'DELETED':
+                        ruser.data = null;
+                        ruser.error = { error : 'The account \'' + email + '\' has been removed.', errorCode : 1234 };
+                        break;
+                    case 'LOCKED':
+                        ruser.data = null;
+                        ruser.error = { error : 'The account \'' + email + '\' has been locked. Please contact the administrator.',
+                                        errorCode : 1234 };
+                        break;
+                    case 'VALIDATION_REQUIRED':
+                        ruser.data = null;
+                        ruser.error = { error : 'A validation is still required for the account \'' + email + '\'.',
+                                        errorCode : 1234 };
+                        break;
+                    }
                 } else if (firebase.auth().currentUser && ruser.error === null) {
                     ruser.error = { error : 'The account \'' + email + '\' has been removed.', errorCode : 1234 };
                 }
@@ -313,6 +338,7 @@ export class UserService  extends RemotePersistentDataService<User> {
         return {
             id: null,
             accountId: cred.user.uid,
+            accountStatus: 'VALIDATION_REQUIRED',
             role: 'USER',
             authProvider,
             version: 0,
@@ -367,4 +393,16 @@ export class UserService  extends RemotePersistentDataService<User> {
             this.delete(user.id).subscribe();
         }
     }
-}
+    public sendNewAccountToAdmin(userId: string): Observable<any> {
+        return this.angularFireFunctions.httpsCallable('sendNewAccountToAdmin')({userId});
+    }
+    public sendNewAccountToUser(userId: string): Observable<any> {
+        return this.angularFireFunctions.httpsCallable('sendNewAccountToUser')({userId});
+    }
+    public sendAccountValidated(userId: string): Observable<any> {
+        return this.angularFireFunctions.httpsCallable('sendAccountValidated')({userId});
+    }
+    public sendAccountNotValidated(userId: string): Observable<any> {
+        return this.angularFireFunctions.httpsCallable('sendAccountNotValidated')({userId});
+    }
+  }
