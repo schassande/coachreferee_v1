@@ -4,26 +4,35 @@ This file lists the development task to do:
 
 ## Possibles features by priority
 
+Priority 1:
+
 - Mobile app installation on IOS device
-- Write a documentation of the application on the web site
 - On User edit page, as admin, be able to reset password, ask the reset of the password, un/block an account and validate the subscription of new user
-- Organize Angular code in submodules with lazy loading.
+- Create user group used to simplify the sharing
+- Solution to import csv of referees for a competition
+- Enter referee allocation => create coaching or assessment
+
+Priority 2:
+
+- In context menu, of coaching game, add the next and the previous game
 - Settings: limit to referee to a region or a group => defintion of referee group
 - Find a solution to force pushing data when switch online
 - Function sendXpReport
-- Create user group used to simplify the sharing
-- Solution to import csv of referees
-- Enter referee allocation => create coaching or assessment
 - Offline photo for users & referees
 - Create a trigger to delete unused photo on storage every week end
 - Referee list : infinite scroll, group by short name or level
 - Coaching list : infinite scroll
 - Assessment list : infinite scroll
 - In coaching-list use a different color for the futur coaching
-- In context menu, of coaching game, add the next and the previous game
 - Auto detect disconnected mode.
+- Organize Angular code in submodules with lazy loading.
 
-## Versin 2.2.1  (current)
+## Versin 2.2.2  (current)
+
+- API key is no more in Git repository
+- Write a documentation of the application on the web site
+
+## Versin 2.2.1
 
 - On any page, an help is available via context menu. Help is based on markdown file.
 
@@ -35,8 +44,7 @@ This file lists the development task to do:
 - Add an admin page : migrate profile and account management links on this page
 - Create a login page (Remove the feature to select an user on login page: only email/password, Logout navigate on Login page, move autologin into that page)
 
-
-## Version 2.1.3 
+## Version 2.1.3
 
 - Auto clean the context menu list
 - Show a Loading screen on login

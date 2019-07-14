@@ -1,8 +1,6 @@
 import { COACH_LEVELS_EURO } from './coachLevelEuropean';
-import { OfflinesService } from './../../app/service/OfflineService';
-import { AngularFirestore } from 'angularfire2/firestore';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { map, flatMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { AlertController, ToastController, NavController } from '@ionic/angular';
 import { Observable, of, concat } from 'rxjs';
 import { UserService } from '../../app/service/UserService';
@@ -13,7 +11,6 @@ import { RefereeService } from '../../app/service/RefereeService';
 import { AppSettingsService } from '../../app/service/AppSettingsService';
 import { LocalAppSettings } from '../../app/model/settings';
 import { AssessmentService } from '../../app/service/AssessmentService';
-import { ConnectedUserService } from '../../app/service/ConnectedUserService';
 import { Referee, Gender, RefereeLevel, RefereeCategory } from './../../app/model/user';
 import { ExportedData } from './../../app/model/settings';
 
@@ -42,6 +39,8 @@ export class SettingsPage implements OnInit {
   @ViewChild('inputReferees') inputReferees: ElementRef;
   launchMode = '';
   showDebugInfo = false;
+  deferredPrompt;
+  showInstallBtn = false;
 
   constructor(
     private navController: NavController,
@@ -59,6 +58,14 @@ export class SettingsPage implements OnInit {
 
   ngOnInit() {
     this.computeLaunchMode();
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      e.preventDefault();
+      // Stash the event so it can be triggered later on the button event.
+      this.deferredPrompt = e;
+    // Update UI by showing a button to notify the user they can add to home screen
+      this.showInstallBtn = true;
+    });
     this.appSettingsService.get().subscribe((appSettings: LocalAppSettings) => {
       if (appSettings.forceOffline === undefined) {
         appSettings.forceOffline = false;
@@ -312,6 +319,22 @@ export class SettingsPage implements OnInit {
   onNbPeriodChange() {
     this.settings.nbPeriod = Math.min(4, Math.max(this.settings.nbPeriod, 1));
     this.saveSettings(false);
+  }
+
+  addToHome() {
+    // hide our user interface that shows our button
+    // Show the prompt
+    this.deferredPrompt.prompt();
+    // Wait for the user to respond to the prompt
+    this.deferredPrompt.userChoice
+      .then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the prompt');
+        } else {
+          console.log('User dismissed the prompt');
+        }
+        this.deferredPrompt = null;
+      });
   }
   onSwipe(event) {
     // console.log('onSwipe', event);

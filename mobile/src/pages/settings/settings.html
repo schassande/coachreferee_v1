@@ -25,6 +25,9 @@
             <ion-label>NB Period</ion-label>
             <ion-input type="number" min="1" max="4" [(ngModel)]="settings.nbPeriod" (ionChange)="onNbPeriodChange()"></ion-input>
         </ion-item>
+        <ion-item (click)="addToHome()" *ngIf="showInstallBtn">
+            <ion-label class="menu-entry">Install on device</ion-label>
+        </ion-item>
     </ion-list>
     <div style="text-align: center; margin-top: 10px;" *ngIf="!env.production">
         <span>
