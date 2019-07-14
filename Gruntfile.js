@@ -23,9 +23,9 @@ module.exports = function(grunt) {
                 cwd: 'mobile',
                 cmd: 'node ./replace.build.js',
             },
-            'commit': {
+            'commit-version': {
                 cwd: 'mobile',
-                cmd: 'node ./replace.build.js',
+                cmd: 'git commit -a -m "version"',
             },
             'app-build': {
                 cwd: 'mobile',
@@ -80,6 +80,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-patch', 'Upgrade to next patch version, commit, build, deploy the mobile app only', [
         'exec:app-version-patch',
         'exec:app-apply-version',
+        'exec:commit-version',
         'exec:app-build',
         'exec:deploy-app'
     ]);
