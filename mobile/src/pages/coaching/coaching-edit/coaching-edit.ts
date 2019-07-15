@@ -219,7 +219,7 @@ export class CoachingEditPage implements OnInit {
   }
 
   saveNback() {
-    if (this.coaching.closed || !this.isValid() || !this.coachingOwner)  {
+    if (!this.coaching || this.coaching.closed || !this.isValid() || !this.coachingOwner)  {
       this.navController.navigateRoot(`/coaching/list`);
     } else {
       this.coachingService.save(this.coaching).subscribe(() => {
