@@ -1,3 +1,4 @@
+import { DataRegion } from './../../app/model/common';
 import { COACH_LEVELS_EURO } from './coachLevelEuropean';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { map } from 'rxjs/operators';
@@ -11,7 +12,7 @@ import { RefereeService } from '../../app/service/RefereeService';
 import { AppSettingsService } from '../../app/service/AppSettingsService';
 import { LocalAppSettings } from '../../app/model/settings';
 import { AssessmentService } from '../../app/service/AssessmentService';
-import { Referee, Gender, RefereeLevel, RefereeCategory } from './../../app/model/user';
+import { Referee, Gender, RefereeLevel, RefereeCategory, AccountStatus } from './../../app/model/user';
 import { ExportedData } from './../../app/model/settings';
 
 import { LEVELS_AUS } from './levelAus';
@@ -146,7 +147,7 @@ export class SettingsPage implements OnInit {
       speakingLanguages: this.getStringList(json, 'speakingLanguages', ['EN']),
       referee : {
           refereeLevel: this.getRefereeLevel(json, 'refereeLevel', 'EURO_1'),
-          refereeCategory : 'OPEN',
+          refereeCategory : this.getRefereeCategory(json, 'OPEN'),
           nextRefereeLevel: this.getRefereeLevel(json, 'nextRefereeLevel', null),
       },
       refereeCoach: {
