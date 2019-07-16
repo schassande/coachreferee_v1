@@ -1,4 +1,3 @@
-import { DataRegion } from './../../app/model/common';
 import { COACH_LEVELS_EURO } from './coachLevelEuropean';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { map } from 'rxjs/operators';
@@ -12,7 +11,7 @@ import { RefereeService } from '../../app/service/RefereeService';
 import { AppSettingsService } from '../../app/service/AppSettingsService';
 import { LocalAppSettings } from '../../app/model/settings';
 import { AssessmentService } from '../../app/service/AssessmentService';
-import { Referee, Gender, RefereeLevel, RefereeCategory, AccountStatus } from './../../app/model/user';
+import { Referee, Gender, RefereeLevel, RefereeCategory } from './../../app/model/user';
 import { ExportedData } from './../../app/model/settings';
 
 import { LEVELS_AUS } from './levelAus';
@@ -123,7 +122,7 @@ export class SettingsPage implements OnInit {
       csv({ output: 'json', trim: true, noheader: false, delimiter: ';', ignoreEmpty: true, checkType: true})
         .fromString(reader.result as string).then((jsons) => {
           jsons.forEach(json => {
-            this.importReferee(json);
+            // this.importReferee(json);
           });
         });
    };

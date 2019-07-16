@@ -1,4 +1,3 @@
-import { UserManagerComponent } from './../pages/admin/user-manager/user-manager.component';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
@@ -16,6 +15,7 @@ import { CompetitionEditComponent } from '../pages/competition/competition-edit/
 import { HomePage } from '../pages/home/home';
 import { ProEditPage } from '../pages/pro/pro-edit/pro-edit';
 import { ProListPage } from '../pages/pro/pro-list/pro-list';
+import { RefereeImportComponent } from '../pages/referee/referee-import/referee-import.component';
 import { RefereeListPage } from '../pages/referee/referee-list/referee-list';
 import { RefereeViewPage } from '../pages/referee/referee-view/referee-view';
 import { SettingsPage } from '../pages/settings/settings';
@@ -27,6 +27,7 @@ import { UserEditPage } from '../pages/user/user-edit/user-edit';
 import { XpEditComponent } from '../pages/xp/xp-edit/xp-edit.component';
 import { XpListComponent } from '../pages/xp/xp-list/xp-list.component';
 import { UserLoginComponent } from 'src/pages/user/user-login/user-login.component';
+import { UserManagerComponent } from './../pages/admin/user-manager/user-manager.component';
 
 import { AuthGuard } from './AuthGuard';
 import { AdminGuard } from './AdminGuard';
@@ -59,6 +60,7 @@ const routes: Routes = [
 
   { path: 'referee/list', component: RefereeListPage, canActivate: [AuthGuard] },
   { path: 'referee/view/:id', component: RefereeViewPage, canActivate: [AuthGuard] },
+  { path: 'referee/import', component: RefereeImportComponent, canActivate: [AdminGuard] },
   // MODAL { path: 'referee/select', component: RefereeSelectPage, canActivate: [AuthGuard] },
   // MODAL { path: 'referee/edit/:id', component: RefereeEditPage, canActivate: [AuthGuard] },
 

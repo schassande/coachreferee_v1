@@ -26,6 +26,9 @@ export class RefereeService extends RemotePersistentDataService<Referee> {
     getPriority(): number {
         return 2;
     }
+    public findByShortName(shortName: string): Observable<ResponseWithData<Referee[]>> {
+        return super.filter(super.all(), this.getFilterByShortName(shortName));
+    }
 
     public searchReferees(text: string): Observable<ResponseWithData<Referee[]>> {
         return super.filter(super.all(), this.getFilterByText(text));
@@ -38,5 +41,9 @@ export class RefereeService extends RemotePersistentDataService<Referee> {
                 || this.stringContains(validText, referee.firstName)
                 || this.stringContains(validText, referee.lastName);
         };
+    }
+    public getFilterByShortName(text: string): PersistentDataFilter<Referee> {
+        const validText = text && text !== null  && text.trim().length > 0 ? text.trim() : null;
+        return validText === null ? null : (referee: Referee) => validText === referee.shortName;
     }
 }

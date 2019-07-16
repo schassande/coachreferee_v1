@@ -1,4 +1,3 @@
-import { UserManagerComponent } from './../pages/admin/user-manager/user-manager.component';
 import { HelpService } from './service/HelpService';
 import { HelpWidgetComponent } from './../pages/widget/help-widget-component';
 import { NgModule } from '@angular/core';
@@ -60,6 +59,7 @@ import { PeriodSelectorComponent } from '../pages/widget/period-selector-compone
 import { ProEditPage } from '../pages/pro/pro-edit/pro-edit';
 import { ProListPage } from '../pages/pro/pro-list/pro-list';
 import { RefereeEditPage } from '../pages/referee/referee-edit/referee-edit';
+import { RefereeImportComponent } from '../pages/referee/referee-import/referee-import.component';
 import { RefereeListPage } from '../pages/referee/referee-list/referee-list';
 import { RefereeSelectPage } from '../pages/referee/referee-select/referee-select';
 import { RefereeViewPage } from '../pages/referee/referee-view/referee-view';
@@ -70,6 +70,7 @@ import { SkillProfileListPage } from '../pages/skill-profile/skill-profile-list/
 import { SkillSetEditPage } from '../pages/skill-profile/skill-set-edit/skill-set-edit';
 import { UserEditPage } from '../pages/user/user-edit/user-edit';
 import { UserLoginComponent } from '../pages/user/user-login/user-login.component';
+import { UserManagerComponent } from './../pages/admin/user-manager/user-manager.component';
 import { XpListComponent } from '../pages/xp/xp-list/xp-list.component';
 import { XpEditComponent } from '../pages/xp/xp-edit/xp-edit.component';
 
@@ -86,7 +87,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
 }
 @NgModule({
   declarations: [AppComponent,
-    AdminHomeComponent, UserManagerComponent,
+    AdminHomeComponent, UserManagerComponent, RefereeImportComponent,
     AssessRefereePage, AssessmentEditPage, AssessmentListPage,
     CoachingEditPage, CoachingGamePage, CoachingImprovmentFeedbackEditPage, CoachingListPage, CoachingPositiveFeedbackEditPage,
     CompetitionListPage, CompetitionEditComponent,
