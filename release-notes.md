@@ -25,12 +25,13 @@ Priority 2:
 - Auto detect disconnected mode.
 - Organize Angular code in submodules with lazy loading.
 
-## Versin 2.2.2
+## Versin 2.3.0 (Next)
 
 - API key is no more in Git repository
 - Write a documentation of the application on the web site
 - Create an admin page of users: delete account, ask the reset of the password, un/block an account and validate the subscription of new user
 - On User edit page the user can delete his account
+- Import of referees via a CSV file
 
 ## Versin 2.2.1 (current)
 
