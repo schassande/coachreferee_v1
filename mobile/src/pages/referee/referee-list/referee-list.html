@@ -19,7 +19,21 @@
 </ion-header>
 <ion-content (swipe)="onSwipe($event)">
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button (click)="newReferee()" class="plusButton">+</ion-fab-button>
+        <ion-row>
+            <ion-col>
+                <ion-fab-button (click)="exportReferees()">
+                    <ion-icon name="download"></ion-icon>
+                </ion-fab-button>
+            </ion-col>
+            <ion-col>
+                <ion-fab-button routerLink="/referee/import">
+                    <ion-icon name="attach"></ion-icon>
+                </ion-fab-button>
+            </ion-col>
+            <ion-col>
+                <ion-fab-button (click)="newReferee()" class="plusButton">+</ion-fab-button>
+            </ion-col>
+        </ion-row>
     </ion-fab>
     <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
     <ion-item>

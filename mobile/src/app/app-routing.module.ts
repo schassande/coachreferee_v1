@@ -60,7 +60,7 @@ const routes: Routes = [
 
   { path: 'referee/list', component: RefereeListPage, canActivate: [AuthGuard] },
   { path: 'referee/view/:id', component: RefereeViewPage, canActivate: [AuthGuard] },
-  { path: 'referee/import', component: RefereeImportComponent, canActivate: [AdminGuard] },
+  { path: 'referee/import', component: RefereeImportComponent, canActivate: [AuthGuard] },
   // MODAL { path: 'referee/select', component: RefereeSelectPage, canActivate: [AuthGuard] },
   // MODAL { path: 'referee/edit/:id', component: RefereeEditPage, canActivate: [AuthGuard] },
 
