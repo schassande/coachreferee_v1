@@ -34,6 +34,7 @@ export interface PositiveFeedback {
 }
 
 export interface Coaching extends PersistentData, SharedElement {
+    importGameId?: string;
     competition: string;
     competitionId?: string;
     date: Date;

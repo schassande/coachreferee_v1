@@ -284,6 +284,9 @@ export class UserService  extends RemotePersistentDataService<User> {
             }),
         );
     }
+    public findByShortName(shortName: string): Observable<ResponseWithData<User[]>> {
+        return this.query(this.getCollectionRef().where('shortName', '==', shortName), 'default');
+    }
 
     public authWithGoogle(): Observable<ResponseWithData<User>> {
         return this.authWith(new firebase.auth.GoogleAuthProvider(), 'GOOGLE');
@@ -405,4 +408,4 @@ export class UserService  extends RemotePersistentDataService<User> {
     public sendAccountNotValidated(userId: string): Observable<any> {
         return this.angularFireFunctions.httpsCallable('sendAccountNotValidated')({userId});
     }
-  }
+}

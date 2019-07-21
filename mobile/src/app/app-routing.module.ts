@@ -10,6 +10,7 @@ import { CoachingGamePage } from '../pages/coaching/coaching-game/coaching-game'
 import { CoachingImprovmentFeedbackEditPage } from '../pages/coaching/coaching-improvment-feedback-edit/coaching-improvment-feedback-edit';
 import { CoachingListPage } from '../pages/coaching/coaching-list/coaching-list';
 import { CoachingPositiveFeedbackEditPage } from '../pages/coaching/coaching-positive-feedback-edit/coaching-positive-feedback-edit';
+import { CompetitionImportComponent } from '../pages/competition/competition-import/competition-import.component';
 import { CompetitionListPage } from '../pages/competition/competition-list/competition-list';
 import { CompetitionEditComponent } from '../pages/competition/competition-edit/competition-edit.component';
 import { HomePage } from '../pages/home/home';
@@ -51,6 +52,7 @@ const routes: Routes = [
         component: CoachingPositiveFeedbackEditPage, canActivate: [AuthGuard] },
 
   { path: 'competition/list', component: CompetitionListPage, canActivate: [AuthGuard] },
+  { path: 'competition/import', component: CompetitionImportComponent, canActivate: [AuthGuard] },
   { path: 'competition/edit/:id', component: CompetitionEditComponent, canActivate: [AuthGuard] },
 
   { path: 'home', component: HomePage, canActivate: [AuthGuard]},

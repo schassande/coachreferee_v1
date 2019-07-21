@@ -50,6 +50,7 @@ import { CoachingGamePage } from '../pages/coaching/coaching-game/coaching-game'
 import { CoachingImprovmentFeedbackEditPage } from '../pages/coaching/coaching-improvment-feedback-edit/coaching-improvment-feedback-edit';
 import { CoachingListPage } from '../pages/coaching/coaching-list/coaching-list';
 import { CoachingPositiveFeedbackEditPage } from '../pages/coaching/coaching-positive-feedback-edit/coaching-positive-feedback-edit';
+import { CompetitionImportComponent } from '../pages/competition/competition-import/competition-import.component';
 import { CompetitionListPage } from '../pages/competition/competition-list/competition-list';
 import { CompetitionEditComponent } from '../pages/competition/competition-edit/competition-edit.component';
 import { CompetitionSelectorComponent } from './../pages/widget/competition-selector';
@@ -90,7 +91,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     AdminHomeComponent, UserManagerComponent, RefereeImportComponent,
     AssessRefereePage, AssessmentEditPage, AssessmentListPage,
     CoachingEditPage, CoachingGamePage, CoachingImprovmentFeedbackEditPage, CoachingListPage, CoachingPositiveFeedbackEditPage,
-    CompetitionListPage, CompetitionEditComponent,
+    CompetitionImportComponent, CompetitionListPage, CompetitionEditComponent,
     HelpWidgetComponent, HomePage,
     ProEditPage, ProListPage,
     RefereeListPage, RefereeViewPage, RefereeSelectPage, RefereeEditPage,

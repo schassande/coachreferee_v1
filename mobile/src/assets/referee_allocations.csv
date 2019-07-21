@@ -1,2 +1,3 @@
-"competition", "date", "time", "field", "category", "referee1", "referee2", "referee3, "refereeCoach"
-"Touch In Paris 2019", "24/06/2019", "1", "MXO", "PTT", "DCA", "JMN", "SCB"
+"gameId", "competition", "date", "timeSlot", "field", "category", "referee1", "referee2", "referee3", "refereeCoach1", "refereeCoach2", "refereeCoach3"
+"1","Touch In Paris 2019", "2019-06-24", "10:20", 1, MXO, PTT, DCA, JMN, Seb
+"2","Touch In Paris 2019", "2019/06/24", "11:10", 2, MXO, PTT, DCA, JMN, Seb

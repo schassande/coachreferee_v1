@@ -1,8 +1,11 @@
 import { User, UserGroup } from './user';
 
-export interface PersistentData {
+export interface HasId {
     /** Identifier of the persistent object */
     id: string;
+}
+
+export interface PersistentData extends HasId {
     /** Version number of the persistent object */
     version: number;
     /** The creation date of the persistent object */

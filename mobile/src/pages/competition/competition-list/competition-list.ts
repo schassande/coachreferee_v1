@@ -34,7 +34,7 @@ export class CompetitionListPage implements OnInit {
 
   ngOnInit() {
     this.helpService.setHelp('competition-list');
-    setTimeout(() => { this.doRefresh(null); }, 500);
+    setTimeout(() => { this.doRefresh(null); }, 200);
   }
 
   doRefresh(event) {

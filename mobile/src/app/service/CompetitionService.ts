@@ -37,6 +37,9 @@ export class CompetitionService extends RemotePersistentDataService<Competition>
                 item.date = d.toDate();
             }
         }
+        if (item.allocations === undefined) {
+            item.allocations = [];
+        }
     }
     public searchCompetitions(text: string,
                               options: 'default' | 'server' | 'cache' = 'default'): Observable<ResponseWithData<Competition[]>> {

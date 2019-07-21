@@ -97,7 +97,8 @@ export class CompetitionEditComponent implements OnInit {
       region : 'Others',
       country : '',
       referees: [],
-      refereeCoaches: []
+      refereeCoaches: [],
+      allocations: []
     };
   }
 

@@ -20,9 +20,6 @@
 
 
 <ion-content (swipe)="onSwipe($event)">
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button (click)="newCompetition()" class="plusButton">+</ion-fab-button>
-    </ion-fab>
     <div slot="fixed" style="width: 100%;     background: white;">
         <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
         <div *ngIf="loading" style="margin: 20px auto; text-align: center;">
@@ -42,4 +39,16 @@
     <p *ngIf="!competitions || competitions.length == 0" style="margin: 70px 10px 0 10px; text-align: center; font-style: italic;">
         Use this section to declare competitions. For each competition, you declare the list of referees and the list of referee coaches.
     </p>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-row>
+            <ion-col>
+                <ion-fab-button routerLink="/competition/import">
+                    <ion-icon name="attach"></ion-icon>
+                </ion-fab-button>
+            </ion-col>
+            <ion-col>
+                <ion-fab-button (click)="newCompetition()" class="plusButton">+</ion-fab-button>
+            </ion-col>
+        </ion-row>
+    </ion-fab>
 </ion-content>
