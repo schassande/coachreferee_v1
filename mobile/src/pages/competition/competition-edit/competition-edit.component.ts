@@ -1,3 +1,4 @@
+import { ConnectedUserService } from './../../../app/service/ConnectedUserService';
 import { HelpService } from './../../../app/service/HelpService';
 import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
@@ -9,7 +10,7 @@ import { DateService } from './../../../app/service/DateService';
 import { RefereeService } from './../../../app/service/RefereeService';
 import { UserService } from './../../../app/service/UserService';
 
-import { Competition } from './../../../app/model/competition';
+import { Competition, GameAllocation } from './../../../app/model/competition';
 import { Referee, User } from './../../../app/model/user';
 import { ResponseWithData } from 'src/app/service/response';
 import { flatMap, map, catchError } from 'rxjs/operators';
@@ -36,8 +37,9 @@ export class CompetitionEditComponent implements OnInit {
 
   constructor(
     private alertCtrl: AlertController,
+    private connectedUserService: ConnectedUserService,
     private competitionService: CompetitionService,
-    private dateService: DateService,
+    public dateService: DateService,
     private helpService: HelpService,
     private modalController: ModalController,
     private navController: NavController,
@@ -65,6 +67,7 @@ export class CompetitionEditComponent implements OnInit {
           // the competition has not been found => create it
           this.createCompetition();
         }
+        // console.log('competition= ' + JSON.stringify(this.competition, null, 2));
         return this.competition;
       }),
       // load referees
@@ -331,4 +334,49 @@ export class CompetitionEditComponent implements OnInit {
       arrays.splice(idx, 1);
     }
   }
+
+  allocSelected(alloc: GameAllocation) {
+    this.alertCtrl.create({
+      header: 'Game actions',
+      message: `You selected the following game:<ul>
+      <li>Date: ${this.dateService.date2string(alloc.date)}</li>
+      <li>Slot: ${alloc.timeSlot}</li>
+      <li>Field: ${alloc.field} Cat:${alloc.gameCategory}</li>
+      <li>Referees: ${alloc.referees.map((ref) => ref.refereeShortName).join(',')}</li>
+      <li>Coaches: ${alloc.refereeCoaches.map((ref) => ref.coachShortName).join(',')}</li>
+      </ul>
+      What do you wan to do about this game?`,
+      buttons: [
+        { text: 'Cancel', role: 'cancel'},
+        {
+          text: 'Delete',
+          cssClass: 'Danger',
+          handler: () => {
+            const idx = this.competition.allocations.findIndex((a) => alloc.id === a.id);
+            if (idx >= 0) {
+              this.competition.allocations.splice(idx, 1);
+            }
+          }
+        },
+        {
+          text: 'Coach It',
+          cssClass: 'Success',
+          handler: () => {
+            const currentUserId = this.connectedUserService.getCurrentUser().id;
+            const refco = alloc.refereeCoaches.find((rc) => rc.coachId === currentUserId);
+            if (refco && refco.coachingId) {
+              // the current user is an allocated coach on the game and he has a coaching objet
+              this.navController.navigateRoot(`/coaching/coach/${refco.coachingId}`);
+            } else {
+              // Go on CoachingEdit page with the game info
+              this.navController.navigateRoot(`/coaching/edit/-1`, { queryParams: {
+                alloc: JSON.stringify(alloc),
+                competitionId: this.competition.id,
+                competitionName: this.competition.name
+              }});
+            }
+          }
+        }
+      ]
+    }).then( (alert) => alert.present() );  }
 }

@@ -38,7 +38,7 @@
         <ion-list>
             <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
                 <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
-                    <ion-label>{{importedDatas.dataToImport.allocations.length}} game(s) detected</ion-label>
+                    <ion-label>{{importedDatas.dataToImport.allocations.length}} game(s)</ion-label>
                 </ion-item-divider>
                 <ion-item *ngFor="let ana of importedDatas.gameAnalysis">
                     <ion-label>
@@ -55,7 +55,7 @@
             </ion-item-group>
             <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
                 <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
-                    <ion-label>{{importedDatas.refereeAnalysis.length}} new referee(s) detected</ion-label>
+                    <ion-label>{{importedDatas.refereeAnalysis.length}} new referee(s) detected over {{importedDatas.dataToImport.referees.length}}</ion-label>
                 </ion-item-divider>
                 <ion-item *ngFor="let ana of importedDatas.refereeAnalysis">
                     <ion-label>
@@ -66,12 +66,14 @@
             </ion-item-group>
             <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
                 <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
-                    <ion-label>{{importedDatas.refereeCoachAnalysis.length}} new coach(s) detected</ion-label>
+                    <ion-label>{{importedDatas.refereeCoachAnalysis.length}} coach(s)</ion-label>
                 </ion-item-divider>
                 <ion-item *ngFor="let ana of importedDatas.refereeCoachAnalysis">
                     <ion-label>
                         <span *ngIf="ana.dataFromDB">{{ana.dataFromDB.firstName}} {{ana.dataFromDB.lastName}}, </span>{{ana.id}}
-                        <p *ngFor="let error of ana.errors" class="warning"><br>Warning: {{error}}</p>
+                        <div *ngIf="!ana.dataFromDB" style="float: right; color: orange;">IGNORED</div>
+                        <div *ngIf="ana.dataFromDB && isNewCoach(ana.dataFromDB.id)" style="float: right; color: green;">NEW</div>
+                        <p *ngIf="ana.errors.length > 0" class="warning"><br>Warning: {{ana.errors[0]}}</p>
                     </ion-label>
                 </ion-item>
             </ion-item-group>

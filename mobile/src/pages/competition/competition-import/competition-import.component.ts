@@ -101,7 +101,7 @@ export class CompetitionImportComponent implements OnInit {
           this.nbError = this.getNbError();
           this.showImportButton = this.nbError === 0;
           this.analysisStatus = 'ANALYSED';
-          console.log('Analysis completed:', this.importedDatas);
+          console.log('Analysis completed:', JSON.stringify(this.importedDatas.dataToImport, null, 2));
         });
     };
     reader.readAsText(file);
@@ -119,48 +119,44 @@ export class CompetitionImportComponent implements OnInit {
     // console.log(`analyseGame(${lineNumber})`);
     let iag: AnalysedImport<GameAllocation> = null;
     return this.analyseCompetition(jsonGame, lineNumber).pipe(
-      map((comp) => {
+      map(() => {
         iag = this.newAnalysedImportGameAllocation(lineNumber);
-        const nbNotDefined = iag.dataToImport.referees.filter((ref) => !ref).length;
-        if (nbNotDefined) {
-          console.log(`analyseGame(${lineNumber}) ${nbNotDefined}`);
-        }
+        // check Game Id
         if (!jsonGame.gameId || !jsonGame.gameId.trim()) {
           iag.errors.push('The game id is missing.');
         } else {
-          iag.dataToImport.id = jsonGame.gameId.trim();
-          iag.id = iag.dataToImport.id;
+          iag.id = jsonGame.gameId.trim();
           // check if the game id is not already used
           const iags = this.importedDatas.gameAnalysis.filter((ga) => ga.id === iag.id);
           if (iags.length) {
             iag.errors.push(`The game line ${iag.lineNumber} has the same identifier ${iag.id} than the game line ${iags[0].lineNumber}`);
           }
         }
-        if (comp && comp.allocations && iag.dataToImport.id) {
-          const allocs = comp.allocations.filter( (alloc) => alloc.id === iag.dataToImport.id);
-          if (allocs.length) {
-            iag.dataFromDB = allocs[0];
-            if (this.updateExisting) {
-              Object.assign(iag.dataToImport, iag.dataFromDB);
-            }
+        if (iag.id) {
+          // the game has an id, try to find if it matches an existing game
+          const dbAllocIdx = this.importedDatas.dataFromDB.allocations.findIndex( (alloc) => alloc.id === iag.id);
+          if (dbAllocIdx >= 0) {
+            iag.dataFromDB =  this.importedDatas.dataToImport.allocations[dbAllocIdx];
+          }
+          const impAllocIdx = this.importedDatas.dataToImport.allocations.findIndex( (alloc) => alloc.id === iag.id);
+          if (this.updateExisting && impAllocIdx >= 0) {
+            // share the same GameAllocation with the imported competition object
+            iag.dataToImport = this.importedDatas.dataToImport.allocations[impAllocIdx];
+          } else {
+            // Create a new GameAllocation
+            iag.dataToImport = this.newGameAllocation(iag.id);
           }
         } else {
+          iag.dataToImport = this.newGameAllocation();
           this.importedDatas.dataToImport.allocations.push(iag.dataToImport);
         }
-        const nbNotDefined2 = iag.dataToImport.referees.filter((ref) => !ref).length;
-        if (nbNotDefined2) {
-          console.log(`analyseGame(${lineNumber})2 ${nbNotDefined2}`);
-        }
-        // console.log(`Analyse (${lineNumber}): iag.dataToImport=` + JSON.stringify(iag.dataToImport, null, 2));
+        // import other attributes
         this.analyseGameAttributes(jsonGame, iag);
-        const nbNotDefined3 = iag.dataToImport.referees.filter((ref) => !ref).length;
-        if (nbNotDefined3) {
-          console.log(`analyseGame(${lineNumber})3 ${nbNotDefined3}`);
-        }
-        iag.dataToImport.referees = []; // clean the referees of the game
+        // Store the analysis in global objet
         this.importedDatas.gameAnalysis.push(iag);
-        return '';
+        return iag;
       }),
+      map( () => iag.dataToImport.referees = [] ), // clean the referees of the game
       flatMap(() => this.analyseReferee(jsonGame.referee1, iag)),
       flatMap(() => this.analyseReferee(jsonGame.referee2, iag)),
       flatMap(() => this.analyseReferee(jsonGame.referee3, iag)),
@@ -171,7 +167,65 @@ export class CompetitionImportComponent implements OnInit {
     );
   }
 
-  private analyseCompetition(jsonGame, lineNumber: number): Observable<Competition> {
+  private newGameAllocation(id: string = null): GameAllocation {
+    return {
+      id: null,
+      date: new Date(),
+      field: '1',
+      timeSlot: '00:00',
+      gameCategory: 'OPEN',
+      gameSpeed: 'Medium',
+      gameSkill: 'Medium',
+      referees: [],
+      refereeCoaches: []
+    };
+  }
+  private cloneGameAllocation(src: GameAllocation): GameAllocation {
+    return {
+      date: src.date,
+      field: src.field,
+      gameCategory: src.gameCategory,
+      gameSkill: src.gameSkill,
+      gameSpeed: src.gameSpeed,
+      id : src.id,
+      timeSlot : src.timeSlot,
+      referees: src.referees.map((item) =>  {
+        return {  refereeId: item.refereeId, refereeShortName: item.refereeShortName };
+      }),
+      refereeCoaches: src.refereeCoaches.map((item) =>  {
+        return {
+          coachId: item.coachId,
+          coachShortName: item.coachShortName,
+          coachingId: item.coachingId };
+      })
+    };
+  }
+
+  private cloneCompetition(src: Competition): Competition {
+    return {
+      allocations: src.allocations.map((item: GameAllocation) => this.cloneGameAllocation(item)),
+      name: src.name,
+      date: src.date,
+      year: src.year,
+      region: src.region,
+      country: src.region,
+      referees: src.referees.map((item) =>  {
+        return {  refereeId: item.refereeId, refereeShortName: item.refereeShortName };
+      }),
+      refereeCoaches: src.refereeCoaches.map((item) =>  {
+        return {
+          coachId: item.coachId,
+          coachShortName: item.coachShortName };
+      }),
+      id: src.id,
+      creationDate: src.creationDate,
+      version: src.version,
+      lastUpdate: src.lastUpdate,
+      dataStatus: src.dataStatus
+    };
+  }
+
+  private analyseCompetition(jsonGame, lineNumber: number): Observable<AnalysedImportCompetition> {
     // console.log(`analyseCompetition(${lineNumber})`);
     if (!jsonGame.competition || !jsonGame.competition.trim()) {
       this.importedDatas.errors.push('Competition name is missing on line ' + lineNumber);
@@ -184,39 +238,43 @@ export class CompetitionImportComponent implements OnInit {
         throw null;
       }
       // console.log(`analyseCompetition(${lineNumber}): the competition has been already set`);
-      return of(this.importedDatas.dataToImport);
+      return of(this.importedDatas);
     } else {
       // console.log(`analyseCompetition(${lineNumber}): the competition has not been already set`);
-      // first line
-      this.importedDatas.dataToImport = {
-        id: null,
-        version: 0,
-        creationDate : new Date(),
-        lastUpdate : new Date(),
-        dataStatus: 'NEW',
-        name: jsonGame.competition,
-        date: new Date(),
-        year: new Date().getFullYear(),
-        region : 'Others',
-        country : '',
-        referees: [],
-        refereeCoaches: [],
-        allocations: []
-      };
-      // search the competition from DB
+      // it should be the first line of the file
+      // => search the competition from the DB
       return this.competitionService.getCompetitionByName(jsonGame.competition).pipe(
         map((rcomp) => {
           this.importedDatas.dataFromDB = rcomp.data;
           if (this.importedDatas.dataFromDB) {
-            Object.assign(this.importedDatas.dataToImport, this.importedDatas.dataFromDB);
             console.log(`analyseCompetition(${lineNumber}): the competition found from DB: ${this.importedDatas.dataFromDB.id}`);
+            this.importedDatas.dataToImport = this.cloneCompetition(this.importedDatas.dataFromDB);
           } else {
             console.log(`analyseCompetition(${lineNumber}): the competition does not exist`);
+            this.importedDatas.dataToImport = this.newCompetition(jsonGame.competition);
           }
-          return this.importedDatas.dataToImport;
+          return this.importedDatas;
         })
       );
     }
+  }
+
+  private newCompetition(name): Competition {
+    return {
+      id: null,
+      version: 0,
+      creationDate : new Date(),
+      lastUpdate : new Date(),
+      dataStatus: 'NEW',
+      name,
+      date: new Date(),
+      year: new Date().getFullYear(),
+      region : 'Others',
+      country : '',
+      referees: [],
+      refereeCoaches: [],
+      allocations: []
+    };
   }
 
   private analyseReferee(refereeShortName: string, iag: AnalysedImport<GameAllocation>): Observable<any> {
@@ -365,17 +423,7 @@ export class CompetitionImportComponent implements OnInit {
   private newAnalysedImportGameAllocation(lineNumber: number): AnalysedImport<GameAllocation> {
     return {
       id: null,
-      dataToImport: {
-        id: null,
-        date: new Date(),
-        field: '1',
-        timeSlot: '00:00',
-        gameCategory: 'OPEN',
-        gameSpeed: 'Medium',
-        gameSkill: 'Medium',
-        referees: [],
-        refereeCoaches: []
-      },
+      dataToImport: null,
       dataFromDB: null,
       lineNumber,
       errors: [],
@@ -546,6 +594,11 @@ export class CompetitionImportComponent implements OnInit {
         rank: 0
       });
     });
+  }
+
+  isNewCoach(coachId): boolean {
+    return this.importedDatas.dataFromDB
+      && this.importedDatas.dataFromDB.refereeCoaches.filter((refco) => refco.coachId === coachId).length === 0;
   }
 }
 

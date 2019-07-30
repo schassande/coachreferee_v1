@@ -1,3 +1,4 @@
+import { GameAllocation } from './../../../app/model/competition';
 import { HelpService } from './../../../app/service/HelpService';
 import { CompetitionSelectorComponent } from '../../widget/competition-selector';
 import { CompetitionService } from '../../../app/service/CompetitionService';
@@ -43,6 +44,11 @@ export class CoachingEditPage implements OnInit {
   refereesLoaded = false;
   sending = false;
   sharedWith: SharedWith = { users: [], groups: [] };
+  param = {
+     alloc: null as GameAllocation,
+     competitionId: null as string,
+     competitionName: null as string,
+  };
 
   constructor(
     private modalController: ModalController,
@@ -60,20 +66,39 @@ export class CoachingEditPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('CoachingEdit.ngOnInit()');
     this.helpService.setHelp('coaching-edit');
     this.appCoach = this.connectedUserService.getCurrentUser();
-    this.loadCoaching().subscribe((response: ResponseWithData<Coaching>) => {
-      // console.log('CoachingEdit: loaded coaching, response=' + JSON.stringify(response));
-      this.coaching = response.data;
-      if (this.coaching) {
-        this.computeCoachingValues();
-        this.loadingReferees();
-        this.computeSharedWith();
-      } else {
-        this.initCoaching();
+    this.loadParams().pipe(
+      flatMap(() => this.loadCoaching()),
+      map((response: ResponseWithData<Coaching>) => {
+        // console.log('CoachingEdit: loaded coaching, response=' + JSON.stringify(response));
+        this.coaching = response.data;
+        if (this.coaching) {
+          this.computeCoachingValues();
+          this.loadingReferees();
+          this.computeSharedWith();
+        } else if (this.param.alloc !== null) {
+          this.createCoachingFromParam();
+          this.loadingReferees();
+          this.computeCoachingValues();
+        } else {
+          this.initCoaching();
+        }
       }
-    });
+    )).subscribe();
+  }
+
+  loadParams(): Observable<any> {
+    return this.route.queryParams.pipe(
+      map((params) => {
+        const str = params.alloc;
+        if (str) {
+          this.param.alloc = JSON.parse(str);
+        }
+        this.param.competitionId = params.competitionId;
+        this.param.competitionName = params.competitionName;
+        console.log('loadParams() param=' + JSON.stringify(this.param, null, 2));
+      }));
   }
 
   switchLockCoaching() {
@@ -87,10 +112,47 @@ export class CoachingEditPage implements OnInit {
 
   private loadCoaching(): Observable<ResponseWithData<Coaching>> {
     return this.route.paramMap.pipe(
-      flatMap( (paramMap) => this.coachingService.get(paramMap.get('id')))
+      flatMap( (paramMap) => {
+        return this.coachingService.get(paramMap.get('id'));
+      })
     );
   }
-
+  createCoachingFromParam() {
+    console.log('createCoachingFromParam');
+    this.coaching = {
+      id: null,
+      version: 0,
+      creationDate : new Date(),
+      lastUpdate : new Date(),
+      dataStatus: 'NEW',
+      competition: this.param.competitionName,
+      competitionId: this.param.competitionId,
+      field: this.param.alloc.field,
+      date : new Date(this.param.alloc.date),
+      timeSlot: this.param.alloc.timeSlot,
+      coachId: this.appCoach.id,
+      gameCategory: this.param.alloc.gameCategory,
+      gameSpeed: 'Medium',
+      gameSkill: 'Medium',
+      referees : this.param.alloc.referees.map((ref) => {
+        return {
+          refereeId: ref.refereeId,
+          refereeShortName: ref.refereeShortName,
+          feedbacks: [],
+          positiveFeedbacks: [],
+          upgrade: null,
+          rank: 0
+        };
+      }),
+      refereeIds: this.param.alloc.referees.map((ref) => ref.refereeId),
+      currentPeriod : 1,
+      closed: false,
+      sharedWith: {
+        users: [],
+        groups: []
+      }
+    };
+}
   initCoaching() {
     this.competitionService.get(this.appCoach.defaultCompetitionId).pipe(
       map((rcompetition) => {
