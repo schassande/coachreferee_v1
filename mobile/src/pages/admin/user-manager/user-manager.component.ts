@@ -145,4 +145,13 @@ export class UserManagerComponent implements OnInit {
   userSelected(user: User) {
     this.navController.navigateRoot('/user/edit/' + user.id);
   }
+  back() {
+    this.navController.navigateRoot('/admin');
+  }
+  onSwipe(event) {
+    // console.log('onSwipe', event);
+    if (event.direction === 4) {
+      this.back();
+    }
+  }
 }
