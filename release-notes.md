@@ -26,7 +26,7 @@ Priority 2:
 - Auto detect disconnected mode.
 - Organize Angular code in submodules with lazy loading.
 
-## Versin 2.3.0 (Next)
+## Versin 2.3.0 (current)
 
 - API key is no more in Git repository
 - Write a documentation of the application on the web site
@@ -35,7 +35,7 @@ Priority 2:
 - Import of referees via a CSV file
 - Import csv of a competition containing the referees, the coaches and the games. The import creates coaching
 
-## Versin 2.2.1 (current)
+## Versin 2.2.1
 
 - On any page, an help is available via context menu. Help is based on markdown file.
 
