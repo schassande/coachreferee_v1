@@ -1,18 +1,19 @@
 import { NavController } from '@ionic/angular';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Observable, of, concat, Subject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, flatMap } from 'rxjs/operators';
 
-import { Coaching } from './../../../app/model/coaching';
-import { Competition, GameAllocation, AnalysedImport, AnalysedImportCompetition } from './../../../app/model/competition';
-import { Referee, User } from './../../../app/model/user';
+import { Coaching } from '../../../app/model/coaching';
+import { Competition, GameAllocation, AnalysedImport, AnalysedImportCompetition } from '../../../app/model/competition';
+import { Referee, User } from '../../../app/model/user';
 
-import { CoachingService } from './../../../app/service/CoachingService';
-import { CompetitionService } from './../../../app/service/CompetitionService';
+import { CoachingService } from '../../../app/service/CoachingService';
+import { CompetitionService } from '../../../app/service/CompetitionService';
+import { DateService } from '../../../app/service/DateService';
+import { HelpService } from '../../../app/service/HelpService';
 import { RefereeService } from '../../../app/service/RefereeService';
-import { UserService } from './../../../app/service/UserService';
-import { DateService } from './../../../app/service/DateService';
-import { ResponseWithData } from 'src/app/service/response';
+import { UserService } from '../../../app/service/UserService';
+import { ResponseWithData } from '../../../app/service/response';
 
 import * as csv from 'csvtojson';
 
@@ -36,6 +37,7 @@ export class CompetitionImportComponent implements OnInit {
     private coachingService: CoachingService,
     private competitionService: CompetitionService,
     private dateService: DateService,
+    private helpService: HelpService,
     private navController: NavController,
     private refereeService: RefereeService,
     private userService: UserService
@@ -44,6 +46,7 @@ export class CompetitionImportComponent implements OnInit {
   ngOnInit() {
     this.analysisStatus = 'NONE';
     this.importStatus = 'NONE';
+    this.helpService.setHelp('competition-import');
   }
 
   loadFile() {
