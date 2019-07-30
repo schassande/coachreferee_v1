@@ -7,8 +7,7 @@ This file lists the development task to do:
 Priority 1:
 
 - Create user group used to simplify the sharing
-- Solution to import csv of referees for a competition
-- Enter referee allocation => create coaching or assessment
+- Shortcut to assess a referee from the coaching page and from the Referee View page
 
 Priority 2:
 
@@ -32,6 +31,7 @@ Priority 2:
 - Create an admin page of users: delete account, ask the reset of the password, un/block an account and validate the subscription of new user
 - On User edit page the user can delete his account
 - Import of referees via a CSV file
+- Import csv of a competition containing the referees, the coaches and the games. The import creates coaching
 
 ## Versin 2.2.1 (current)
 
