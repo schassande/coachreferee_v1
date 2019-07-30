@@ -97,7 +97,6 @@ export class CoachingEditPage implements OnInit {
         }
         this.param.competitionId = params.competitionId;
         this.param.competitionName = params.competitionName;
-        console.log('loadParams() param=' + JSON.stringify(this.param, null, 2));
       }));
   }
 
