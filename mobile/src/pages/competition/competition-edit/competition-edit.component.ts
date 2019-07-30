@@ -34,6 +34,7 @@ export class CompetitionEditComponent implements OnInit {
   regions = DATA_REGIONS;
   constantes = CONSTANTES;
   errors: string[] = [];
+  viewName = 'R';
 
   constructor(
     private alertCtrl: AlertController,

@@ -39,16 +39,26 @@
                 </ion-select>
             </ion-item>
         </ion-item-group>
-        <div *ngIf="errors && errors.length" style="margin: 5px 20px">
-            <div style="color: red;">Detected errors:</div>
-            <ul>
-                <li *ngFor="let error of errors">{{error}}</li>
-            </ul>
-        </div>
-        <div style="text-align: center">
-            <ion-button shape="round" (click)="back()">Cancel</ion-button>
-            <ion-button shape="round" (click)="saveNback()">Save</ion-button>
-        </div>
+    </ion-list>
+    <div *ngIf="errors && errors.length" style="margin: 5px 20px">
+        <div style="color: red;">Detected errors:</div>
+        <ul>
+            <li *ngFor="let error of errors">{{error}}</li>
+        </ul>
+    </div>
+    <div style="text-align: center">
+        <ion-button shape="round" (click)="back()">Cancel</ion-button>
+        <ion-button shape="round" (click)="saveNback()">Save</ion-button>
+    </div>
+    <div style="margin-top: 20px;">
+        <ion-segment #segment id="tabSegment" [(ngModel)]="viewName">
+            <ion-segment-button value="R">Referees</ion-segment-button>
+            <ion-segment-button value="C">Coaches</ion-segment-button>
+            <ion-segment-button value="G">Games</ion-segment-button>
+        </ion-segment>
+    </div>
+
+    <ion-list *ngIf="viewName === 'R'">
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
                 <ion-label>{{referees.length}} Referee(s)</ion-label>
@@ -63,6 +73,8 @@
                 <ion-icon slot="end" name="trash" (click)="deleteReferee(referee)"></ion-icon>
             </ion-item>
         </ion-item-group>
+    </ion-list>
+    <ion-list *ngIf="viewName === 'C'">
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
                 <ion-label>{{coaches.length}} Referee Coach(es)</ion-label>
@@ -77,6 +89,8 @@
                 <ion-icon slot="end" name="trash" (click)="deleteRefereeCoach(coach)"></ion-icon>
             </ion-item>
         </ion-item-group>
+    </ion-list>
+    <ion-list *ngIf="viewName === 'G'">
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
                 <ion-label>{{competition.allocations.length}} Game(s)</ion-label>
