@@ -29,17 +29,13 @@ export class CompetitionService extends RemotePersistentDataService<Competition>
         return 4;
     }
     protected adjustFieldOnLoad(item: Competition) {
-        const d: any = item.date;
-        if (d && !(d instanceof Date) ) {
-            if (typeof d === 'string') {
-                item.date = this.dateService.string2date(d as string, null);
-            } else {
-                item.date = d.toDate();
-            }
-        }
+        item.date = this.adjustDate(item.date, this.dateService);
         if (item.allocations === undefined) {
             item.allocations = [];
         }
+        item.allocations.forEach( (alloc) => {
+            alloc.date = this.adjustDate(alloc.date, this.dateService);
+        });
     }
     public searchCompetitions(text: string,
                               options: 'default' | 'server' | 'cache' = 'default'): Observable<ResponseWithData<Competition[]>> {

@@ -1,8 +1,6 @@
-import { GameLevel } from './game';
-import { GameCategory } from './../../../../firebase/functions/src/model/game';
+import { GameLevel, GameCategory } from './game';
 import { PersistentData, DataRegion, HasId } from './common';
-import { Referee } from '../../../../firebase/functions/src/model/user';
-import { User } from './user';
+import { User, Referee } from './user';
 
 export interface Competition extends PersistentData {
     name: string;

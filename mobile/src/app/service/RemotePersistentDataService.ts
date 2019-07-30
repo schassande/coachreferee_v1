@@ -12,6 +12,7 @@ import { AngularFirestore,
     QueryDocumentSnapshot,
     Query} from 'angularfire2/firestore';
 import { ToastController } from '@ionic/angular';
+import { DateService } from './DateService';
 
 export abstract class RemotePersistentDataService<D extends PersistentData> implements Crud<D> {
 
@@ -47,6 +48,19 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     protected adjustFieldOnLoad(item: D) {
     }
 
+    protected adjustDate(d: any, dateService: DateService): Date {
+        if (d && !(d instanceof Date) ) {
+            if (typeof d === 'string') {
+                return dateService.string2date(d as string, null);
+            } else {
+                return d.toDate();
+            }
+        } else {
+            return d as Date;
+        }
+    }
+
+
     public localGet(id: string): Observable<ResponseWithData<D>> {
         return this.fireStoreCollection.doc<D>(id).get({source: 'cache'}).pipe(
             map(this.docSnapToResponse.bind(this))
@@ -57,6 +71,9 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
         return '/' + id;
     }
 
+    public createId(): string {
+        return this.db.createId();
+    }
     public save(data: D): Observable<ResponseWithData<D>> {
         console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].save(): id=' + data.id + ', status=' + data.dataStatus);
         if (data.dataStatus === 'REMOVED') {
@@ -66,7 +83,9 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             data.dataStatus = 'CLEAN';
             data.creationDate = new Date();
             // Create a document
-            data.id = this.db.createId();
+            if (!data.id) {
+                data.id = this.createId();
+            }
             const docRef = this.fireStoreCollection.doc(data.id);
             // Get its id and set the id field
             console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].save(): docRef=', docRef, data.id);
