@@ -39,9 +39,17 @@ module.exports = function(grunt) {
                 cwd: 'firebase',
                 cmd: 'firebase deploy',
             },
+            'set-target-deploy-www': {
+                cwd: 'firebase',
+                cmd: 'firebase target:apply hosting  www coachreferee-site',
+            },
+            'set-target-deploy-app': {
+                cwd: 'firebase',
+                cmd: 'firebase target:apply hosting  app refcoach-676e3',
+            },
             'deploy-www': {
                 cwd: 'firebase',
-                cmd: 'firebase deploy',
+                cmd: 'firebase deploy --only hosting:www',
             },
             'deploy-function': {
                 cwd: 'firebase',
@@ -82,35 +90,47 @@ module.exports = function(grunt) {
         'exec:app-apply-version',
         'exec:commit-version',
         'exec:app-build',
-        'exec:deploy-app'
+        'exec:set-target-deploy-app',
+        'exec:deploy-app',
+        'exec:set-target-deploy-www',
+        'exec:deploy-www',
+        'exec:set-target-deploy-app'
     ]);
     grunt.registerTask('app-deploy-minor', 'Upgrade to next minor version, commit, build, deploy the mobile app only', [
         'exec:app-version-minor',
         'exec:app-apply-version',
         'exec:app-build',
-        'exec:deploy-app'
+        'exec:set-target-deploy-app',
+        'exec:deploy-app',
+        'exec:set-target-deploy-www',
+        'exec:deploy-www',
+        'exec:set-target-deploy-app'
     ]);
     grunt.registerTask('app-deploy-major', 'Upgrade to next major version, commit, build, deploy the mobile app only', [
         'exec:app-version-major',
         'exec:app-apply-version',
         'exec:app-build',
-        'exec:deploy-app'
+        'exec:set-target-deploy-app',
+        'exec:deploy-app',
+        'exec:set-target-deploy-www',
+        'exec:deploy-www',
+        'exec:set-target-deploy-app'
     ]);
     grunt.registerTask('function-deploy', 'Deploy the backend function only', [
         'exec:deploy-function'
     ]);
-    /* 
+    /* TODO deploy function
     lancer la compile ts=> js
     Copy firebase/functions/lib/firebase/functions/src firebase/functions/lib 
     dans firebase lancer firebase deploy --only functions
     */
 
     grunt.registerTask('www-deploy', 'Deploy the web site only', [
-        'exec:deploy-www'
-    ]);
-    grunt.registerTask('www-help-build', 'Build help pages of the web site', [
         'markdown:www-help-build',
         'copy:copyHelp',
-        'exec:delete-help'
+        'exec:delete-help',
+        'exec:set-target-deploy-www',
+        'exec:deploy-www',
+        'exec:set-target-deploy-app'
     ]);
 }
