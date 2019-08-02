@@ -13,6 +13,7 @@ Priority 1:
 
 Priority 2:
 
+- Admin: yearly activity charts : coaching done per week, assessment done per week, number of user accounts per month
 - Style of the online help
 - In context menu, of coaching game, add the next and the previous game
 - Settings: limit to referee to a region or a group => defintion of referee group
