@@ -26,12 +26,12 @@ Priority 2:
 - Auto detect disconnected mode.
 - Organize Angular code in submodules with lazy loading.
 
-## Versin 2.3.1 (next)
+## Versin 2.3.1 (current)
 
 - list assessments of a refere in Referee View Page
 - Shortcut to assess a referee from the coaching page and from the Referee View page
 
-## Versin 2.3.0 (current)
+## Versin 2.3.0
 
 - API key is no more in Git repository
 - Write a documentation of the application on the web site
