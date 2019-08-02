@@ -61,4 +61,22 @@
             </ion-button>
         </div>
     </ion-list>
+    <ion-list *ngIf="assessments">
+        <ion-item-divider color="light">Assessements ({{assessments.length}})</ion-item-divider>
+        <ion-item *ngFor="let assessment of assessments" (click)="assessmentSelected($event, assessment)" style="border: none;">
+            <ion-label>
+                {{assessment.competition}}
+                <br>{{dateService.date2string(assessment.date)}} &nbsp;&nbsp;{{assessment.timeSlot}} &nbsp;&nbsp;Field {{assessment.field}}, &nbsp;&nbsp;{{assessment.gameCategory}}
+                <br>{{assessment.profileName}}: {{assessment.competency}}
+            </ion-label>
+        </ion-item>
+        <div style="text-align: right;" padding>
+            <ion-button shape="round" (click)="sendAssessments($event)" *ngIf="assessments.length > 0">
+                <ion-icon name="send"></ion-icon>
+            </ion-button>
+        </div>
+    </ion-list>
+    <div style="text-align: right;" padding>
+        <ion-button shape="round" (click)="assessReferee()" style="margin-bottom: 20px;">Assess</ion-button>
+    </div>
 </ion-content>

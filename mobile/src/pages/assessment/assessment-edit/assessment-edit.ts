@@ -37,6 +37,9 @@ export class AssessmentEditPage implements OnInit {
   profileId: string;
   appCoach: User;
   sending = false;
+  param = {
+    refereeId: null as string,
+ };
 
   constructor(
     public modalController: ModalController,
@@ -54,10 +57,10 @@ export class AssessmentEditPage implements OnInit {
 
   ngOnInit() {
     this.appCoach = this.connectedUserService.getCurrentUser();
-    this.loadAssessment().pipe( // load Assessment or create it
+    this.loadParams().pipe(
+      flatMap(() => this.loadAssessment()),
       flatMap((response: ResponseWithData<Assessment>) => {
         this.assessment = response.data;
-        this.computeAssessmentValues();
         if (this.assessment) {
           if (!this.assessment.profileType) {
             this.assessment.profileType = 'REFEREE';
@@ -69,6 +72,7 @@ export class AssessmentEditPage implements OnInit {
         }
       }),
       map(() => {
+        this.computeAssessmentValues();
         this.assessmentService.currentAssessment = this.assessment;
         // console.log('this.assessment.profileType=' + this.assessment.profileType);
         return this.assessment;
@@ -78,6 +82,10 @@ export class AssessmentEditPage implements OnInit {
       // load referees
       flatMap(() => this.assessmentService.loadingReferees(this.assessment, this.id2referee)),
       map(() => {
+        console.log('Param=' + JSON.stringify(this.param));
+        if (this.assessment.dataStatus ===  'NEW' && this.param.refereeId) {
+          this.setRefereeId(this.param.refereeId);
+        }
         this.refereesLoaded = true;
         this.updateAssessmentValid();
       })
@@ -130,6 +138,13 @@ export class AssessmentEditPage implements OnInit {
     );
   }
 
+  loadParams(): Observable<any> {
+    return this.route.queryParams.pipe(
+      map((params) => {
+        this.param.refereeId = params.refereeId;
+      }));
+  }
+
   initAssessment(): Observable<Assessment> {
     return this.competitionService.get(this.appCoach.defaultCompetitionId).pipe(
       map((rcompetition) => {
@@ -154,7 +169,7 @@ export class AssessmentEditPage implements OnInit {
             gameCategory: 'OPEN',
             gameSpeed: 'Medium',
             gameSkill: 'Medium',
-            refereeId : null,
+            refereeId : this.param.refereeId,
             refereeShortName: '-',
             comment: '-',
             profileId: null,
@@ -240,30 +255,37 @@ export class AssessmentEditPage implements OnInit {
     modal.onDidDismiss().then( (data) => {
         const referee: Referee = this.refereeService.lastSelectedReferee.referee;
         this.refereeService.lastSelectedReferee.referee = null; // clean
-        if (referee) {
-          // a referee has been selected
-          this.assessment.refereeId = referee.id;
-          this.assessment.refereeShortName = referee.shortName;
-          this.id2referee.set(referee.id, referee);
-          this.updateAssessmentValid();
-          if (referee.referee.nextRefereeLevel) {
-            // try to find the right profile from the referee
-            const foundProfiles = this.profiles.filter((profile) => {
-              // console.log('profile.level=', profile.level, 'referee.referee.nextRefereeLevel', referee.referee.nextRefereeLevel);
-              return profile.level === referee.referee.nextRefereeLevel;
-            });
-            if (foundProfiles.length > 0) {
-              // a profile has been found => use it
-              this.profileId = foundProfiles[0].id;
-              this.adjustFromProfile();
-            }
-          }
-
-          // if (this.assessment.)
-        }
+        this.setReferee(referee);
       });
     return await modal.present();
   }
+  private setRefereeId(refereeId: string) {
+    console.log('setRefereeId(' + refereeId + ')');
+    this.setReferee(this.id2referee.get(refereeId));
+  }
+
+  private setReferee(referee: Referee) {
+    console.log('setReferee(' + referee + ')');
+    if (referee) {
+      // a referee has been selected
+      this.assessment.refereeId = referee.id;
+      this.assessment.refereeShortName = referee.shortName;
+      this.id2referee.set(referee.id, referee);
+      this.updateAssessmentValid();
+      if (referee.referee.nextRefereeLevel) {
+        // try to find the right profile from the referee
+        const foundProfiles = this.profiles.filter((profile) => {
+          // console.log('profile.level=', profile.level, 'referee.referee.nextRefereeLevel', referee.referee.nextRefereeLevel);
+          return profile.level === referee.referee.nextRefereeLevel;
+        });
+        if (foundProfiles.length > 0) {
+          // a profile has been found => use it
+          this.profileId = foundProfiles[0].id;
+          this.adjustFromProfile();
+        }
+      }
+    }
+}
 
   computeTimeSlot(ts: Date): string {
     return this.assessmentService.computeTimeSlot(ts);

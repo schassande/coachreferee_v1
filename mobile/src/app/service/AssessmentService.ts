@@ -158,6 +158,7 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
             return of('');
         }
     }
+
     public sendAssessmentByEmail(assessmentId: string, skillProfileId: string, refereeId: string): Observable<any> {
         return this.angularFireFunctions.httpsCallable('sendAssessment')({
           assessmentId,

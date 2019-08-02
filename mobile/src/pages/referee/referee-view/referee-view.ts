@@ -1,20 +1,23 @@
-import { HelpService } from './../../../app/service/HelpService';
 import { ModalController, LoadingController, NavController } from '@ionic/angular';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 
-import { ToolService } from '../../../app/service/ToolService';
-import { CONSTANTES } from '../../../app/model/user';
+import { Assessment } from '../../../app/model/assessment';
+import { AssessmentService } from './../../../app/service/AssessmentService';
 import { BookmarkService } from '../../../app/service/BookmarkService';
-import { RefereeEditPage } from '../referee-edit/referee-edit';
-import { EmailService } from '../../../app/service/EmailService';
 import { ConnectedUserService } from '../../../app/service/ConnectedUserService';
-import { CoachingService } from '../../../app/service/CoachingService';
-import { RefereeService } from '../../../app/service/RefereeService';
 import { Coaching } from '../../../app/model/coaching';
-import { ResponseWithData } from '../../../app/service/response';
+import { CoachingService } from '../../../app/service/CoachingService';
+import { CONSTANTES } from '../../../app/model/user';
+import { DateService } from './../../../app/service/DateService';
+import { EmailService } from '../../../app/service/EmailService';
+import { HelpService } from './../../../app/service/HelpService';
 import { Referee } from '../../../app/model/user';
+import { RefereeEditPage } from '../referee-edit/referee-edit';
+import { RefereeService } from '../../../app/service/RefereeService';
+import { ResponseWithData } from '../../../app/service/response';
+import { ToolService } from '../../../app/service/ToolService';
 
 /**
  * Generated class for the RefereeViewPage page.
@@ -32,6 +35,8 @@ export class RefereeViewPage implements OnInit {
   referee: Referee;
   coachings: Coaching[];
   errorfindCoachings: any;
+  assessments: Assessment[];
+  errorfindAssessments: any;
   refereeLanguage: string[];
   refereeCountry: string;
 
@@ -42,6 +47,8 @@ export class RefereeViewPage implements OnInit {
     private navController: NavController,
     private helpService: HelpService,
     public refereeService: RefereeService,
+    public dateService: DateService,
+    private assessmentService: AssessmentService,
     public coachingService: CoachingService,
     public connectedUserService: ConnectedUserService,
     public loadingCtrl: LoadingController,
@@ -86,7 +93,7 @@ export class RefereeViewPage implements OnInit {
   }
 
   private setReferee(referee: Referee) {
-    console.log('RefereeView.setReferee(' + referee + ')');
+    // console.log('RefereeView.setReferee(' + referee + ')');
     this.referee = referee;
     this.refereeCountry = this.toolService.getValue(CONSTANTES.countries, this.referee.country);
     this.refereeLanguage = this.toolService.getValues(CONSTANTES.languages, this.referee.speakingLanguages);
@@ -94,6 +101,11 @@ export class RefereeViewPage implements OnInit {
     this.coachingService.getCoachingByReferee(this.referee.id).subscribe((response: ResponseWithData<Coaching[]>) => {
       this.errorfindCoachings = response.error;
       this.coachings = response.data;
+    });
+    this.assessmentService.getAssessmentByReferee(this.referee.id).subscribe((response: ResponseWithData<Assessment[]>) => {
+      this.errorfindAssessments = response.error;
+      this.assessments = response.data;
+      console.log('Assessments=', this.assessments);
     });
   }
 
@@ -120,6 +132,19 @@ export class RefereeViewPage implements OnInit {
   sendCoachings() {
     this.coachings.forEach((coaching: Coaching) => {
       this.coachingService.sendCoachingByEmail(coaching.id).subscribe();
+    });
+  }
+  assessmentSelected(event, assessment: Assessment) {
+    this.navController.navigateRoot(`/assessment/edit/${assessment.id}`);
+  }
+
+  assessReferee() {
+    this.navController.navigateRoot(`/assessment/edit/-1?refereeId=${this.referee.id}`);
+  }
+
+  sendAssessments() {
+    this.assessments.forEach((assessment: Assessment) => {
+      this.assessmentService.sendAssessmentByEmail(assessment.id, assessment.profileId, assessment.refereeId).subscribe();
     });
   }
   onSwipe(event) {

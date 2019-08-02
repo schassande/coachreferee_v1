@@ -6,9 +6,7 @@ This file lists the development task to do:
 
 Priority 1:
 
-- list assessments of a refere in Referee View Page
 - Create user group used to simplify the sharing
-- Shortcut to assess a referee from the coaching page and from the Referee View page
 - Add a feature for helping the job of coach as panel member when he is discussing upgrades: list upgrable referees
 
 Priority 2:
@@ -27,6 +25,11 @@ Priority 2:
 - In coaching-list use a different color for the futur coaching
 - Auto detect disconnected mode.
 - Organize Angular code in submodules with lazy loading.
+
+## Versin 2.3.1 (next)
+
+- list assessments of a refere in Referee View Page
+- Shortcut to assess a referee from the coaching page and from the Referee View page
 
 ## Versin 2.3.0 (current)
 

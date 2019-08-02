@@ -74,6 +74,9 @@
             </ion-item>
         </ion-item-group>
     </ion-list>
+    <div style="text-align: right;" padding>
+        <ion-button shape="round" (click)="assessReferee()" style="margin-bottom: 20px;">Assess</ion-button>
+    </div>
     <div style="margin-bottom: 120px;">&nbsp;</div>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!readonly">
         <ion-fab-button style='--background:green; font-size: 1.6em; margin-bottom: 10px;' (click)="newPositiveFeedback($event)">+</ion-fab-button>
