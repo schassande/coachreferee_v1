@@ -33,7 +33,9 @@ export class UserManagerComponent implements OnInit {
     this.userService.all().subscribe((response: ResponseWithData<User[]>) => {
       this.users = this.sort(response.data);
       this.error = response.error;
-      this.computeStats();
+      if (this.users) {
+        this.computeStats();
+      }
     });
   }
 
