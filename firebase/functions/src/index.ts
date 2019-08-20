@@ -1,14 +1,14 @@
-import { Competency } from './model/assessment';
-import { SkillProfile } from './model/skill';
+import { Competency } from './assessment';
+import { SkillProfile } from './skill';
 import { Assessment } from './../../../mobile/src/app/model/assessment';
 import * as func from 'firebase-functions';
 import * as nodemailer from 'nodemailer';
 import * as cors from  'cors';
 import * as admin from 'firebase-admin';
 import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
-import { User, Referee } from './model/user';
-import { PersistentData } from './model/common';
-import { Coaching } from './model/coaching';
+import { User, Referee } from './user';
+import { PersistentData } from './common';
+import { Coaching } from './coaching';
 
 admin.initializeApp(func.config().firebase);
 const db = admin.firestore();
@@ -123,6 +123,7 @@ export const sendAssessment = func.https.onRequest((request, response) => {
                         const email = {
                             from: gmailEmail,
                             to: data.user.email,
+                            bcc: gmailEmail,
                             subject,
                             html: `Hi ${data.user.firstName},<br> The assessment sheet is attached to this email.<br>Best regard<br>Coach Referee App`,
                             attachments: [{   
@@ -180,7 +181,7 @@ export const sendNewAccountToAdmin = func.https.onRequest((request, response) =>
                         const subject = `[CoachReferee.com] Account validation required: ${user.firstName} ${user.lastName}`;
                         const email = {
                             from: gmailEmail,
-                            to: user.email,
+                            to: gmailEmail + ', chassande@gmail.com',
                             subject,
                             html: `Hi Admin, 
                                     <br>${user.firstName} ${user.lastName} has created an account. A validation from an admin is required.
@@ -238,6 +239,7 @@ export const sendNewAccountToUser = func.https.onRequest((request, response) => 
                         const subject = `[CoachReferee.com] Account created`;
                         const email = {
                             from: gmailEmail,
+                            cc: gmailEmail,
                             to: user.email,
                             subject,
                             html: `Hi ${user.firstName} ${user.lastName}, 
@@ -297,6 +299,7 @@ export const sendAccountValidated = func.https.onRequest((request, response) => 
                         const email = {
                             from: gmailEmail,
                             to: user.email,
+                            cc: gmailEmail,
                             subject,
                             html: `Hi ${user.firstName} ${user.lastName}, 
                                     <br>Your account on the app CoachRefere.com has been validated !
@@ -354,6 +357,7 @@ export const sendAccountNotValidated = func.https.onRequest((request, response) 
                         const email = {
                             from: gmailEmail,
                             to: user.email,
+                            cc: gmailEmail,
                             subject,
                             html: `Hi ${user.firstName} ${user.lastName}, 
                                     <br>Your account on the app CoachRefere.com has NOT been validated !

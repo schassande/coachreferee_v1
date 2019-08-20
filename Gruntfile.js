@@ -3,79 +3,45 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         exec: {
-            'app-serve': {
-                cwd: 'mobile',
-                cmd: 'ionic serve',
-            },
-            'app-version-patch': {
-                cwd: 'mobile',
-                cmd: 'npm version patch',
-            },
-            'app-version-minor': {
-                cwd: 'mobile',
-                cmd: 'npm version minor',
-            },
-            'app-version-major': {
-                cwd: 'mobile',
-                cmd: 'npm version major',
-            },
-            'app-apply-version': {
-                cwd: 'mobile',
-                cmd: 'node ./replace.build.js',
-            },
-            'commit-version': {
-                cwd: 'mobile',
-                cmd: 'git commit -a -m "version"',
-            },
-            'app-build': {
-                cwd: 'mobile',
-                cmd: 'ionic build --prod --service-worker',
-            },
-            'function-build': {
-                cwd: 'mobile',
-                cmd: 'ionic build --prod --service-worker',
-            },
-            'deploy-app': {
-                cwd: 'firebase',
-                cmd: 'firebase deploy',
-            },
-            'set-target-deploy-www': {
-                cwd: 'firebase',
-                cmd: 'firebase target:apply hosting  www coachreferee-site',
-            },
-            'set-target-deploy-app': {
-                cwd: 'firebase',
-                cmd: 'firebase target:apply hosting  app refcoach-676e3',
-            },
-            'deploy-www': {
-                cwd: 'firebase',
-                cmd: 'firebase deploy --only hosting:www',
-            },
-            'deploy-function': {
-                cwd: 'firebase',
-                cmd: 'firebase deploy',
-            },
-            'delete-help': {
-                cwd: '.',
-                cmd: 'rm -rf html',
-            }
+            'app-serve': { cwd: 'mobile', cmd: 'ionic serve' },
+            'app-version-patch': { cwd: 'mobile', cmd: 'npm version patch' },
+            'app-version-minor': { cwd: 'mobile', cmd: 'npm version minor' },
+            'app-version-major': { cwd: 'mobile', cmd: 'npm version major' },
+            'app-apply-version': { cwd: 'mobile', cmd: 'node ./replace.build.js' },
+            'commit-version': { cwd: 'mobile', cmd: 'git commit -a -m "version"' },
+            'app-build': { cwd: 'mobile', cmd: 'ionic build --prod --service-worker' },
+            'function-build': { cwd: 'firebase/functions', cmd: 'npm run build' },
+            'deploy-app': { cwd: 'firebase', cmd: 'firebase deploy' },
+            'set-target-deploy-www': { cwd: 'firebase', cmd: 'firebase target:apply hosting  www coachreferee-site' },
+            'set-target-deploy-app': { cwd: 'firebase', cmd: 'firebase target:apply hosting  app refcoach-676e3' },
+            'deploy-www': { cwd: 'firebase', cmd: 'firebase deploy --only hosting:www' },
+            'deploy-function': { cwd: 'firebase', cmd: 'firebase deploy --only functions' },
+            'delete-help': { cwd: '.', cmd: 'rm -rf html' },
+            'show-function-env': { cwd: 'firebase', cmd: 'firebase functions:config:get' },
+            'set-function-env': { cwd: 'firebase', cmd: 'firebase functions:config:set gmail.email=coachreferee@gmail.com' }
         },
         markdown: {
-            'www-help-build': {
-                files: [{
-                    expand: true,
-                    src: 'mobile/src/assets/help/*.md',
-                    dest: 'html/',
-                    ext: '.html',
-                }]
-            }
+            'www-help-build': { files: [{ expand: true, src: 'mobile/src/assets/help/*.md', dest: 'html/', ext: '.html' }] }
         },
         copy: {
+            copyGeneratedHelp: {
+                cwd: 'html/mobile/src/assets/help',
+                src: ['*.html'],
+                timestamp: true,
+                dest: 'firebase/hosting/www/help/'
+            },
             copyHelp: {
-                src: ['html/mobile/src/assets/help/*.html'],
-                dest: 'firebase/hosting/www/help/',
-                expand: true,
-                flatten: true
+                cwd: 'mobile/src/assets/help',
+                src: ['**'],
+                timestamp: true,
+                dest: 'firebase/hosting/www/help/'
+            },
+            copyFunctions: {
+                cwd: 'firebase/functions/lib/firebase/functions/src/',
+                src: ['*.*'],
+                timestamp: true,
+                dest: 'firebase/functions/lib/',
+                expand: true
             }
         },
     });
@@ -117,7 +83,9 @@ module.exports = function(grunt) {
         'exec:set-target-deploy-app'
     ]);
     grunt.registerTask('function-deploy', 'Deploy the backend function only', [
-        'exec:deploy-function'
+        'exec:function-build',
+        'copy:copyFunctions',
+        'exec:deploy-function',
     ]);
     /* TODO deploy function
     lancer la compile ts=> js
@@ -126,9 +94,10 @@ module.exports = function(grunt) {
     */
 
     grunt.registerTask('www-deploy', 'Deploy the web site only', [
-        'markdown:www-help-build',
+        /*'markdown:www-help-build',
+        'copy:copyGeneratedHelp',
         'copy:copyHelp',
-        'exec:delete-help',
+        'exec:delete-help', */
         'exec:set-target-deploy-www',
         'exec:deploy-www',
         'exec:set-target-deploy-app'
