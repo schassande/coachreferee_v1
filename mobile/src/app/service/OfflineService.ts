@@ -1,29 +1,33 @@
-import { CompetitionService } from './CompetitionService';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable, from, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
+import { AppSettingsService } from './AppSettingsService';
 import { AssessmentService } from './AssessmentService';
 import { CoachingService } from './CoachingService';
+import { ConnectedUserService } from './ConnectedUserService';
+import { CompetitionService } from './CompetitionService';
 import { LocalAppSettings } from './../model/settings';
-import { AppSettingsService } from './AppSettingsService';
-import { RefereeService } from './RefereeService';
 import { PROService } from './PROService';
+import { RefereeService } from './RefereeService';
 import { SkillProfileService } from './SkillProfileService';
+import { UserService } from './UserService';
 
 @Injectable()
 export class OfflinesService  {
 
     constructor(
-        private refereeService: RefereeService,
-        private proService: PROService,
-        private skillProfileService: SkillProfileService,
-        private coachingService: CoachingService,
+        private appSettingsService: AppSettingsService,
         private assessmentService: AssessmentService,
+        private coachingService: CoachingService,
+        private connectedUserService: ConnectedUserService,
         private competitionService: CompetitionService,
         private firestore: AngularFirestore,
-        private appSettingsService: AppSettingsService
+        private proService: PROService,
+        private refereeService: RefereeService,
+        private skillProfileService: SkillProfileService,
+        private userService: UserService
     ) {}
 
     public switchOfflineMode(): Observable<LocalAppSettings> {
@@ -41,6 +45,14 @@ export class OfflinesService  {
                         flatMap(() => this.coachingService.preload()),
                         flatMap(() => this.assessmentService.preload()),
                         flatMap(() => this.competitionService.preload()),
+                        flatMap(() => {
+                            // for admin preload user list
+                            if (this.connectedUserService.getCurrentUser().role === 'ADMIN') {
+                                return this.userService.preload();
+                            } else {
+                                return of('');
+                            }
+                        }),
                         // then disable the network
                         flatMap(() => from(this.firestore.firestore.disableNetwork())),
                     );
