@@ -16,7 +16,7 @@ import { ResponseWithData } from 'src/app/service/response';
 import { flatMap, map, catchError } from 'rxjs/operators';
 
 import { RefereeSelectPage } from './../../referee/referee-select/referee-select';
-import { CONSTANTES } from './../../../../../firebase/functions/src/model/user';
+import { CONSTANTES } from '../../../../../firebase/functions/src/user';
 import { UserSelectorComponent } from './../../widget/user-selector-component';
 import { SharedWith, DATA_REGIONS } from './../../../app/model/common';
 
@@ -57,7 +57,6 @@ export class CompetitionEditComponent implements OnInit {
 
   private loadCompetition(): Observable<Competition> {
     this.loading = true;
-    console.log('loadCompetition begin');
     // load id from url path
     return this.route.paramMap.pipe(
       // load competition from the id
@@ -68,7 +67,6 @@ export class CompetitionEditComponent implements OnInit {
           // the competition has not been found => create it
           this.createCompetition();
         }
-        // console.log('competition= ' + JSON.stringify(this.competition, null, 2));
         return this.competition;
       }),
       // load referees
@@ -81,7 +79,6 @@ export class CompetitionEditComponent implements OnInit {
         return of(this.competition);
       }),
       map (() => {
-        console.log('loadCompetition end');
         this.loading = false;
         return this.competition;
       })
