@@ -16,7 +16,7 @@ export const REFEREE_LEVELS =  ['' , 'EURO_0', 'EURO_1' , 'EURO_2' , 'EURO_3', '
                                 'AUS_0', 'AUS_1', 'AUS_2', 'AUS_3', 'AUS_4', 'AUS_5', 'AUS_6'];
 
 export type Gender = 'M' | 'F';
-export type RefereeCategory = 'OPEN' | 'SENIOR';
+export type RefereeCategory = 'OPEN' | 'SENIOR' | 'JUNIOR';
 export interface Photo {
      path: string;
      url: string;

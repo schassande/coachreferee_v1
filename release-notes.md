@@ -31,6 +31,9 @@ Priority 2:
 - New admin page showing the use of the application with charts
 - show user id users admin page
 - Bug Fix about account validation
+- Bug fix about offline/online
+- Wait server response on write action when online
+- Add Junior category for a referee
 
 
 ## Versin 2.3.1 (current)
