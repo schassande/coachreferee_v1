@@ -28,6 +28,7 @@
                 <span (click)="userSelected(user)">
                     <span style="font-weight: bold; font-size: 1.2em;">{{user.firstName}} {{user.lastName}} ({{user.shortName}})</span>
                 <br>{{user.email}}
+                <br>{{user.id}}
                 </span>
                 <div *ngIf="user.accountStatus !== 'ACTIVE'">Status: <span style="font-weight: bold; font-size: 1.2em; color: red;">{{user.accountStatus}}</span></div>
                 <div style="margin: 10px 0; text-align: center; font-size: 0.8em;">
