@@ -1,3 +1,4 @@
+import { AppSettingsService } from './AppSettingsService';
 import { map } from 'rxjs/operators';
 import { ConnectedUserService } from './ConnectedUserService';
 import { AngularFirestore, Query } from 'angularfire2/firestore';
@@ -12,11 +13,12 @@ import { ToastController } from '@ionic/angular';
 export class PROService extends RemotePersistentDataService<PersistentPRO> {
 
     constructor(
+        appSettingsService: AppSettingsService,
         db: AngularFirestore,
         private connectedUserService: ConnectedUserService,
         toastController: ToastController
     ) {
-        super(db, toastController);
+        super(appSettingsService, db, toastController);
     }
 
     getLocalStoragePrefix() {

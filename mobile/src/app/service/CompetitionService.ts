@@ -1,3 +1,4 @@
+import { AppSettingsService } from './AppSettingsService';
 import { DateService } from './DateService';
 import { Competition } from './../model/competition';
 import { map } from 'rxjs/operators';
@@ -13,12 +14,13 @@ import { ToastController } from '@ionic/angular';
 export class CompetitionService extends RemotePersistentDataService<Competition> {
 
     constructor(
+        appSettingsService: AppSettingsService,
         db: AngularFirestore,
         private connectedUserService: ConnectedUserService,
         private dateService: DateService,
         toastController: ToastController
     ) {
-        super(db, toastController);
+        super(appSettingsService, db, toastController);
     }
 
     getLocalStoragePrefix() {

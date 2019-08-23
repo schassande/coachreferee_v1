@@ -1,3 +1,4 @@
+import { AppSettingsService } from './AppSettingsService';
 import { ToastController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
@@ -13,10 +14,11 @@ export class RefereeService extends RemotePersistentDataService<Referee> {
     public lastSelectedReferee: { referee: Referee, idx: number} = {referee: null, idx: -1};
 
     constructor(
+        appSettingsService: AppSettingsService,
         db: AngularFirestore,
         toastController: ToastController
     ) {
-        super(db, toastController);
+        super(appSettingsService, db, toastController);
     }
 
     getLocalStoragePrefix() {

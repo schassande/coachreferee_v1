@@ -11,7 +11,7 @@ Priority 1:
 
 Priority 2:
 
-- Admin: yearly activity charts : coaching done per week, assessment done per week, number of user accounts per month
+- Cleaning script of past empty coaching
 - Style of the online help
 - In context menu, of coaching game, add the next and the previous game
 - Settings: limit to referee to a region or a group => defintion of referee group
@@ -25,6 +25,13 @@ Priority 2:
 - In coaching-list use a different color for the futur coaching
 - Auto detect disconnected mode.
 - Organize Angular code in submodules with lazy loading.
+
+## Next version
+
+- New admin page showing the use of the application with charts
+- show user id users admin page
+- Bug Fix about account validation
+
 
 ## Versin 2.3.1 (current)
 

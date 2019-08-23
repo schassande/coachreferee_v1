@@ -1,3 +1,4 @@
+import { AppSettingsService } from './AppSettingsService';
 import { PersistentDataUpdater, PersistentDataFilter } from './PersistentDataFonctions';
 import { Crud } from './crud';
 import { PersistentData } from '../model/common';
@@ -20,6 +21,7 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     private preloaded = false;
 
     constructor(
+        protected appSettingsService: AppSettingsService,
         protected db: AngularFirestore,
         private toastController: ToastController
     ) {
@@ -75,7 +77,6 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
         return this.db.createId();
     }
     public save(data: D): Observable<ResponseWithData<D>> {
-        console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].save(): id=' + data.id + ', status=' + data.dataStatus);
         if (data.dataStatus === 'REMOVED') {
             return of({ error : { errorCode: 1, error: null}, data });
 
@@ -88,19 +89,38 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             }
             const docRef = this.fireStoreCollection.doc(data.id);
             // Get its id and set the id field
-            console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].save(): docRef=', docRef, data.id);
-            // store the data
-            docRef.set(data);
-            return of({ error: null, data});
-            // this.voidToObs(docRef.set(data), data);
+            console.log('DatabaseService[' + this.getLocalStoragePrefix() + ']: Creating objet with new id: ' + data.id);
+            return this.manageWritePromise(docRef.set(data), data);
 
         } else {
+            console.log('DatabaseService[' + this.getLocalStoragePrefix() + ']: Saving: ', data.id);
             data.dataStatus = 'CLEAN';
             data.lastUpdate = new Date();
             data.version ++;
-            this.fireStoreCollection.doc(data.id).update(data);
-            // return this.voidToObs(this.fireStoreCollection.doc(data.id).update(data), data);
+            return this.manageWritePromise(this.fireStoreCollection.doc(data.id).update(data), data);
+        }
+    }
+
+    manageWritePromise(promise: any, data: D): Observable<ResponseWithData<D>> {
+        if (this.appSettingsService.settings.forceOffline) {
+            console.log('DatabaseService[' + this.getLocalStoragePrefix() + '](' + data.id + '): offline mode, remote action is queued.');
+            // store the data but don't wait the end because the promise is resolved only when data are store on remote server
+            promise.then((value) => {
+                // TODO emit an event to show data are synchronised.
+                console.log('DatabaseService[' + this.getLocalStoragePrefix() + '](' + data.id + ') data pushed on server.');
+            });
             return of({ error: null, data});
+        } else {
+            console.log('DatabaseService[' + this.getLocalStoragePrefix() + '](' + data.id + '): online mode, wait server response.');
+            // Online mode, wait server response
+            return from(promise).pipe(
+                map( () => {
+                    return { error: null, data};
+                }),
+                catchError((err) => {
+                    return of ({ error: err, data: null});
+                })
+            );
         }
     }
 
@@ -267,14 +287,17 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
                 flatMap( (resL) => {
                     if (resL.data.length === 0) {
                         console.log('preload[' + this.getLocalStoragePrefix() + ']: Loading from server');
-                        this.toastController.create({ message: 'Loading ' + this.getLocalStoragePrefix() + 's...', position: 'bottom'})
-                            .then((alert) => {
-                                toast = alert;
-                                alert.present();
+                        this.toastController.dismiss().then(() => {
+                            this.toastController.create({ message: 'Loading ' + this.getLocalStoragePrefix() + 's...', position: 'bottom'})
+                                .then((alert) => {
+                                    toast = alert;
+                                    alert.present();
+                                });
                             });
                         // load from server
                         return this.allO('server').pipe(flatMap( (resR) =>  {
                             this.preloaded = true;
+                            this.toastController.dismiss();
                             return of({ error: null});
                         }));
                     } else {

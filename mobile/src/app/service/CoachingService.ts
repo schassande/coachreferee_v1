@@ -1,3 +1,4 @@
+import { AppSettingsService } from './AppSettingsService';
 import { DateService } from './DateService';
 import { ConnectedUserService } from './ConnectedUserService';
 import { AngularFirestore, Query } from 'angularfire2/firestore';
@@ -19,6 +20,7 @@ const DATE_SEP = '-';
 export class CoachingService extends RemotePersistentDataService<Coaching> {
 
     constructor(
+      appSettingsService: AppSettingsService,
       db: AngularFirestore,
       protected refereeService: RefereeService,
       private connectedUserService: ConnectedUserService,
@@ -26,7 +28,7 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
       private dateService: DateService,
       toastController: ToastController
     ) {
-        super(db, toastController);
+        super(appSettingsService, db, toastController);
     }
 
     getLocalStoragePrefix() {

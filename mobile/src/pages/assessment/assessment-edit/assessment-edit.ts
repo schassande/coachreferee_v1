@@ -4,7 +4,7 @@ import { ModalController, NavController, ToastController } from '@ionic/angular'
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { SkillProfile } from '../../../app/model/skill';
 import { Observable, of } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { ResponseWithData } from '../../../app/service/response';
 import { AppSettingsService } from '../../../app/service/AppSettingsService';
@@ -43,6 +43,7 @@ export class AssessmentEditPage implements OnInit {
 
   constructor(
     public modalController: ModalController,
+    private changeDetectorRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private navController: NavController,
     public connectedUserService: ConnectedUserService,
@@ -88,6 +89,7 @@ export class AssessmentEditPage implements OnInit {
         }
         this.refereesLoaded = true;
         this.updateAssessmentValid();
+        this.changeDetectorRef.detectChanges();
       })
     ).subscribe();
   }

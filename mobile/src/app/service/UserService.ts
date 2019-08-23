@@ -20,12 +20,12 @@ export class UserService  extends RemotePersistentDataService<User> {
         db: AngularFirestore,
         toastController: ToastController,
         private connectedUserService: ConnectedUserService,
-        private appSettingsService: AppSettingsService,
+        appSettingsService: AppSettingsService,
         private alertCtrl: AlertController,
         private loadingController: LoadingController,
         private angularFireFunctions: AngularFireFunctions
     ) {
-        super(db, toastController);
+        super(appSettingsService, db, toastController);
     }
 
     getLocalStoragePrefix(): string {

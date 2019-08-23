@@ -1,3 +1,4 @@
+import { AppSettingsService } from './AppSettingsService';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { ConnectedUserService } from './ConnectedUserService';
 import { AngularFirestore, Query } from 'angularfire2/firestore';
@@ -21,13 +22,14 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
     public currentAssessment: Assessment = null;
 
     constructor(
+        appSettingsService: AppSettingsService,
         db: AngularFirestore,
         protected refereeService: RefereeService,
         private connectedUserService: ConnectedUserService,
         private angularFireFunctions: AngularFireFunctions,
         toastController: ToastController
     ) {
-        super(db, toastController);
+        super(appSettingsService, db, toastController);
     }
 
     getLocalStoragePrefix() {
@@ -144,7 +146,7 @@ export class AssessmentService extends RemotePersistentDataService<Assessment> {
     }
 
     public loadingReferees(assessment: Assessment, id2referee: Map<string, Referee>): Observable<string> {
-        if (assessment && assessment.refereeId !== null && assessment.refereeId.trim().length > 0) {
+        if (assessment && assessment.refereeId && assessment.refereeId.trim().length > 0) {
             return this.refereeService.get(assessment.refereeId).pipe(
                 map((res: ResponseWithData<Referee>) => {
                 if (res.data) {

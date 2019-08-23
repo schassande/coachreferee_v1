@@ -1,7 +1,7 @@
 import { ResponseWithData } from '../../../app/service/response';
 import { AssessmentService } from '../../../app/service/AssessmentService';
 import { Assessment } from '../../../app/model/assessment';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NavController, AlertController } from '@ionic/angular';
 
 /**
@@ -29,9 +29,11 @@ export class AssessmentListPage implements OnInit {
   searchInput: string;
 
   constructor(
-    private navController: NavController,
-    public assessmentService: AssessmentService,
-    public alertCtrl: AlertController) {
+    private alertCtrl: AlertController,
+    private assessmentService: AssessmentService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private navController: NavController
+    ) {
   }
 
   ngOnInit() {
@@ -43,6 +45,7 @@ export class AssessmentListPage implements OnInit {
       this.assessments = this.assessmentService.sortAssessments(response.data, true);
       this.assessmentLists = this.computeAssessmentLists(this.assessments);
       this.error = response.error;
+      this.changeDetectorRef.detectChanges();
     });
   }
 

@@ -49,10 +49,9 @@ export class AppComponent {
       this.appSettingsService.get().subscribe((appSetttings) => {
         this.appSetttings = appSetttings;
         if (appSetttings.forceOffline) {
-          console.log('Switch offline');
-          this.firestore.firestore.disableNetwork();
+          this.firestore.firestore.disableNetwork().then(() => console.log('Offline'));
         } else {
-          this.firestore.firestore.enableNetwork();
+          this.firestore.firestore.enableNetwork().then(() => console.log('Online'));
         }
       });
     });

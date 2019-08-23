@@ -35,9 +35,11 @@ export class OfflinesService  {
         return this.appSettingsService.get().pipe(
             flatMap((s: LocalAppSettings) => {
                 settings = s;
-                console.log('switchOfflineMode() =>', !settings.forceOffline);
                 let obs: Observable<any> = null;
                 if (settings.forceOffline) {
+                    // Enable the network
+                    obs = from(this.firestore.firestore.enableNetwork().then(() => console.log('Online')));
+                } else {
                     // preload data
                     obs = this.skillProfileService.preload().pipe(
                         flatMap(() => this.refereeService.preload()),
@@ -54,11 +56,8 @@ export class OfflinesService  {
                             }
                         }),
                         // then disable the network
-                        flatMap(() => from(this.firestore.firestore.disableNetwork())),
+                        flatMap(() => from(this.firestore.firestore.disableNetwork().then(() => console.log('Offline')))),
                     );
-                } else {
-                    // Enable the network
-                    obs = from(this.firestore.firestore.enableNetwork());
                 }
                 // store the offline mode
                 return obs.pipe(

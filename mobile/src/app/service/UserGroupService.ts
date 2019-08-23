@@ -1,3 +1,4 @@
+import { AppSettingsService } from './AppSettingsService';
 import { ToastController } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
@@ -11,10 +12,11 @@ import { RemotePersistentDataService } from './RemotePersistentDataService';
 export class UserGroupService extends RemotePersistentDataService<UserGroup> {
 
     constructor(
+        appSettingsService: AppSettingsService,
         db: AngularFirestore,
         toastController: ToastController
     ) {
-        super(db, toastController);
+        super(appSettingsService, db, toastController);
     }
 
     getLocalStoragePrefix() {

@@ -1,3 +1,4 @@
+import { AppSettingsService } from './AppSettingsService';
 import { map } from 'rxjs/operators';
 import { AngularFirestore, Query } from 'angularfire2/firestore';
 import { Injectable } from '@angular/core';
@@ -9,10 +10,11 @@ import { ToastController } from '@ionic/angular';
 export class SkillProfileService  extends RemotePersistentDataService<SkillProfile> {
 
     constructor(
+        appSettingsService: AppSettingsService,
         db: AngularFirestore,
         toastController: ToastController
     ) {
-        super(db, toastController);
+        super(appSettingsService, db, toastController);
     }
 
     getLocalStoragePrefix() {

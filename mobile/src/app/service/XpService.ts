@@ -1,3 +1,4 @@
+import { AppSettingsService } from './AppSettingsService';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { ConnectedUserService } from './ConnectedUserService';
 import { AngularFirestore, Query } from 'angularfire2/firestore';
@@ -13,12 +14,13 @@ import { User } from '../model/user';
 export class XpService extends RemotePersistentDataService<Xp> {
 
     constructor(
+        appSettingsService: AppSettingsService,
         db: AngularFirestore,
         private connectedUserService: ConnectedUserService,
         private angularFireFunctions: AngularFireFunctions,
         toastController: ToastController
     ) {
-        super(db, toastController);
+        super(appSettingsService, db, toastController);
     }
 
     getLocalStoragePrefix() {

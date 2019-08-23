@@ -9,8 +9,13 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class AppSettingsService extends LocalSingletonDataService<LocalAppSettings> {
 
+    public settings: LocalAppSettings = null;
+
     constructor(storage: Storage) {
         super(storage, 'LocalAppSettings');
+        this.get().subscribe((las: LocalAppSettings) => {
+            this.settings = las;
+        });
     }
 
     public get(): Observable<LocalAppSettings> {
@@ -31,6 +36,7 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
                 if (!result.nbPeriod) {
                     result.nbPeriod = 2;
                 }
+                this.settings = result;
                 return result;
             })
         );
@@ -40,18 +46,21 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
         this.get().subscribe((setting: LocalAppSettings) => {
             setting.lastUserEmail = email;
             setting.lastUserPassword = password;
+            this.settings = setting;
             this.save(setting).subscribe();
         });
     }
     public setServerUrl(serverUrl: string) {
         this.get().subscribe((setting: LocalAppSettings) => {
             setting.serverUrl = serverUrl;
+            this.settings = setting;
             this.save(setting).subscribe();
         });
     }
     public setApplicationVersion(applicationVersion: string) {
         this.get().subscribe((setting: LocalAppSettings) => {
             setting.applicationVersion = applicationVersion;
+            this.settings = setting;
             this.save(setting).subscribe();
         });
     }
