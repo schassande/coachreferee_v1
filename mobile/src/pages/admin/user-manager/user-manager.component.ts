@@ -104,20 +104,20 @@ export class UserManagerComponent implements OnInit {
   }
 
   validate(user: User) {
+    user.accountStatus = 'ACTIVE';
     this.userService.save(user).pipe(
       flatMap(() => this.userService.sendAccountValidated(user.id)),
       map(() => {
-        user.accountStatus = 'ACTIVE';
         this.computeStats();
       })
     ).subscribe();
   }
 
   unvalidate(user: User) {
+    user.accountStatus = 'DELETED';
     this.userService.save(user).pipe(
       flatMap(() => this.userService.sendAccountNotValidated(user.id)),
       map(() => {
-        user.accountStatus = 'DELETED';
         this.users = this.sort(this.users);
         this.computeStats();
       })
