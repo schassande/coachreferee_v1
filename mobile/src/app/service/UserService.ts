@@ -127,6 +127,7 @@ export class UserService  extends RemotePersistentDataService<User> {
             catchError((err) => {
                 console.log('UserService.login(' + email + ', ' + password + ') error=', err);
                 this.loadingController.dismiss(null);
+                console.error(err);
                 this.alertCtrl.create({message: err.message}).then((alert) => alert.present());
                 return of({ error: err, data: null});
             }),
@@ -139,7 +140,8 @@ export class UserService  extends RemotePersistentDataService<User> {
                         break;
                     case 'DELETED':
                         ruser.data = null;
-                        ruser.error = { error : 'The account \'' + email + '\' has been removed.', errorCode : 1234 };
+                        ruser.error = { error : 'The account \'' + email + '\' has been removed. Please contact the administrator.',
+                                        errorCode : 1234 };
                         break;
                     case 'LOCKED':
                         ruser.data = null;
@@ -152,8 +154,13 @@ export class UserService  extends RemotePersistentDataService<User> {
                                         errorCode : 1234 };
                         break;
                     }
-                } else if (firebase.auth().currentUser && ruser.error === null) {
-                    ruser.error = { error : 'The account \'' + email + '\' has been removed.', errorCode : 1234 };
+                } else if (!ruser.error) {
+                    const msg = 'Unexpected problem, please contact the administrator with the following data: '
+                        + '<br>server response: ' + JSON.stringify(ruser)
+                        + '<br>credential: ' + JSON.stringify(credential);
+                    console.error(msg);
+                    this.alertCtrl.create({message: msg}).then((alert) => alert.present());
+                    ruser.error = { error : msg, errorCode : 1234 };
                 }
                 return ruser;
             })
