@@ -74,6 +74,10 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
       );
     }
 
+    public allFromAllUsers() {
+      return this.query(this.getCollectionRef(), 'server');
+    }
+
     /** Query basis for coaching limiting access to the coachings of the user */
     private getBaseQueryMyCoahchings(): Query {
       return this.getCollectionRef().where('coachId', '==', this.connectedUserService.getCurrentUser().id);

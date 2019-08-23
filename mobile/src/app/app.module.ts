@@ -1,3 +1,4 @@
+import { CoachingActivityPage } from './../pages/admin/coaching-activity/coaching-activity.page';
 import { HelpService } from './service/HelpService';
 import { HelpWidgetComponent } from './../pages/widget/help-widget-component';
 import { NgModule } from '@angular/core';
@@ -8,6 +9,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { MarkdownModule } from 'ngx-markdown';
+import { ChartsModule } from 'ng2-charts';
 
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireModule } from 'angularfire2';
@@ -88,7 +90,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
 }
 @NgModule({
   declarations: [AppComponent,
-    AdminHomeComponent, UserManagerComponent, RefereeImportComponent,
+    AdminHomeComponent, UserManagerComponent, RefereeImportComponent, CoachingActivityPage,
     AssessRefereePage, AssessmentEditPage, AssessmentListPage,
     CoachingEditPage, CoachingGamePage, CoachingImprovmentFeedbackEditPage, CoachingListPage, CoachingPositiveFeedbackEditPage,
     CompetitionImportComponent, CompetitionListPage, CompetitionEditComponent,
@@ -116,7 +118,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     AngularFirestoreModule.enablePersistence(),
     AngularFireStorageModule,
     AngularFireFunctionsModule,
-    MarkdownModule.forRoot({ loader: HttpClient })],
+    MarkdownModule.forRoot({ loader: HttpClient }),
+    ChartsModule],
   providers: [
     AppSettingsService,
     AssessmentService,

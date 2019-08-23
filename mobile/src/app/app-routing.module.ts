@@ -1,3 +1,4 @@
+import { CoachingActivityPage } from './../pages/admin/coaching-activity/coaching-activity.page';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
@@ -36,6 +37,7 @@ import { AdminGuard } from './AdminGuard';
 const routes: Routes = [
   { path: 'admin', component: AdminHomeComponent, canActivate: [AdminGuard] },
   { path: 'admin/user-manager', component: UserManagerComponent, canActivate: [AdminGuard] },
+  { path: 'admin/coaching-activity', component: CoachingActivityPage, canActivate: [AdminGuard] },
 
   { path: 'assessment/list', component: AssessmentListPage, canActivate: [AuthGuard] },
   { path: 'assessment/create', component: AssessmentEditPage, canActivate: [AuthGuard] },
@@ -83,6 +85,7 @@ const routes: Routes = [
   { path: 'xp/create', component: XpEditComponent, canActivate: [AuthGuard]},
 
   { path: '', redirectTo: '/home', pathMatch: 'full' }
+
 ];
 
 @NgModule({
