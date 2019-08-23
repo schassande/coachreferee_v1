@@ -23,7 +23,7 @@
                     <ion-icon name="sync" scope="start"></ion-icon>
                     <ion-button fill="clear" (click)="onToggleForceOffline()">Switch {{ appSetttings.forceOffline ? 'offline' : 'online'}}</ion-button>
                 </ion-item>
-                <ion-item *ngIf="helpService.entry">
+                <ion-item *ngIf="helpService.getHelp() | async">
                     <ion-icon name="{{helpService.entry.iconName}}" scope="start"></ion-icon>
                     <ion-button fill="clear" (click)="handleEntry(helpService.entry)">{{helpService.entry.label}}</ion-button>
                 </ion-item>
