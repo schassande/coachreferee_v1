@@ -3,7 +3,7 @@ import { ResponseWithData } from './../../../app/service/response';
 import { Competition } from './../../../app/model/competition';
 import { NavController, AlertController } from '@ionic/angular';
 import { CompetitionService } from './../../../app/service/CompetitionService';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DateService } from 'src/app/service/DateService';
 
 /**
@@ -25,16 +25,20 @@ export class CompetitionListPage implements OnInit {
   loading = false;
 
   constructor(
-    private navController: NavController,
+    private alertCtrl: AlertController,
     private competitionService: CompetitionService,
-    private helpService: HelpService,
+    private changeDetectorRef: ChangeDetectorRef,
     private dateService: DateService,
-    private alertCtrl: AlertController) {
+    private helpService: HelpService,
+    private navController: NavController
+    ) {
   }
 
   ngOnInit() {
     this.helpService.setHelp('competition-list');
-    setTimeout(() => { this.doRefresh(null); }, 200);
+    setTimeout(() => {
+      this.doRefresh(null);
+    }, 200);
   }
 
   doRefresh(event) {
@@ -59,6 +63,7 @@ export class CompetitionListPage implements OnInit {
         if (this.error) {
           console.log('searchCompetition(' + this.searchInput + ') error=' + this.error);
         }
+        this.changeDetectorRef.detectChanges();
       });
   }
 
