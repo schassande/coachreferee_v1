@@ -7,11 +7,11 @@
         </ion-header>
         <ion-content id="ctt">
             <ion-list>
-                <ion-item>
+                <ion-item *ngIf="this.connectedUserService.isConnected()">
                     <ion-icon name="home" scope="start"></ion-icon>
                     <ion-button fill="clear" (click)="route()">Home</ion-button>
                 </ion-item>
-                <ion-item>
+                <ion-item *ngIf="this.connectedUserService.isConnected()">
                     <ion-icon name="log-out" scope="start"></ion-icon>
                     <ion-button fill="clear" (click)="logout()">Log out</ion-button>
                 </ion-item>

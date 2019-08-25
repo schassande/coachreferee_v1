@@ -30,9 +30,6 @@
         <ion-item detail routerLink="/settings">
             <ion-label class="menu-entry">Settings</ion-label>
         </ion-item>
-        <ion-item detail routerLink="/user/edit/{{currentUser.id}}">
-            <ion-label class="menu-entry">My account</ion-label>
-        </ion-item>
         <ion-item detail routerLink="/admin" *ngIf="isLevelAdmin()">
             <ion-label class="menu-entry">Admin</ion-label>
         </ion-item>
