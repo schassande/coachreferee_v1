@@ -28,6 +28,8 @@ Priority 2:
 
 ## Next version
 
+## Versin 2.3.2 (current)
+
 - New admin page showing the use of the application with charts
 - show user id users admin page
 - Bug Fix about account validation
@@ -36,7 +38,7 @@ Priority 2:
 - Add Junior category for a referee
 
 
-## Versin 2.3.1 (current)
+## Versin 2.3.1
 
 - list assessments of a refere in Referee View Page
 - Shortcut to assess a referee from the coaching page and from the Referee View page
