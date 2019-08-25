@@ -1,4 +1,3 @@
-import { ConnectedUserService } from './../../app/service/ConnectedUserService';
 import { COACH_LEVELS_EURO } from './coachLevelEuropean';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { map } from 'rxjs/operators';
@@ -12,7 +11,7 @@ import { RefereeService } from '../../app/service/RefereeService';
 import { AppSettingsService } from '../../app/service/AppSettingsService';
 import { LocalAppSettings } from '../../app/model/settings';
 import { AssessmentService } from '../../app/service/AssessmentService';
-import { Referee, Gender, RefereeLevel, RefereeCategory, User } from './../../app/model/user';
+import { Referee, Gender, RefereeLevel, RefereeCategory } from './../../app/model/user';
 import { ExportedData } from './../../app/model/settings';
 
 import { LEVELS_AUS } from './levelAus';
@@ -42,46 +41,37 @@ export class SettingsPage implements OnInit {
   showDebugInfo = false;
   deferredPrompt;
   showInstallBtn = false;
-  currentUser: User;
 
   constructor(
-    private alertController: AlertController,
-    private appSettingsService: AppSettingsService,
-    private assessmentService: AssessmentService,
-    private coachingService: CoachingService,
-    private connectedUserService: ConnectedUserService,
     private navController: NavController,
-    private proService: PROService,
+    private appSettingsService: AppSettingsService,
+    private userService: UserService,
     private refereeService: RefereeService,
+    private proService: PROService,
     private skillProfileService: SkillProfileService,
-    private toastController: ToastController,
-    private userService: UserService
+    private coachingService: CoachingService,
+    private assessmentService: AssessmentService,
+    private alertController: AlertController,
+    private toastController: ToastController
   ) {
   }
 
   ngOnInit() {
-    this.installAsApp();
     this.computeLaunchMode();
-    this.currentUser = this.connectedUserService.getCurrentUser();
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      e.preventDefault();
+      // Stash the event so it can be triggered later on the button event.
+      this.deferredPrompt = e;
+    // Update UI by showing a button to notify the user they can add to home screen
+      this.showInstallBtn = true;
+    });
     this.appSettingsService.get().subscribe((appSettings: LocalAppSettings) => {
       if (appSettings.forceOffline === undefined) {
         appSettings.forceOffline = false;
       }
       this.settings = appSettings;
     });
-  }
-
-  private installAsApp() {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevent Chrome 67 and earlier from automatically showing the prompt
-      // e.preventDefault();
-      // Stash the event so it can be triggered later on the button event.
-      this.deferredPrompt = e;
-    // Update UI by showing a button to notify the user they can add to home screen
-      this.showInstallBtn = true;
-      this.launchMode += '<br>App can be installed.';
-    });
-    window.addEventListener('appinstalled', (event) => { this.launchMode += '<br>App installed'; });
   }
 
   private computeLaunchMode() {
@@ -103,6 +93,12 @@ export class SettingsPage implements OnInit {
     } else {
       this.launchMode += '<br>display-mode is launch from web browser';
     }
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      e.preventDefault();
+      this.launchMode += '<br>App can be installed.';
+    });
+    window.addEventListener('appinstalled', (event) => { this.launchMode += '<br>App installed'; });
   }
 
   public saveSettings(navigate = true) {

@@ -1,13 +1,11 @@
 {
-    "name": "CoachReferee",
-    "short_name": "CoachReferee",
+    "name": "RefCoach",
+    "short_name": "RefCoach",
     "theme_color": "#1976d2",
     "background_color": "#fafafa",
     "display": "standalone",
     "scope": "/",
     "start_url": "index.html",
-    "prefer_related_applications": false,
-    "related_applications": [],
     "icons": [{
             "src": "assets/icons/icon-72x72.png",
             "sizes": "72x72",
