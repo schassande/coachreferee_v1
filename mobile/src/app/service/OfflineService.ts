@@ -49,7 +49,7 @@ export class OfflinesService  {
                         flatMap(() => this.competitionService.preload()),
                         flatMap(() => {
                             // for admin preload user list
-                            if (this.connectedUserService.getCurrentUser().role === 'ADMIN') {
+                            if (this.connectedUserService.isConnected() && this.connectedUserService.getCurrentUser().role === 'ADMIN') {
                                 return this.userService.preload();
                             } else {
                                 return of('');
