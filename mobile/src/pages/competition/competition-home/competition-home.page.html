@@ -13,13 +13,11 @@
 </ion-header>
 
 <ion-content *ngIf="competition && !loading">
-    <div>
-        <div style="margin: 20px 0 0 10px; text-align: center;">
-            <span style="font-size: 1.4em;">{{competition.name}}</span>
-            <br>{{dateService.date2string(competition.date)}} <span *ngIf="competition.allocations.length">over {{competition.allocations.length}} day(s)</span>
-            <br>in {{competition.country}} / {{competition.region}}
-            <span *ngIf="owner"><br>Own by {{owner}}</span>
-        </div>
+    <div style="margin: 20px 0; text-align: center;">
+        <span style="font-size: 1.4em;">{{competition.name}}</span>
+        <br>{{dateService.date2string(competition.date)}} <span *ngIf="competition.allocations.length">over {{competition.allocations.length}} day(s)</span>
+        <br>in {{competition.country}} / {{competition.region}}
+        <span *ngIf="owner"><br>Own by {{owner}}</span>
     </div>
     <ion-list>
         <ion-item detail routerLink="/competition/{{competition.id}}/edit">
