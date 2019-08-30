@@ -8,6 +8,7 @@ export interface Competition extends PersistentData {
     year: number;
     region: DataRegion;
     country: string;
+    ownerId: string;
     referees: {
         refereeId: string;
         refereeShortName: string;

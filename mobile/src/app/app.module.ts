@@ -1,4 +1,4 @@
-import { CoachingActivityPage } from './../pages/admin/coaching-activity/coaching-activity.page';
+import { CompetitionGamesPage } from './../pages/competition/competition-games/competition-games.page';
 import { HelpService } from './service/HelpService';
 import { HelpWidgetComponent } from './../pages/widget/help-widget-component';
 import { NgModule } from '@angular/core';
@@ -47,15 +47,22 @@ import { AdminHomeComponent } from './../pages/admin/admin-home/admin-home.compo
 import { AssessRefereePage } from '../pages/assessment/assess-referee/assess-referee';
 import { AssessmentEditPage } from '../pages/assessment/assessment-edit/assessment-edit';
 import { AssessmentListPage } from '../pages/assessment/assessment-list/assessment-list';
+import { CoachingActivityPage } from './../pages/admin/coaching-activity/coaching-activity.page';
 import { CoachingEditPage } from '../pages/coaching/coaching-edit/coaching-edit';
 import { CoachingGamePage } from '../pages/coaching/coaching-game/coaching-game';
 import { CoachingImprovmentFeedbackEditPage } from '../pages/coaching/coaching-improvment-feedback-edit/coaching-improvment-feedback-edit';
 import { CoachingListPage } from '../pages/coaching/coaching-list/coaching-list';
 import { CoachingPositiveFeedbackEditPage } from '../pages/coaching/coaching-positive-feedback-edit/coaching-positive-feedback-edit';
+import { CompetitionEditComponent } from '../pages/competition/competition-edit/competition-edit.component';
+import { CompetitionCoachesPage } from './../pages/competition/competition-coaches/competition-coaches.page';
+import { CompetitionHomePage } from './../pages/competition/competition-home/competition-home.page';
 import { CompetitionImportComponent } from '../pages/competition/competition-import/competition-import.component';
 import { CompetitionListPage } from '../pages/competition/competition-list/competition-list';
-import { CompetitionEditComponent } from '../pages/competition/competition-edit/competition-edit.component';
+import { CompetitionRefereesPage } from './../pages/competition/competition-referees/competition-referees.page';
+import { CompetitionRankingPage } from './../pages/competition/competition-ranking/competition-ranking.page';
+import { CompetitionRankingBestOf2Page } from './../pages/competition/competition-ranking-best-of2/competition-ranking-best-of2.page';
 import { CompetitionSelectorComponent } from './../pages/widget/competition-selector';
+import { CompetitionUpgradesPage } from './../pages/competition/competition-upgrades/competition-upgrades.page';
 import { CompetencyComponent } from '../pages/assessment/assess-referee/competency-component';
 import { HomePage } from '../pages/home/home';
 import { PeriodSelectorComponent } from '../pages/widget/period-selector-component';
@@ -94,6 +101,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     AssessRefereePage, AssessmentEditPage, AssessmentListPage,
     CoachingEditPage, CoachingGamePage, CoachingImprovmentFeedbackEditPage, CoachingListPage, CoachingPositiveFeedbackEditPage,
     CompetitionImportComponent, CompetitionListPage, CompetitionEditComponent,
+    CompetitionCoachesPage, CompetitionHomePage, CompetitionRankingPage, CompetitionUpgradesPage, CompetitionRefereesPage,
+    CompetitionRankingPage, CompetitionRankingBestOf2Page, CompetitionGamesPage,
     HelpWidgetComponent, HomePage,
     ProEditPage, ProListPage,
     RefereeListPage, RefereeViewPage, RefereeSelectPage, RefereeEditPage,

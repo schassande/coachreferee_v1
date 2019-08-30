@@ -68,11 +68,11 @@ export class CompetitionListPage implements OnInit {
   }
 
   newCompetition() {
-    this.navController.navigateRoot(`/competition/edit/-1`);
+    this.navController.navigateRoot(`/competition/-1/edit`);
   }
 
   competitionSelected(competition: Competition) {
-    this.navController.navigateRoot(`/competition/edit/${competition.id}`);
+    this.navController.navigateRoot(`/competition/${competition.id}/home`);
   }
 
   deleteCompetition(competition: Competition) {

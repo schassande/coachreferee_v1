@@ -1,3 +1,4 @@
+import { ConnectedUserService } from './../../../app/service/ConnectedUserService';
 import { NavController } from '@ionic/angular';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Observable, of } from 'rxjs';
@@ -36,6 +37,7 @@ export class CompetitionImportComponent implements OnInit {
   constructor(
     private coachingService: CoachingService,
     private competitionService: CompetitionService,
+    private connectedUserService: ConnectedUserService,
     private dateService: DateService,
     private helpService: HelpService,
     private navController: NavController,
@@ -212,6 +214,7 @@ export class CompetitionImportComponent implements OnInit {
       year: src.year,
       region: src.region,
       country: src.region,
+      ownerId: src.ownerId,
       referees: src.referees.map((item) =>  {
         return {  refereeId: item.refereeId, refereeShortName: item.refereeShortName };
       }),
@@ -270,6 +273,7 @@ export class CompetitionImportComponent implements OnInit {
       lastUpdate : new Date(),
       dataStatus: 'NEW',
       name,
+      ownerId: this.connectedUserService.getCurrentUser().id,
       date: new Date(),
       year: new Date().getFullYear(),
       region : 'Others',

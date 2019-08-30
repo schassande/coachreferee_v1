@@ -1,4 +1,4 @@
-import { CoachingActivityPage } from './../pages/admin/coaching-activity/coaching-activity.page';
+import { CompetitionGamesPage } from './../pages/competition/competition-games/competition-games.page';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
@@ -11,9 +11,15 @@ import { CoachingGamePage } from '../pages/coaching/coaching-game/coaching-game'
 import { CoachingImprovmentFeedbackEditPage } from '../pages/coaching/coaching-improvment-feedback-edit/coaching-improvment-feedback-edit';
 import { CoachingListPage } from '../pages/coaching/coaching-list/coaching-list';
 import { CoachingPositiveFeedbackEditPage } from '../pages/coaching/coaching-positive-feedback-edit/coaching-positive-feedback-edit';
+import { CoachingActivityPage } from './../pages/admin/coaching-activity/coaching-activity.page';
 import { CompetitionImportComponent } from '../pages/competition/competition-import/competition-import.component';
 import { CompetitionListPage } from '../pages/competition/competition-list/competition-list';
 import { CompetitionEditComponent } from '../pages/competition/competition-edit/competition-edit.component';
+import { CompetitionCoachesPage } from './../pages/competition/competition-coaches/competition-coaches.page';
+import { CompetitionRefereesPage } from './../pages/competition/competition-referees/competition-referees.page';
+import { CompetitionUpgradesPage } from './../pages/competition/competition-upgrades/competition-upgrades.page';
+import { CompetitionRankingPage } from './../pages/competition/competition-ranking/competition-ranking.page';
+import { CompetitionHomePage } from './../pages/competition/competition-home/competition-home.page';
 import { HomePage } from '../pages/home/home';
 import { ProEditPage } from '../pages/pro/pro-edit/pro-edit';
 import { ProListPage } from '../pages/pro/pro-list/pro-list';
@@ -55,7 +61,13 @@ const routes: Routes = [
 
   { path: 'competition/list', component: CompetitionListPage, canActivate: [AuthGuard] },
   { path: 'competition/import', component: CompetitionImportComponent, canActivate: [AuthGuard] },
-  { path: 'competition/edit/:id', component: CompetitionEditComponent, canActivate: [AuthGuard] },
+  { path: 'competition/:id/home', component: CompetitionHomePage, canActivate: [AuthGuard] },
+  { path: 'competition/:id/edit', component: CompetitionEditComponent, canActivate: [AuthGuard] },
+  { path: 'competition/:id/coaches', component: CompetitionCoachesPage, canActivate: [AuthGuard] },
+  { path: 'competition/:id/games', component: CompetitionGamesPage, canActivate: [AuthGuard] },
+  { path: 'competition/:id/ranking', component: CompetitionRankingPage, canActivate: [AuthGuard] },
+  { path: 'competition/:id/referees', component: CompetitionRefereesPage, canActivate: [AuthGuard] },
+  { path: 'competition/:id/upgrades', component: CompetitionUpgradesPage, canActivate: [AuthGuard] },
 
   { path: 'home', component: HomePage, canActivate: [AuthGuard]},
 
@@ -84,7 +96,7 @@ const routes: Routes = [
   { path: 'xp/edit/:id', component: XpEditComponent, canActivate: [AuthGuard]},
   { path: 'xp/create', component: XpEditComponent, canActivate: [AuthGuard]},
 
-  { path: '', redirectTo: '/home', pathMatch: 'full' }
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
 
 ];
 
