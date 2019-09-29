@@ -13,5 +13,27 @@
 </ion-header>
 
 <ion-content>
-    <p style="text-align: center; font-size: 2em; color: yellow;">Feature Under construction</p>
+    <ion-item>
+        <ion-label position="fixed">Upgrade to:</ion-label>
+        <ion-select [(ngModel)]="currentUgradeLevel" (ionChange)="onUpgradeLevelChanged()">
+            <ion-select-option *ngFor="let upgradeLevel of upgradeLevels" [value]="upgradeLevel">{{upgradeLevel}}</ion-select-option>
+        </ion-select>
+    </ion-item>
+    <ion-item *ngFor="let ru of refereesToUpgrade">
+        <ion-label>
+            <div style="text-align: center; font-size: 1.2em; font-weight: bold;">{{ru.referee.firstName}} {{ru.referee.lastName}} ({{ru.referee.shortName}})</div>
+            <div *ngFor="let coaching of ru.coachings" style="margin-top: 20px;">
+                <span style="font-weight: bold;">{{coachingService.getCoachingDateAsString(coaching)}} &nbsp;&nbsp;{{coaching.timeSlot}} &nbsp;&nbsp;Field {{coaching.field}}, &nbsp;&nbsp;{{coaching.gameCategory}}</span>
+                <div> Referees: <span *ngFor="let cref of coaching.referees; last as isLast">{{cref.refereeShortName}}<span *ngIf="!isLast">, </span></span>
+                    <div *ngIf="coaching.referees[getRefIdx(coaching, ru.referee.id)]; let coachingRef">
+                        <div *ngFor="let positiveFeedback of coachingRef.positiveFeedbacks" class="feedback">+
+                            <span [ngClass]="{'delivered': positiveFeedback.deliver}">{{positiveFeedback.skillName}}</span></div>
+                        <div *ngFor="let feedback of coachingRef.feedbacks" class="feedback">-{{feedback.appliedLater ? '&gt;+': ''}}
+                            <span [ngClass]="{'delivered': feedback.deliver}">{{feedback.problemShortDesc}}</span></div>
+                        <div>upgrade: {{coachingRef.upgrade}}, rank: {{coachingRef.rank}}</div>
+                    </div>
+                </div>
+            </div>
+        </ion-label>
+    </ion-item>
 </ion-content>

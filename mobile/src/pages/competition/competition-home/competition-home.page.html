@@ -29,13 +29,13 @@
         <ion-item detail routerLink="/competition/{{competition.id}}/coaches">
             <ion-label class="menu-entry">Referee Coaches</ion-label>
         </ion-item>
-        <ion-item detail routerLink="/competition/{{competition.id}}/games">
+        <ion-item detail routerLink="/competition/{{competition.id}}/games" *ngIf="competition.allocations.length">
             <ion-label class="menu-entry">Games</ion-label>
         </ion-item>
-        <ion-item detail routerLink="/competition/{{competition.id}}/upgrades">
+        <ion-item detail routerLink="/competition/{{competition.id}}/upgrades" *ngIf="competition.referees.length">
             <ion-label class="menu-entry">Upgrades</ion-label>
         </ion-item>
-        <ion-item detail routerLink="/competition/{{competition.id}}/ranking">
+        <ion-item detail routerLink="/competition/{{competition.id}}/ranking" *ngIf="competition.referees.length">
             <ion-label class="menu-entry">Ranking</ion-label>
         </ion-item>
         <ion-item detail routerLink="/competition/import">
