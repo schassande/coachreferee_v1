@@ -4,7 +4,7 @@ import { Coaching } from './../../../app/model/coaching';
 import { CoachingService } from './../../../app/service/CoachingService';
 import { Component, OnInit } from '@angular/core';
 import { map, flatMap } from 'rxjs/operators';
-import { observable, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-coaching-activity',
