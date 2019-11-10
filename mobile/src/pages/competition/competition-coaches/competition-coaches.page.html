@@ -14,6 +14,12 @@
 
 <ion-content>
     <ion-list *ngIf="competition && !loading">
+        <ion-item>
+            <ion-label>Director:</ion-label>
+            <ion-select slot="end" (ionChange)="setDirector(event)" [(ngModel)]="competition.refereePanelDirectorId">
+                <ion-select-option *ngFor="let coach of coaches" [value]="coach.id">{{coach.shortName}}</ion-select-option>
+            </ion-select>
+        </ion-item>
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
                 <ion-label>{{coaches.length}} Referee Coach(es)</ion-label>
@@ -27,6 +33,11 @@
                 </ion-label>
                 <ion-icon slot="end" name="trash" (click)="deleteRefereeCoach(coach)"></ion-icon>
             </ion-item>
+            <ion-item *ngFor="let nonUserCoach of nonUserCoaches">
+                <ion-label class="listItemButton">{{nonUserCoach}}</ion-label>
+                <ion-icon slot="end" name="trash" (click)="deleteNonUserCoach(nonUserCoach)"></ion-icon>
+            </ion-item>
+
         </ion-item-group>
     </ion-list>
 

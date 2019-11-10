@@ -1,3 +1,7 @@
+import { Upgradable } from './../../../app/model/coaching';
+import { ConnectedUserService } from './../../../app/service/ConnectedUserService';
+import { CompetitionRefereeUpgradeService } from './../../../app/service/CompetitionRefereeUpgradeService';
+import { CompetitionRefereeUpgrade, UpgradeVote } from './../../../app/model/upgrade';
 import { CoachingService } from './../../../app/service/CoachingService';
 import { Coaching } from 'src/app/model/coaching';
 import { ToolService } from 'src/app/service/ToolService';
@@ -8,7 +12,7 @@ import { NavController, AlertController } from '@ionic/angular';
 import { flatMap, map, catchError } from 'rxjs/operators';
 
 import { CompetitionService } from './../../../app/service/CompetitionService';
-import { Competition } from './../../../app/model/competition';
+import { Competition, CoachRef } from './../../../app/model/competition';
 import { DateService } from './../../../app/service/DateService';
 import { HelpService } from './../../../app/service/HelpService';
 import { Referee, RefereeLevel } from './../../../app/model/user';
@@ -37,9 +41,17 @@ export class CompetitionUpgradesPage implements OnInit {
   referees: Referee[] = [];
   currentUgradeLevel: RefereeLevel = null;
   refereesToUpgrade: UpgradableReferee[] = [];
+  refereeToUpgrade: UpgradableReferee = null;
+  refereeToUpgrade2: UpgradableReferee = null;
+  competitionRefereeUpgrade: CompetitionRefereeUpgrade;
+  votes: UpgradeVote[];
+  voteStats: number[] = [];
+  isPanelDirector = false;
+  userId: string;
 
   constructor(
     private coachingService: CoachingService,
+    private connectedUserService: ConnectedUserService,
     private competitionService: CompetitionService,
     public dateService: DateService,
     private helpService: HelpService,
@@ -47,9 +59,11 @@ export class CompetitionUpgradesPage implements OnInit {
     private refereeService: RefereeService,
     private route: ActivatedRoute,
     private toolService: ToolService,
+    private competitionRefereeUpgradeService: CompetitionRefereeUpgradeService
   ) { }
 
   ngOnInit() {
+    this.userId = this.connectedUserService.getCurrentUser().id;
     this.helpService.setHelp('competition-list');
     this.loadCompetition().subscribe();
   }
@@ -116,9 +130,11 @@ export class CompetitionUpgradesPage implements OnInit {
     }
     return this.upgradeLevels;
   }
+
   onUpgradeLevelChanged() {
     this.computeUpgradableReferees().subscribe();
   }
+
   computeUpgradableReferees(): Observable<any> {
     const refsToUpgrade: UpgradableReferee[] = [];
     const obs: Observable<any>[] = [];
@@ -144,6 +160,7 @@ export class CompetitionUpgradesPage implements OnInit {
           this.coachingService.sortCoachings(ref.coachings, true);
         });
         this.refereesToUpgrade = refsToUpgrade;
+        this.refereeToUpgrade = refsToUpgrade ? refsToUpgrade[0] : null;
         return this.refereesToUpgrade;
       })
     );
@@ -159,5 +176,99 @@ export class CompetitionUpgradesPage implements OnInit {
     } else {
       this.navController.navigateRoot(`/competition/list`);
     }
+  }
+
+  onRefereeChanged() {
+    if (this.refereeToUpgrade
+      && (this.refereeToUpgrade2 === null || this.refereeToUpgrade.referee.id !== this.refereeToUpgrade2.referee.id)) {
+
+      this.refereeToUpgrade2 = this.refereeToUpgrade;
+      this.getCompetitionRefereeUpgrade().subscribe();
+    }
+  }
+
+  private getCompetitionRefereeUpgrade(): Observable<CompetitionRefereeUpgrade> {
+    return this.competitionRefereeUpgradeService.getCompetitionRefereeUpgrade(this.competition.id, this.refereeToUpgrade.referee.id).pipe(
+      flatMap((rcru) => {
+        if (!rcru.error && !rcru.data) {
+          console.log('getCompetitionRefereeUpgrade: create a new');
+          // create a new CompetitionRefereeUpgrade
+          rcru.data = {
+            id: '',
+            creationDate: new Date(),
+            dataStatus: 'NEW',
+            lastUpdate: new Date(),
+            version: 0,
+            refereeId: this.refereeToUpgrade.referee.id,
+            refereeShortName: this.refereeToUpgrade.referee.shortName,
+            competitionId: this.competition.id,
+            votes: {},
+            finalDecision: 'DNS'
+          };
+          // initialize coach votes
+          this.competition.refereeCoaches.forEach(coach => {
+            const coachId: string = this.toCoachId(coach);
+            if (coachId) {
+              rcru.data.votes[coachId] = {
+                coachId,
+                vote: 'DNS',
+                isUser: coach.coachId !== null,
+                force: false
+              } as UpgradeVote;
+            }
+          });
+          // save the new object
+          return this.competitionRefereeUpgradeService.save(rcru.data);
+        } else {
+          console.log('getCompetitionRefereeUpgrade: rcru', rcru);
+          return of(rcru);
+        }
+      }),
+      map((rcru) => {
+        this.competitionRefereeUpgrade = rcru.data;
+        if (this.competitionRefereeUpgrade) {
+          this.votes = this.competition.refereeCoaches.map(coach => this.competitionRefereeUpgrade.votes[this.toCoachId(coach)]);
+          this.isPanelDirector = this.userId === this.competition.refereePanelDirectorId;
+        } else {
+          this.votes = [];
+          this.isPanelDirector = false;
+        }
+        this.computeVoteStats();
+        return this.competitionRefereeUpgrade;
+      })
+    );
+  }
+
+  toCoachId(coach: CoachRef): string {
+    return coach.coachId ? coach.coachId : coach.coachShortName;
+  }
+
+  getCoachShortName(coachId: string): string {
+    const coachInfo = this.competition.refereeCoaches.find(coach => this.toCoachId(coach) === coachId);
+    return coachInfo ? coachInfo.coachShortName : null;
+  }
+
+  setDecision(up: Upgradable) {
+    console.log('setDecision: ', up);
+    this.competitionRefereeUpgrade.finalDecision = up;
+    this.competitionRefereeUpgradeService.setDecision(this.competitionRefereeUpgrade.id, up).subscribe();
+  }
+
+  setVote(vote: UpgradeVote, up: Upgradable) {
+    console.log('setVote: ', vote, up);
+    vote.vote = up;
+    this.computeVoteStats();
+    this.competitionRefereeUpgradeService.setCoachVote(this.competitionRefereeUpgrade.id, vote).subscribe();
+  }
+
+  computeVoteStats() {
+    this.voteStats['Yes'] = 0;
+    this.voteStats['Possible'] = 0;
+    this.voteStats['No'] = 0;
+    this.voteStats['DNS'] = 0;
+    this.competition.refereeCoaches.forEach(coach => {
+      const vote: Upgradable = this.competitionRefereeUpgrade.votes[this.toCoachId(coach)].vote;
+      this.voteStats[vote]++;
+    });
   }
 }

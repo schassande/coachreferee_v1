@@ -26,6 +26,7 @@ import { AssessmentService } from './service/AssessmentService';
 import { BookmarkService } from './service/BookmarkService';
 import { CoachingService } from './service/CoachingService';
 import { CompetitionService } from './service/CompetitionService';
+import { CompetitionRefereeUpgradeService } from './service/CompetitionRefereeUpgradeService';
 import { ConnectedUserService } from './service/ConnectedUserService';
 import { DateService } from './service/DateService';
 import { EmailService } from './service/EmailService';
@@ -135,6 +136,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     BookmarkService,
     CoachingService,
     CompetitionService,
+    CompetitionRefereeUpgradeService,
     ConnectedUserService,
     DateService,
     EmailService,

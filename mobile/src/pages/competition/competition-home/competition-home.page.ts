@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HelpService } from './../../../app/service/HelpService';
 import { DateService } from './../../../app/service/DateService';
 import { Competition } from './../../../app/model/competition';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-competition-home',
@@ -23,6 +23,7 @@ export class CompetitionHomePage implements OnInit {
 
   constructor(
     private alertCtrl: AlertController,
+    private changeDetectorRef: ChangeDetectorRef,
     private connectedUserService: ConnectedUserService,
     private competitionService: CompetitionService,
     public dateService: DateService,
@@ -34,7 +35,9 @@ export class CompetitionHomePage implements OnInit {
 
   ngOnInit() {
     this.helpService.setHelp('competition-list');
-    this.loadCompetition().subscribe();
+    this.loadCompetition().subscribe(() => {
+      this.changeDetectorRef.detectChanges();
+    });
   }
 
   private loadCompetition(): Observable<Competition> {

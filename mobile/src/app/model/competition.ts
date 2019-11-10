@@ -9,15 +9,20 @@ export interface Competition extends PersistentData {
     region: DataRegion;
     country: string;
     ownerId: string;
-    referees: {
-        refereeId: string;
-        refereeShortName: string;
-    }[];
-    refereeCoaches: {
-        coachId: string;
-        coachShortName: string;
-    }[];
+    referees: RefereeRef[];
+    refereeCoaches: CoachRef[];
     allocations: GameAllocation[];
+    refereePanelDirectorId?: string;
+}
+
+export interface RefereeRef {
+    refereeId: string;
+    refereeShortName: string;
+}
+
+export interface CoachRef {
+    coachId: string;
+    coachShortName: string;
 }
 export interface GameAllocation extends HasId {
     date: Date;
