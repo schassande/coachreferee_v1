@@ -1,4 +1,3 @@
-import { CompetitionGamesPage } from './../pages/competition/competition-games/competition-games.page';
 import { HelpService } from './service/HelpService';
 import { HelpWidgetComponent } from './../pages/widget/help-widget-component';
 import { NgModule } from '@angular/core';
@@ -56,6 +55,7 @@ import { CoachingListPage } from '../pages/coaching/coaching-list/coaching-list'
 import { CoachingPositiveFeedbackEditPage } from '../pages/coaching/coaching-positive-feedback-edit/coaching-positive-feedback-edit';
 import { CompetitionEditComponent } from '../pages/competition/competition-edit/competition-edit.component';
 import { CompetitionCoachesPage } from './../pages/competition/competition-coaches/competition-coaches.page';
+import { CompetitionGamesPage } from './../pages/competition/competition-games/competition-games.page';
 import { CompetitionHomePage } from './../pages/competition/competition-home/competition-home.page';
 import { CompetitionImportComponent } from '../pages/competition/competition-import/competition-import.component';
 import { CompetitionListPage } from '../pages/competition/competition-list/competition-list';
@@ -72,6 +72,7 @@ import { ProListPage } from '../pages/pro/pro-list/pro-list';
 import { RefereeEditPage } from '../pages/referee/referee-edit/referee-edit';
 import { RefereeImportComponent } from '../pages/referee/referee-import/referee-import.component';
 import { RefereeListPage } from '../pages/referee/referee-list/referee-list';
+import { RefereeSeasonUpgradeComponent } from '../pages/referee/referee-season-upgrade/referee-season-upgrade.component';
 import { RefereeSelectPage } from '../pages/referee/referee-select/referee-select';
 import { RefereeViewPage } from '../pages/referee/referee-view/referee-view';
 import { SettingsPage } from '../pages/settings/settings';
@@ -106,7 +107,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     CompetitionRankingPage, CompetitionRankingBestOf2Page, CompetitionGamesPage,
     HelpWidgetComponent, HomePage,
     ProEditPage, ProListPage,
-    RefereeListPage, RefereeViewPage, RefereeSelectPage, RefereeEditPage,
+    RefereeListPage, RefereeViewPage, RefereeSelectPage, RefereeEditPage, RefereeSeasonUpgradeComponent,
     SettingsPage,
     SkillEditPage, SkillProfileEditPage, SkillProfileListPage, SkillSetEditPage,
     UserEditPage, UserLoginComponent,

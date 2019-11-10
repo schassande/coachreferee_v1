@@ -203,7 +203,8 @@ export class CompetitionUpgradesPage implements OnInit {
             refereeShortName: this.refereeToUpgrade.referee.shortName,
             competitionId: this.competition.id,
             votes: {},
-            finalDecision: 'DNS'
+            finalDecision: 'DNS',
+            season: this.competition.date.getFullYear().toString()
           };
           // initialize coach votes
           this.competition.refereeCoaches.forEach(coach => {

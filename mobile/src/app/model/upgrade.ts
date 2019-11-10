@@ -15,6 +15,8 @@ export interface CompetitionRefereeUpgrade extends  PersistentData {
     votes: any;
     /** The final decision of the panel */
     finalDecision: Upgradable;
+    /** the season/year of the competition when the referee has been evaluated */
+    season: string;
 }
 
 /**

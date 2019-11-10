@@ -24,6 +24,7 @@ import { HomePage } from '../pages/home/home';
 import { ProEditPage } from '../pages/pro/pro-edit/pro-edit';
 import { ProListPage } from '../pages/pro/pro-list/pro-list';
 import { RefereeImportComponent } from '../pages/referee/referee-import/referee-import.component';
+import { RefereeSeasonUpgradeComponent } from '../pages/referee/referee-season-upgrade/referee-season-upgrade.component';
 import { RefereeListPage } from '../pages/referee/referee-list/referee-list';
 import { RefereeViewPage } from '../pages/referee/referee-view/referee-view';
 import { SettingsPage } from '../pages/settings/settings';
@@ -77,6 +78,7 @@ const routes: Routes = [
   { path: 'referee/list', component: RefereeListPage, canActivate: [AuthGuard] },
   { path: 'referee/view/:id', component: RefereeViewPage, canActivate: [AuthGuard] },
   { path: 'referee/import', component: RefereeImportComponent, canActivate: [AuthGuard] },
+  { path: 'referee/upgrades', component: RefereeSeasonUpgradeComponent, canActivate: [AuthGuard] },
   // MODAL { path: 'referee/select', component: RefereeSelectPage, canActivate: [AuthGuard] },
   // MODAL { path: 'referee/edit/:id', component: RefereeEditPage, canActivate: [AuthGuard] },
 

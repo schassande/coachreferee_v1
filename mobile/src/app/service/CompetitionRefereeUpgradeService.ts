@@ -40,6 +40,10 @@ export class CompetitionRefereeUpgradeService extends RemotePersistentDataServic
         );
     }
 
+    findCompetitionRefereeUpgradeByReferee(refereeId: string, season: string): Observable<ResponseWithData<CompetitionRefereeUpgrade[]>> {
+      return this.query(this.getCollectionRef().where('refereeId', '==', refereeId).where('season', '==', season), 'default');
+    }
+
     setCoachVote(id: string, vote: UpgradeVote): Observable<any> {
       const newPartialCru: Partial<CompetitionRefereeUpgrade> = {};
       newPartialCru['votes.' + vote.coachId] = vote;
