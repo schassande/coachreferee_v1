@@ -1,3 +1,5 @@
+import { CompetitionRankingNewComponent } from './../pages/competition/competition-ranking-list/competition-ranking-new.component';
+import { CompetitionRankingListComponent } from './../pages/competition/competition-ranking-list/competition-ranking-list.component';
 import { HelpService } from './service/HelpService';
 import { HelpWidgetComponent } from './../pages/widget/help-widget-component';
 import { NgModule } from '@angular/core';
@@ -26,6 +28,7 @@ import { BookmarkService } from './service/BookmarkService';
 import { CoachingService } from './service/CoachingService';
 import { CompetitionService } from './service/CompetitionService';
 import { CompetitionRefereeUpgradeService } from './service/CompetitionRefereeUpgradeService';
+import { CompetitionRefereeRankingService } from './service/CompetitionRefereeRankingService';
 import { ConnectedUserService } from './service/ConnectedUserService';
 import { DateService } from './service/DateService';
 import { EmailService } from './service/EmailService';
@@ -104,7 +107,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     CoachingEditPage, CoachingGamePage, CoachingImprovmentFeedbackEditPage, CoachingListPage, CoachingPositiveFeedbackEditPage,
     CompetitionImportComponent, CompetitionListPage, CompetitionEditComponent,
     CompetitionCoachesPage, CompetitionHomePage, CompetitionRankingPage, CompetitionUpgradesPage, CompetitionRefereesPage,
-    CompetitionRankingPage, CompetitionRankingBestOf2Page, CompetitionGamesPage,
+    CompetitionRankingPage, CompetitionRankingBestOf2Page, CompetitionGamesPage, CompetitionRankingListComponent, 
+    CompetitionRankingNewComponent,
     HelpWidgetComponent, HomePage,
     ProEditPage, ProListPage,
     RefereeListPage, RefereeViewPage, RefereeSelectPage, RefereeEditPage, RefereeSeasonUpgradeComponent,
@@ -115,7 +119,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     SharingComponent, CompetencyComponent, CompetencyPointsComponent, PeriodSelectorComponent, CompetitionSelectorComponent,
     CameraIconComponent, UserSelectorComponent],
   entryComponents: [AppComponent, HomePage, RefereeSelectPage,
-    RefereeEditPage, UserSelectorComponent, CompetitionSelectorComponent, HelpWidgetComponent],
+    RefereeEditPage, UserSelectorComponent, CompetitionSelectorComponent, HelpWidgetComponent, CompetitionRankingNewComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -138,6 +142,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     CoachingService,
     CompetitionService,
     CompetitionRefereeUpgradeService,
+    CompetitionRefereeRankingService,
     ConnectedUserService,
     DateService,
     EmailService,

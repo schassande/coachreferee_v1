@@ -113,10 +113,11 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             });
             return of({ error: null, data});
         } else {
-            console.log('DatabaseService[' + this.getLocalStoragePrefix() + '](' + data.id + '): online mode, wait server response.');
+            // console.log('DatabaseService[' + this.getLocalStoragePrefix() + '](' + data.id + '): online mode, wait server response.');
             // Online mode, wait server response
             return from(promise).pipe(
                 map( () => {
+                    // console.log('DatabaseService[' + this.getLocalStoragePrefix() + '](' + data.id + ') data pushed on server now.');
                     return { error: null, data};
                 }),
                 catchError((err) => {

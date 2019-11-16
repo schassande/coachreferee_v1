@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 
 @Injectable()
 export class ToolService {
@@ -24,5 +26,17 @@ export class ToolService {
         if (idx >= 0) {
           arrays.splice(idx, 1);
         }
+    }
+
+    runObservableInSequence(obsArray: Observable<boolean>[], idx = 0): Observable<any> {
+        return obsArray[idx].pipe(
+            flatMap((continu) => {
+                if (continu && obsArray.length > idx + 1) {
+                    return this.runObservableInSequence(obsArray, idx + 1);
+                } else {
+                    return of(false);
+                }
+            })
+        );
     }
 }

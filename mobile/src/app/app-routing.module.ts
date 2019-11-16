@@ -1,3 +1,4 @@
+import { CompetitionRankingListComponent } from './../pages/competition/competition-ranking-list/competition-ranking-list.component';
 import { CompetitionGamesPage } from './../pages/competition/competition-games/competition-games.page';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
@@ -66,7 +67,8 @@ const routes: Routes = [
   { path: 'competition/:id/edit', component: CompetitionEditComponent, canActivate: [AuthGuard] },
   { path: 'competition/:id/coaches', component: CompetitionCoachesPage, canActivate: [AuthGuard] },
   { path: 'competition/:id/games', component: CompetitionGamesPage, canActivate: [AuthGuard] },
-  { path: 'competition/:id/ranking', component: CompetitionRankingPage, canActivate: [AuthGuard] },
+  { path: 'competition/:id/ranking', component: CompetitionRankingListComponent, canActivate: [AuthGuard] },
+  { path: 'competition/:id/ranking/:listId', component: CompetitionRankingPage, canActivate: [AuthGuard] },
   { path: 'competition/:id/referees', component: CompetitionRefereesPage, canActivate: [AuthGuard] },
   { path: 'competition/:id/upgrades', component: CompetitionUpgradesPage, canActivate: [AuthGuard] },
 

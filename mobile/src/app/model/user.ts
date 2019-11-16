@@ -156,3 +156,28 @@ export function getNextRefereeLevel(level: RefereeLevel): RefereeLevel {
         default: return '';
     }
 }
+
+export function getRefereeLevelValue(level: string): number {
+    switch (level) {
+        case 'AUS_0': return 0;
+        case 'AUS_1': return 1;
+        case 'AUS_2': return 2;
+        case 'AUS_3': return 3;
+        case 'AUS_4': return 4;
+        case 'AUS_5': return 5;
+        case 'AUS_6': return 6;
+        case 'NZ_0': return 2;
+        case 'NZ_1': return 3;
+        case 'NZ_2': return 4;
+        case 'NZ_3': return 5;
+        case 'NZ_4': return 6;
+        case 'EURO_0': return 0;
+        case 'EURO_1': return 1;
+        case 'EURO_2': return 2;
+        case 'EURO_3': return 4;
+        case 'EURO_4': return 5;
+        case 'EURO_5': return 6;
+        default: return -1;
+    }
+}
+

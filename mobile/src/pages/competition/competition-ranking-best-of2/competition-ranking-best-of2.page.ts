@@ -1,6 +1,15 @@
-import { NavController } from '@ionic/angular';
 import { Competition } from './../../../app/model/competition';
-import { Component, OnInit } from '@angular/core';
+import { StepResult } from './../../../app/service/CompetitionRefereeRankingService';
+import { ConnectedUserService } from 'src/app/service/ConnectedUserService';
+import { DateService } from './../../../app/service/DateService';
+import { ModalController } from '@ionic/angular';
+import { Coaching } from 'src/app/model/coaching';
+import { RefereeService } from 'src/app/service/RefereeService';
+import { flatMap, map } from 'rxjs/operators';
+import { Observable, forkJoin } from 'rxjs';
+import { Referee } from './../../../app/model/user';
+import { CoachingService } from './../../../app/service/CoachingService';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-competition-ranking-best-of2',
@@ -9,22 +18,36 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CompetitionRankingBestOf2Page implements OnInit {
 
-  competition: Competition;
-  loading = false;
-  errors: string[] = [];
+  @Input() competition: Competition;
+  @Input() refereeData1: RefereeData;
+  @Input() refereeData2: RefereeData;
+  @Output() choice: EventEmitter<StepResult<string>> = new EventEmitter<StepResult<string>>();
+
 
   constructor(
-    private navController: NavController,
+    public coachingService: CoachingService,
+    public dateService: DateService,
+    private modalCtrl: ModalController,
+    private refereeService: RefereeService
   ) { }
 
   ngOnInit() {
   }
-  back() {
-    if (this.competition.id) {
-      this.navController.navigateRoot(`/competition/${this.competition.id}/home`);
-    } else {
-      this.navController.navigateRoot(`/competition/list`);
-    }
+
+  getRefIdx(coaching: Coaching, refereeId: string) {
+    return coaching.refereeIds.indexOf(refereeId);
   }
 
+  onRefereeSelected(refereeId: string) {
+    this.choice.emit(new StepResult<string>(refereeId, true, true));
+  }
+
+  back() {
+    this.choice.emit(new StepResult<string>(null, false, false));
+  }
+}
+export interface RefereeData {
+  refereeId: string;
+  referee: Referee;
+  coachings: Coaching[];
 }
