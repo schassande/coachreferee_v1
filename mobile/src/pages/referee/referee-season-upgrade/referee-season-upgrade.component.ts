@@ -83,4 +83,7 @@ export class RefereeSeasonUpgradeComponent implements OnInit {
     });
     return votes;
   }
+  onSwipe(event) {
+
+  }
 }
