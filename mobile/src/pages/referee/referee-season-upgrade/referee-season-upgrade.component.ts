@@ -48,9 +48,11 @@ export class RefereeSeasonUpgradeComponent implements OnInit {
 
   onRefereeChanged(referee: Referee) {
     this.referee = referee;
-    this.competitionRefereeUpgradeService.findCompetitionRefereeUpgradeByReferee(this.referee.id, new Date().getFullYear().toString()).pipe(
+    const year = new Date().getFullYear().toString();
+    this.competitionRefereeUpgradeService.findCompetitionRefereeUpgradeByReferee(this.referee.id, year).pipe(
       flatMap((rupgrades) => {
         this.upgrades = rupgrades.data;
+        console.log('findCompetitionRefereeUpgradeByReferee(', this.referee.id, ',', year, ')', rupgrades.data);
         const obs: Observable<any>[] = [of('')];
         this.upgrades.forEach((upgrade) => {
           // load the competition

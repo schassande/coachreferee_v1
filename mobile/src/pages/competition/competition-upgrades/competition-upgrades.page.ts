@@ -79,6 +79,9 @@ export class CompetitionUpgradesPage implements OnInit {
         if (!this.competition) {
           // the competition has not been found => back to list of competition
           this.navController.navigateRoot('/competition/list');
+        } else if (!this.competitionService.authorized(this.competition, this.connectedUserService.getCurrentUser().id)) {
+          // the coach is not allowed to access to this competition
+          this.navController.navigateRoot('/competition/list');
         }
         return this.competition;
       }),

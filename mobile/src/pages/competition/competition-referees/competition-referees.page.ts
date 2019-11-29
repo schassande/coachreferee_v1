@@ -1,3 +1,4 @@
+import { ConnectedUserService } from './../../../app/service/ConnectedUserService';
 import { Referee } from './../../../app/model/user';
 import { RefereeSelectPage } from './../../referee/referee-select/referee-select';
 import { ToolService } from './../../../app/service/ToolService';
@@ -27,6 +28,7 @@ export class CompetitionRefereesPage implements OnInit {
 
   constructor(
     private alertCtrl: AlertController,
+    private connectedUserService: ConnectedUserService,
     private modalController: ModalController,
     private competitionService: CompetitionService,
     public dateService: DateService,
@@ -52,6 +54,9 @@ export class CompetitionRefereesPage implements OnInit {
         this.competition = rcompetition.data;
         if (!this.competition) {
           // the competition has not been found => create it
+          this.navController.navigateRoot('/competition/list');
+        } else if (!this.competitionService.authorized(this.competition, this.connectedUserService.getCurrentUser().id)) {
+          // the coach is not allowed to access to this competition
           this.navController.navigateRoot('/competition/list');
         }
         return this.competition;

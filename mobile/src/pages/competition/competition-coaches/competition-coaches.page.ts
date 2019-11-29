@@ -1,3 +1,4 @@
+import { ConnectedUserService } from './../../../app/service/ConnectedUserService';
 import { SharedWith } from './../../../app/model/common';
 import { UserSelectorComponent } from './../../widget/user-selector-component';
 import { ToolService } from './../../../app/service/ToolService';
@@ -30,6 +31,7 @@ export class CompetitionCoachesPage implements OnInit {
 
   constructor(
     private alertCtrl: AlertController,
+    private connectedUserService: ConnectedUserService,
     private modalController: ModalController,
     private competitionService: CompetitionService,
     public dateService: DateService,
@@ -55,6 +57,10 @@ export class CompetitionCoachesPage implements OnInit {
         this.competition = rcompetition.data;
         if (!this.competition) {
           // the competition has not been found => create it
+          this.navController.navigateRoot('/competition/list');
+        }
+        if (!this.competitionService.authorized(this.competition, this.connectedUserService.getCurrentUser().id)) {
+          // the coach is not allowed to access to this competition
           this.navController.navigateRoot('/competition/list');
         }
         return this.competition;

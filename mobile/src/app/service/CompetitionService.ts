@@ -48,6 +48,17 @@ export class CompetitionService extends RemotePersistentDataService<Competition>
             })
             : this.allO(options);
     }
+
+    public filterCompetitionsByCoach(competitions: Competition[], coachId: string): Competition[] {
+        return competitions.filter((competition) => this.authorized(competition, coachId));
+    }
+
+    public authorized(competition: Competition, coachId: string): boolean {
+        return competition.refereePanelDirectorId === coachId
+                || competition.ownerId === coachId
+                || competition.refereeCoaches.filter((coach) => coach.coachId === coachId).length > 0;
+    }
+
     public sortCompetitions(competitions: Competition[], reverse: boolean = false): Competition[] {
         if (!competitions) {
             return competitions;

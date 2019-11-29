@@ -1,3 +1,4 @@
+import { ConnectedUserService } from './../../../app/service/ConnectedUserService';
 import { HelpService } from './../../../app/service/HelpService';
 import { ResponseWithData } from './../../../app/service/response';
 import { Competition } from './../../../app/model/competition';
@@ -27,6 +28,7 @@ export class CompetitionListPage implements OnInit {
   constructor(
     private alertCtrl: AlertController,
     private competitionService: CompetitionService,
+    private connectedUserService: ConnectedUserService,
     private changeDetectorRef: ChangeDetectorRef,
     private dateService: DateService,
     private helpService: HelpService,
@@ -54,7 +56,8 @@ export class CompetitionListPage implements OnInit {
     // console.log('searchCompetition(' + this.searchInput + ')');
     this.competitionService.searchCompetitions(this.searchInput, forceServer ? 'server' : 'default')
       .subscribe((response: ResponseWithData<Competition[]>) => {
-        this.competitions = this.competitionService.sortCompetitions(response.data, true);
+        this.competitions = this.competitionService.sortCompetitions(
+          this.competitionService.filterCompetitionsByCoach(response.data, this.connectedUserService.getCurrentUser().id), true);
         this.loading = false;
         if (event) {
           event.target.complete();

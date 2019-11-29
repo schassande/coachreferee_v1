@@ -1,3 +1,4 @@
+import { ConnectedUserService } from './../../../app/service/ConnectedUserService';
 import { Observable, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
@@ -21,6 +22,7 @@ export class CompetitionGamesPage implements OnInit {
   errors: string[] = [];
   constructor(
     private competitionService: CompetitionService,
+    private connectedUserService: ConnectedUserService,
     public dateService: DateService,
     private helpService: HelpService,
     private navController: NavController,
@@ -43,6 +45,9 @@ export class CompetitionGamesPage implements OnInit {
         this.competition = rcompetition.data;
         if (!this.competition) {
           // the competition has not been found => create it
+          this.navController.navigateRoot('/competition/list');
+        } else if (!this.competitionService.authorized(this.competition, this.connectedUserService.getCurrentUser().id)) {
+          // the coach is not allowed to access to this competition
           this.navController.navigateRoot('/competition/list');
         }
         return this.competition;
