@@ -1,3 +1,4 @@
+import { ConnectedUserService } from './../../../app/service/ConnectedUserService';
 import { RefereeData } from './../competition-ranking-best-of2/competition-ranking-best-of2.page';
 import { Coaching } from './../../../app/model/coaching';
 import { StepResult, RefereeComparator } from './../../../app/service/CompetitionRefereeRankingService';
@@ -35,6 +36,7 @@ export class CompetitionRankingPage implements OnInit, RefereeComparator {
   constructor(
     private competitionService: CompetitionService,
     public competitionRefereeRankingService: CompetitionRefereeRankingService,
+    private connectedUserService: ConnectedUserService,
     private helpService: HelpService,
     private navController: NavController,
     private route: ActivatedRoute,
@@ -55,6 +57,9 @@ export class CompetitionRankingPage implements OnInit, RefereeComparator {
           this.competition = rcompetition.data;
           if (!this.competition) {
             // the competition has not been found => back to list of competition
+            this.navController.navigateRoot('/competition/list');
+          } else if (!this.competitionService.authorized(this.competition, this.connectedUserService.getCurrentUser().id)) {
+            // the coach is not allowed to access to this competition
             this.navController.navigateRoot('/competition/list');
           }
           return paramMap;
