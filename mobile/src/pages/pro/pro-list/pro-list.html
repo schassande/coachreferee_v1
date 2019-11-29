@@ -21,7 +21,7 @@
 <ion-content (swipe)="onSwipe($event)">
     <ion-searchbar [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
     <ion-item>
-        <ion-label>Only not completed</ion-label>
+        <ion-label>Show only not completed</ion-label>
         <ion-checkbox slot="end" [(ngModel)]="notCompleted" (ionChange)="onSearchBarInput()"></ion-checkbox>
     </ion-item>
     <ion-list style="margin-bottom: 40px;">
