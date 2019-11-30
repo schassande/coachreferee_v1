@@ -16,6 +16,7 @@
         "grunt-contrib-jshint": "^2.1.0",
         "grunt-copy": "^0.1.0",
         "grunt-exec": "^3.0.0",
+        "grunt-git-tag": "0.0.5",
         "grunt-markdown": "^0.7.0"
     }
 }

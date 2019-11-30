@@ -8,7 +8,9 @@ module.exports = function(grunt) {
             'app-version-minor': { cwd: 'mobile', cmd: 'npm version minor' },
             'app-version-major': { cwd: 'mobile', cmd: 'npm version major' },
             'app-apply-version': { cwd: 'mobile', cmd: 'node ./replace.build.js' },
+            'app-clean-apikey': { cwd: 'mobile', cmd: 'node ./clean.apikey.js' },
             'commit-version': { cwd: 'mobile', cmd: 'git commit -a -m "version"' },
+            'git-tag': { cwd: 'mobile', cmd: 'git tag' },
             'app-build': { cwd: 'mobile', cmd: 'ionic build --prod --service-worker' },
             'function-build': { cwd: 'firebase/functions', cmd: 'npm run build' },
             'deploy-app': { cwd: 'firebase', cmd: 'firebase deploy' },
@@ -48,19 +50,22 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-copy');
+    grunt.loadNpmTasks('grunt-git-tag');
 
     grunt.registerTask('app-build', 'Build the mobile app', ['exec:app-build']);
 
     grunt.registerTask('deploy-patch', 'Upgrade to next patch version, commit, build, deploy the mobile app only', [
         'exec:app-version-patch',
         'exec:app-apply-version',
-        'exec:commit-version',
         'exec:app-build',
         'exec:set-target-deploy-app',
         'exec:deploy-app',
         'exec:set-target-deploy-www',
         'exec:deploy-www',
-        'exec:set-target-deploy-app'
+        'exec:set-target-deploy-app',
+        'exec:app-clean-apikey',
+        'exec:commit-version',
+        'grunt-git-tag'
     ]);
     grunt.registerTask('app-deploy-minor', 'Upgrade to next minor version, commit, build, deploy the mobile app only', [
         'exec:app-version-minor',
@@ -70,7 +75,9 @@ module.exports = function(grunt) {
         'exec:deploy-app',
         'exec:set-target-deploy-www',
         'exec:deploy-www',
-        'exec:set-target-deploy-app'
+        'exec:set-target-deploy-app',
+        'exec:app-clean-apikey',
+        'exec:commit-version'
     ]);
     grunt.registerTask('app-deploy-major', 'Upgrade to next major version, commit, build, deploy the mobile app only', [
         'exec:app-version-major',
@@ -80,7 +87,9 @@ module.exports = function(grunt) {
         'exec:deploy-app',
         'exec:set-target-deploy-www',
         'exec:deploy-www',
-        'exec:set-target-deploy-app'
+        'exec:set-target-deploy-app',
+        'exec:app-clean-apikey',
+        'exec:commit-version'
     ]);
     grunt.registerTask('function-deploy', 'Deploy the backend function only', [
         'exec:function-build',
@@ -101,5 +110,11 @@ module.exports = function(grunt) {
         'exec:set-target-deploy-www',
         'exec:deploy-www',
         'exec:set-target-deploy-app'
+    ]);
+
+    grunt.registerTask('gitag', 'Commit and tag', [
+        'exec:app-clean-apikey',
+        'exec:commit-version',
+        'git_tag'
     ]);
 }
