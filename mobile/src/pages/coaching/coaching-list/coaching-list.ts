@@ -1,6 +1,6 @@
 import { HelpService } from './../../../app/service/HelpService';
 import { DateService } from 'src/app/service/DateService';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
 
 import { ResponseWithData } from '../../../app/service/response';
@@ -10,6 +10,7 @@ import { CoachingService } from '../../../app/service/CoachingService';
 
 export interface CoachingList {
   day: string;
+  today: boolean;
   competitionName: string;
   coachings: Coaching[];
 }
@@ -32,18 +33,24 @@ export class CoachingListPage implements OnInit {
   error: any;
   searchInput: string;
   loading = false;
+  today = true;
 
   constructor(
-    private navController: NavController,
-    private dateService: DateService,
+    public alertCtrl: AlertController,
+    private changeDetectorRef: ChangeDetectorRef,
     public coachingService: CoachingService,
+    private dateService: DateService,
     private helpService: HelpService,
-    public alertCtrl: AlertController) {
+    private navController: NavController
+    ) {
   }
 
   ngOnInit() {
     this.helpService.setHelp('coaching-list');
     this.searchCoaching();
+  }
+  onToday() {
+    this.changeDetectorRef.detectChanges();
   }
   doRefresh(event) {
     this.searchCoaching(false, event);
@@ -114,7 +121,12 @@ export class CoachingListPage implements OnInit {
         lists[currentIndex].coachings.push(c);
       } else {
         currentIndex ++;
-        lists.push({ day: cd, competitionName: c.competition, coachings : [c]});
+        lists.push({
+          day: cd,
+          today: this.dateService.isToday(c.date),
+          competitionName: c.competition,
+          coachings : [c]
+        });
       }
     });
     return lists;

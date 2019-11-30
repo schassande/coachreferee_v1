@@ -2,15 +2,21 @@
 
 This file lists the development task to do:
 
+## Bugs
+
+- Scrolling with tabs does work on iPhone. Tested on safari and on chrome
+- Import duplicates coaching
+
 ## Possibles features by priority
 
 Priority 1:
 
 - Create user group used to simplify the sharing
-- Add a feature for helping the job of coach as panel member when he is discussing upgrades: list upgrable referees
+- Une page myday avec coaching du jour
 
 Priority 2:
 
+- Localisation des serveurs en europe
 - Cleaning script of past empty coaching
 - Style of the online help
 - In context menu, of coaching game, add the next and the previous game
@@ -27,6 +33,14 @@ Priority 2:
 - Organize Angular code in submodules with lazy loading.
 
 ## Next version
+
+## Versin 2.4.0
+
+- Add the concept of competition
+- New feature helping to rank referees during a competition as panel member
+- New feature helping to decide the referee upgrades during a competition as panel member
+- New feature helping to decide the referee upgrades over a season/year
+- On coaching list page, there is a new button to filter coaching of the day by default
 
 ## Versin 2.3.2 (current)
 

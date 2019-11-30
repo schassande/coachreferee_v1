@@ -62,6 +62,23 @@ export class CoachingService extends RemotePersistentDataService<Coaching> {
        map((list) => this.mergeObservables(list))
      );
     }
+    getCoachingByRefereeCompetition(refereeId: string, competitionId: string): Observable<ResponseWithData<Coaching[]>> {
+      return forkJoin(
+        this.query(this.getBaseQueryMyCoahchings()
+          .where('refereeIds', 'array-contains', refereeId).where('competitionId', '==', competitionId), 'default'),
+        this.query(this.getBaseQuerySharedCoahchings(), 'default').pipe(
+          map((rcoa) => {
+            // query does not support double array contain in where clause
+            if (rcoa.data) {
+              rcoa.data = rcoa.data.filter((c: Coaching) => c.refereeIds.indexOf(refereeId) > -1);
+            }
+            return rcoa;
+          })
+        )
+     ).pipe(
+       map((list) => this.mergeObservables(list, true))
+     );
+    }
 
     /**
      * Overide to restrict to the coachings of the user.

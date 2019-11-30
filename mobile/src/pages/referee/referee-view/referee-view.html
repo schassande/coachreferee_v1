@@ -34,8 +34,8 @@
             <li>Gender: {{referee.gender == 'M' ? 'Male' : (referee.gender == 'F' ? 'Female' : '-')}}</li>
             <li>Referee Level: {{referee.referee.refereeLevel}}</li>
             <li>Referee category: {{referee.referee.refereeCategory}}</li>
-            <li *ngIf="referee.referee.nextRefereeLevel !== 'NONE'">Looking for upgrade?: {{referee.referee.nextRefereeLevel}}</li>
-            <li *ngIf="referee.refereeCoach.refereeCoachLevel !== 'NONE'">Referee coach Level: {{referee.refereeCoach.refereeCoachLevel}}</li>
+            <li *ngIf="referee.referee.nextRefereeLevel && referee.referee.nextRefereeLevel !== 'NONE'">Looking for upgrade?: {{referee.referee.nextRefereeLevel}}</li>
+            <li *ngIf="referee.refereeCoach.refereeCoachLevel && referee.refereeCoach.refereeCoachLevel !== 'NONE'">Referee coach Level: {{referee.refereeCoach.refereeCoachLevel}}</li>
         </ul>
         <div style="text-align: center; margin: 10px;"><img src="assets/imgs/badge/{{referee.referee.refereeLevel}}.png" height="100" /></div>
         <div style="text-align: right;" padding>

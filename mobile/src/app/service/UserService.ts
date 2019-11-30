@@ -128,7 +128,9 @@ export class UserService  extends RemotePersistentDataService<User> {
                 console.log('UserService.login(' + email + ', ' + password + ') error=', err);
                 this.loadingController.dismiss(null);
                 console.error(err);
-                this.alertCtrl.create({message: err.message}).then((alert) => alert.present());
+                if (err.code !== 'auth/network-request-failed') {
+                    this.alertCtrl.create({message: err.message}).then((alert) => alert.present());
+                }
                 return of({ error: err, data: null});
             }),
             map( (ruser: ResponseWithData<User>) => {
@@ -191,7 +193,7 @@ export class UserService  extends RemotePersistentDataService<User> {
                     loading.dismiss();
                     return of({ error: null, data: null});
                 }
-                if (!this.connectedUserService.isOnline()) {
+                if (!this.connectedUserService.isOnline() || settings.forceOffline) {
                     console.log('UserService.autoLogin(): offline => connect with email only');
                     loading.dismiss();
                     return this.connectByEmail(email, password);

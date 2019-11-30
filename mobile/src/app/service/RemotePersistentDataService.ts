@@ -11,9 +11,11 @@ import { AngularFirestore,
     DocumentSnapshot,
     QuerySnapshot,
     QueryDocumentSnapshot,
-    Query} from 'angularfire2/firestore';
+    Query,
+    AngularFirestoreDocument} from 'angularfire2/firestore';
 import { ToastController } from '@ionic/angular';
 import { DateService } from './DateService';
+import { firestore } from 'firebase';
 
 export abstract class RemotePersistentDataService<D extends PersistentData> implements Crud<D> {
 
@@ -111,10 +113,11 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             });
             return of({ error: null, data});
         } else {
-            console.log('DatabaseService[' + this.getLocalStoragePrefix() + '](' + data.id + '): online mode, wait server response.');
+            // console.log('DatabaseService[' + this.getLocalStoragePrefix() + '](' + data.id + '): online mode, wait server response.');
             // Online mode, wait server response
             return from(promise).pipe(
                 map( () => {
+                    // console.log('DatabaseService[' + this.getLocalStoragePrefix() + '](' + data.id + ') data pushed on server now.');
                     return { error: null, data};
                 }),
                 catchError((err) => {
@@ -137,8 +140,19 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
         );
     }
 
-    private docSnapToResponse(docSnap: DocumentSnapshot<D>): ResponseWithData<D> {
-        const data: D = docSnap.exists ? docSnap.data() : null;
+    protected docSnapNTToResponse(docSnap: firestore.DocumentSnapshot): ResponseWithData<D> {
+        const data: D = docSnap && docSnap.exists ? docSnap.data() as D : null;
+        // console.log('load item ' + docSnap.id + ' exists=' + docSnap.exists + ', data=', data);
+        if (data) {
+            // store id inside persistent object
+            data.id = docSnap.id;
+            this.adjustFieldOnLoad(data);
+        }
+        return { error: null, data};
+    }
+
+    protected docSnapToResponse(docSnap: DocumentSnapshot<D>): ResponseWithData<D> {
+        const data: D = docSnap && docSnap.exists ? docSnap.data() : null;
         // console.log('load item ' + docSnap.id + ' exists=' + docSnap.exists + ', data=', data);
         if (data) {
             // store id inside persistent object
@@ -183,6 +197,9 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
 
     public getCollectionRef() {
         return this.fireStoreCollection.ref;
+    }
+    public getDocumentObservable(id: string): AngularFirestoreDocument<D> {
+        return this.fireStoreCollection.doc<D>(id);
     }
 
     protected snapshotToObs(qs: QuerySnapshot<D>): ResponseWithData<D[]> {
