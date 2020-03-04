@@ -36,8 +36,8 @@
                         <br>Level: {{importedData.readReferee.referee.refereeLevel}}/{{importedData.readReferee.referee.refereeCategory}}/{{importedData.readReferee.gender}}
                         <span *ngIf="importedData.readReferee.referee.nextRefereeLevel">=&gt;{{importedData.readReferee.referee.nextRefereeLevel}}</span>
                     <br>Lang: {{importedData.readReferee.speakingLanguages}}
-                    <span *ngIf="importedData.foundReferee"><br>Already exist in database</span>
-                    <span *ngFor="let error of importedData.errors"><br>ERROR: {{error}}</span>
+                    <span *ngIf="importedData.foundReferee" style="background-color: orange;"><br>Already exist in database</span>
+                    <span *ngFor="let error of importedData.errors" style="background-color: red;"><br>ERROR: {{error}}</span>
                     </span>
                 </ion-label>
                 <ion-checkbox *ngIf="importedData.errors.length === 0 && !importedData.foundReferee" slot="end" [(ngModel)]="importedData.toImport" (ionChange)="computesEnableImportButton()"></ion-checkbox>
