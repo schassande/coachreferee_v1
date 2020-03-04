@@ -4,7 +4,7 @@ import { RefereeSelectPage } from './../../referee/referee-select/referee-select
 import { ToolService } from './../../../app/service/ToolService';
 import { ResponseWithData } from './../../../app/service/response';
 import { flatMap, map, catchError } from 'rxjs/operators';
-import { Observable, of, forkJoin } from 'rxjs';
+import { Observable, of, from, forkJoin } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { NavController, AlertController, ModalController } from '@ionic/angular';
 import { HelpService } from './../../../app/service/HelpService';
@@ -123,11 +123,62 @@ export class CompetitionRefereesPage implements OnInit {
         }
         this.referees.push(referee);
         this.competition.referees.push({ refereeShortName: referee.shortName, refereeId: referee.id});
+        this.competitionService.save(this.competition).subscribe();
       }
     });
     return await modal.present();
   }
 
+  onDeleteAll() {
+    this.referees = [];
+    this.competition.referees = [];
+    this.competitionService.save(this.competition).subscribe();
+  }
+  onImport() {
+    // Ask a ist of referee short names
+    this.alertCtrl.create({
+      message: 'Paste a list of referee short names (use space as separator)',
+      inputs: [{ type: 'text', label: 'Short names', value: '' }],
+      buttons: [
+        'Cancel',
+        {
+          text: 'Add all',
+          handler: (data: string[]) => {
+            console.log('Data:', data[0]);
+            this.importRefereesByShortNames(data[0].split(' '));
+          }
+        }]
+    }).then( (alert) => alert.present());
+  }
+
+  importRefereesByShortNames(refShortNames: string[]) {
+    const obs: Observable<ResponseWithData<Referee[]>>[] = [];
+    refShortNames.forEach((refShortName) => {
+      console.log('Searching referee ', refShortName);
+      obs.push(
+        this.refereeService.findByShortName(refShortName).pipe(
+          map((rref) => {
+            if (rref.data && rref.data.length) {
+              rref.data.forEach(referee => {
+                this.referees.push(referee);
+                this.competition.referees.push({ refereeShortName: referee.shortName, refereeId: referee.id});
+                console.log('Referee ', refShortName, ' added.');
+              });
+            } else {
+              console.log('Referee ', refShortName, ' does not exist.');
+            }
+            return rref;
+          })
+        )
+      );
+    });
+    if (obs.length) {
+      forkJoin(obs).subscribe(() => {
+        this.competitionService.save(this.competition);
+        console.log('Import finished.');
+      });
+    }
+  }
   deleteReferee(referee: Referee) {
     this.alertCtrl.create({
       message: 'Do you reaaly want to delete the the refere ' + referee.shortName + ' from this competition?',
