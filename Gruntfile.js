@@ -7,6 +7,9 @@ module.exports = function(grunt) {
             'app-version-patch': { cwd: 'mobile', cmd: 'npm version patch' },
             'app-version-minor': { cwd: 'mobile', cmd: 'npm version minor' },
             'app-version-major': { cwd: 'mobile', cmd: 'npm version major' },
+            'app-version-patch-root': { cwd: '.', cmd: 'npm version patch' },
+            'app-version-minor-root': { cwd: '.', cmd: 'npm version minor' },
+            'app-version-major-root': { cwd: '.', cmd: 'npm version major' },
             'app-apply-version': { cwd: 'mobile', cmd: 'node ./replace.build.js' },
             'app-clean-apikey': { cwd: 'mobile', cmd: 'node ./clean.apikey.js' },
             'commit-version': { cwd: 'mobile', cmd: 'git commit -a -m "version"' },
@@ -55,6 +58,7 @@ module.exports = function(grunt) {
     grunt.registerTask('app-build', 'Build the mobile app', ['exec:app-build']);
 
     grunt.registerTask('deploy-patch', 'Upgrade to next patch version, commit, build, deploy the mobile app only', [
+        'exec:app-version-patch-root',
         'exec:app-version-patch',
         'exec:app-apply-version',
         'exec:app-build',
@@ -68,6 +72,7 @@ module.exports = function(grunt) {
         'grunt-git-tag'
     ]);
     grunt.registerTask('app-deploy-minor', 'Upgrade to next minor version, commit, build, deploy the mobile app only', [
+        'exec:app-version-minor-root',
         'exec:app-version-minor',
         'exec:app-apply-version',
         'exec:app-build',
@@ -80,6 +85,7 @@ module.exports = function(grunt) {
         'exec:commit-version'
     ]);
     grunt.registerTask('app-deploy-major', 'Upgrade to next major version, commit, build, deploy the mobile app only', [
+        'exec:app-version-major-root',
         'exec:app-version-major',
         'exec:app-apply-version',
         'exec:app-build',
@@ -113,8 +119,6 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('gitag', 'Commit and tag', [
-        'exec:app-clean-apikey',
-        'exec:commit-version',
         'git_tag'
     ]);
 }

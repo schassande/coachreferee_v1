@@ -1,9 +1,13 @@
 {
     "name": "refcoach",
-    "version": "0.0.1",
+    "version": "2.4.0",
     "description": "Ref Coach project",
     "author": "Sebastien Chassande-Barrioz",
     "homepage": "https://refcoach",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/schassande/coachreferee.git"
+    },
     "scripts": {
         "noproxy": "set HTTP_PROXY= && set HTTPS_PROXY=",
         "start": "cd mobile && ionic serve",
