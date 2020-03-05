@@ -35,7 +35,7 @@ Priority 2:
 
 ## Next version
 
-## Versin 2.4.1
+## Versin 2.5.0
 
 - Import of referees in a competition. Based on the list of short names.
 - Permit to delete all referees from a competition.
