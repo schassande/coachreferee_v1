@@ -16,7 +16,7 @@
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-row>
             <ion-col>
-                <ion-fab-button (click)="onDeleteAll()">
+                <ion-fab-button (click)="onDeleteAll()" style='--background:red; font-size: 1.6em;'>
                     <ion-icon name="trash"></ion-icon>
                 </ion-fab-button>
             </ion-col>
@@ -25,13 +25,17 @@
                     <ion-icon name="attach"></ion-icon>
                 </ion-fab-button>
             </ion-col>
+            <ion-col>
+                <ion-fab-button (click)="addReferee()" style='--background:green; font-size: 1.6em; margin-bottom: 10px;'>
+                    +
+                </ion-fab-button>
+            </ion-col>
         </ion-row>
     </ion-fab>
     <ion-list *ngIf="competition && !loading">
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
                 <ion-label>{{referees.length}} Referee(s)</ion-label>
-                <ion-icon slot="end" name="add" (click)="addReferee()"></ion-icon>
             </ion-item-divider>
             <ion-item *ngFor="let referee of referees">
                 <ion-icon slot="start" *ngIf="!referee.photoId" name="person"></ion-icon>
@@ -43,5 +47,5 @@
             </ion-item>
         </ion-item-group>
     </ion-list>
-
+    <div style="height: 100px;"></div>
 </ion-content>

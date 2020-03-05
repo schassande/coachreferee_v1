@@ -130,9 +130,20 @@ export class CompetitionRefereesPage implements OnInit {
   }
 
   onDeleteAll() {
-    this.referees = [];
-    this.competition.referees = [];
-    this.competitionService.save(this.competition).subscribe();
+    this.alertCtrl.create({
+      message: 'Do you reaaly want to delete all the referes from this competition?',
+      buttons: [
+        { text: 'Cancel', role: 'cancel'},
+        {
+          text: 'Delete All',
+          handler: () => {
+            this.referees = [];
+            this.competition.referees = [];
+            this.competitionService.save(this.competition).subscribe();
+          }
+        }
+      ]
+    }).then( (alert) => alert.present() );
   }
   onImport() {
     // Ask a ist of referee short names
@@ -153,6 +164,9 @@ export class CompetitionRefereesPage implements OnInit {
 
   importRefereesByShortNames(refShortNames: string[]) {
     const obs: Observable<ResponseWithData<Referee[]>>[] = [];
+    let addedRefereeNumber = 0;
+    const unknownShortNames: string[] = [];
+    let alreadyAddNames = 0;
     refShortNames.forEach((refShortName) => {
       console.log('Searching referee ', refShortName);
       obs.push(
@@ -160,11 +174,19 @@ export class CompetitionRefereesPage implements OnInit {
           map((rref) => {
             if (rref.data && rref.data.length) {
               rref.data.forEach(referee => {
-                this.referees.push(referee);
-                this.competition.referees.push({ refereeShortName: referee.shortName, refereeId: referee.id});
-                console.log('Referee ', refShortName, ' added.');
+                const existRef = this.referees.find( (ref) => ref.id === referee.id);
+                if (!existRef) {
+                  addedRefereeNumber ++;
+                  this.referees.push(referee);
+                  this.competition.referees.push({ refereeShortName: referee.shortName, refereeId: referee.id});
+                  console.log('Referee ', refShortName, ' added.');
+                } else {
+                  alreadyAddNames ++;
+                  console.log('Referee ', refShortName, ' already belongd the compeetition.');
+                }
               });
             } else {
+              unknownShortNames.push(refShortName);
               console.log('Referee ', refShortName, ' does not exist.');
             }
             return rref;
@@ -173,15 +195,29 @@ export class CompetitionRefereesPage implements OnInit {
       );
     });
     if (obs.length) {
-      forkJoin(obs).subscribe(() => {
-        this.competitionService.save(this.competition);
-        console.log('Import finished.');
-      });
+      forkJoin(obs).pipe(
+        flatMap(() => this.competitionService.save(this.competition)),
+        map(() => {
+          this.refereesImported(refShortNames.length, addedRefereeNumber, unknownShortNames, alreadyAddNames);
+        })
+      ).subscribe();
     }
   }
+
+  refereesImported(givenRefNames: number, addedRefereeNumber: number, unknownShortNames: string[], alreadyAddNames: number) {
+    console.log('Import finished.');
+    this.alertCtrl.create({
+      message: `Given ${givenRefNames} names, ${addedRefereeNumber} have been imported,`
+        + (alreadyAddNames ? `${alreadyAddNames} already in` : '')
+        + (unknownShortNames.length ? `${unknownShortNames.length} names are unknown: ${unknownShortNames.join(', ')}` : '')
+        + '.',
+      buttons: [{ text: 'Ok', role: 'cancel'}]
+    }).then( (alert) => alert.present() );
+  }
+
   deleteReferee(referee: Referee) {
     this.alertCtrl.create({
-      message: 'Do you reaaly want to delete the the refere ' + referee.shortName + ' from this competition?',
+      message: 'Do you reaaly want to delete the refere ' + referee.shortName + ' from this competition?',
       buttons: [
         { text: 'Cancel', role: 'cancel'},
         {
