@@ -11,6 +11,7 @@ This file lists the development task to do:
 
 Priority 1:
 
+- Export of the list of refereees
 - Create user group used to simplify the sharing
 - Une page myday avec coaching du jour
 
@@ -33,6 +34,11 @@ Priority 2:
 - Organize Angular code in submodules with lazy loading.
 
 ## Next version
+
+## Versin 2.4.1
+
+- Import of referees in a competition. Based on the list of short names.
+- Permit to delete all referees from a competition.
 
 ## Versin 2.4.0
 
