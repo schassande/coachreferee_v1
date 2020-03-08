@@ -23,7 +23,7 @@
         <ion-fab-button (click)="newCoaching()" class="plusButton">+</ion-fab-button>
     </ion-fab>
     <div>
-        <ion-searchbar style="width: 85%; display: inline-block;" [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
+        <ion-searchbar style="width: 80%; display: inline-block;" [(ngModel)]="searchInput" [showCancelButton]="false" (ionChange)="onSearchBarInput()"></ion-searchbar>
         <ion-checkbox style="display: inline-block;" [(ngModel)]="today" (ionChange)="onToday()"></ion-checkbox>
         <ion-label style="display: inline-block;">&nbsp;Today</ion-label>
         <div *ngIf="loading" style="margin: 20px auto; text-align: center;">
@@ -36,14 +36,21 @@
     <ion-list style="margin: 0px 0 60px 0;">
         <div *ngFor="let coachingList of coachingLists">
             <ion-item-group *ngIf="!today || coachingList.today">
-                <ion-item-divider color="light">{{coachingList.competitionName}} - {{coachingList.day}}</ion-item-divider>
-                <ion-item *ngFor="let coaching of coachingList.coachings" [color]="isPast(coaching) ? '' : 'medium'">
-                    <!-- #BEF990 style='--color: #D8FFFF;' -->
-                    <ion-label style="border: none;" class="listItemButton" (click)="coachingSelected($event, coaching)">
-                        <p>{{getCoachingDate(coaching)}} {{coaching.timeSlot}}: Field {{coaching.field}}, {{coaching.gameCategory}}<br> Referees: {{getRefereeShortNames(coaching)}}</p>
-                    </ion-label>
-                    <ion-icon slot="end" name="trash" (click)="deleteCoaching(coaching)"></ion-icon>
-                </ion-item>
+                <ion-item-divider color="light">
+                    <ion-icon name="{{ coachingList.visible ? 'remove' : 'add'}}" (click)="toggleCoachingListVisibility(coachingList)"></ion-icon> &nbsp;
+                    <span>{{coachingList.competitionName}} - {{coachingList.day}}</span>
+                    <ion-icon name="lock" slot="end" (click)="lockCoachings(coachingList)" style="margin-right: 15px;"></ion-icon>
+
+                </ion-item-divider>
+                <div *ngIf="coachingList.visible">
+                    <ion-item *ngFor="let coaching of coachingList.coachings" [color]="isPast(coaching) ? '' : 'medium'">
+                        <!-- #BEF990 style='--color: #D8FFFF;' -->
+                        <ion-label style="border: none;" class="listItemButton" (click)="coachingSelected($event, coaching)">
+                            <p>{{getCoachingDate(coaching)}} {{coaching.timeSlot}}: Field {{coaching.field}}, {{coaching.gameCategory}}<br> Referees: {{getRefereeShortNames(coaching)}}</p>
+                        </ion-label>
+                        <ion-icon slot="end" name="trash" (click)="deleteCoaching(coaching)"></ion-icon>
+                    </ion-item>
+                </div>
             </ion-item-group>
         </div>
     </ion-list>

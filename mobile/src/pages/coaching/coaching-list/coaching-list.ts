@@ -13,6 +13,7 @@ export interface CoachingList {
   today: boolean;
   competitionName: string;
   coachings: Coaching[];
+  visible: boolean;
 }
 
 /**
@@ -33,7 +34,7 @@ export class CoachingListPage implements OnInit {
   error: any;
   searchInput: string;
   loading = false;
-  today = true;
+  today = false;
 
   constructor(
     public alertCtrl: AlertController,
@@ -121,11 +122,13 @@ export class CoachingListPage implements OnInit {
         lists[currentIndex].coachings.push(c);
       } else {
         currentIndex ++;
+        const today = this.dateService.isToday(c.date);
         lists.push({
           day: cd,
-          today: this.dateService.isToday(c.date),
+          today,
           competitionName: c.competition,
-          coachings : [c]
+          coachings : [c],
+          visible: today
         });
       }
     });
@@ -136,5 +139,20 @@ export class CoachingListPage implements OnInit {
     if (event.direction === 4) {
       this.navController.navigateRoot(`/home`);
     }
+  }
+
+  toggleCoachingListVisibility(coachingList: CoachingList) {
+    coachingList.visible = !coachingList.visible;
+    this.changeDetectorRef.detectChanges();
+  }
+
+  lockCoachings(coachingList: CoachingList) {
+    coachingList.coachings.forEach((coaching) => {
+      if (!coaching.closed) {
+        coaching.closed = true;
+        console.log('Lock coaching', coaching.coachId);
+        this.coachingService.save(coaching).subscribe();
+      }
+    });
   }
 }
