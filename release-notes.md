@@ -11,6 +11,7 @@ This file lists the development task to do:
 
 Priority 1:
 
+- Migrate to IOnic 5 / Angular 9
 - Export of the list of refereees
 - Create user group used to simplify the sharing
 - Une page myday avec coaching du jour
@@ -34,6 +35,10 @@ Priority 2:
 - Organize Angular code in submodules with lazy loading.
 
 ## Next version
+
+- Time slot is each 5 minutes
+- closable list of coaching in the coaching list page
+- Can lock coaching list in the coaching list page
 
 ## Versin 2.5.0
 
