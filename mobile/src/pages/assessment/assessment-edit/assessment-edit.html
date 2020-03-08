@@ -40,7 +40,7 @@
                         <ion-col size="4" align-self="flex-start">
                             <ion-label position="stacked">Slot:</ion-label>
                             <ion-input *ngIf="readonly" type="text" [(ngModel)]="assessment.timeSlot" readonly="true" style="text-align: center;"></ion-input>
-                            <ion-datetime item-content *ngIf="!readonly" displayFormat="HH:mm" [(ngModel)]="assessment.timeSlot" style="text-align: center;"></ion-datetime>
+                            <ion-datetime item-content *ngIf="!readonly" displayFormat="HH:mm" minuteValues="0,5,10,15,20,25,30,35,40,45,50,55" [(ngModel)]="assessment.timeSlot" style="text-align: center;"></ion-datetime>
                         </ion-col>
                         <ion-col size="4" align-self="flex-start">
                             <ion-label position="stacked">Field:</ion-label>
