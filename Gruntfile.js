@@ -57,7 +57,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('app-build', 'Build the mobile app', ['exec:app-build']);
 
-    grunt.registerTask('deploy-patch', 'Upgrade to next patch version, commit, build, deploy the mobile app only', [
+    grunt.registerTask('app-deploy-patch', 'Upgrade to next patch version, commit, build, deploy the mobile app only', [
         'exec:app-version-patch-root',
         'exec:app-version-patch',
         'exec:app-apply-version',
@@ -68,8 +68,7 @@ module.exports = function(grunt) {
         'exec:deploy-www',
         'exec:set-target-deploy-app',
         'exec:app-clean-apikey',
-        'exec:commit-version',
-        'grunt-git-tag'
+        'exec:commit-version'
     ]);
     grunt.registerTask('app-deploy-minor', 'Upgrade to next minor version, commit, build, deploy the mobile app only', [
         'exec:app-version-minor-root',
