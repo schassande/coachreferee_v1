@@ -1,3 +1,6 @@
+import { Invitation } from './../../app/model/invitation';
+import { AlertController } from '@ionic/angular';
+import { InvitationService } from './../../app/service/InvitationService';
 import { HelpService } from './../../app/service/HelpService';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
@@ -18,8 +21,10 @@ export class HomePage implements OnInit {
   deferredPrompt;
 
   constructor(
+      private alertCtrl: AlertController,
       private connectedUserService: ConnectedUserService,
       private helpService: HelpService,
+      private invitationService: InvitationService,
       private changeDetectorRef: ChangeDetectorRef) {
   }
   public getShortName(): string {
@@ -60,5 +65,19 @@ export class HomePage implements OnInit {
         }
         this.deferredPrompt = null;
       });
+  }
+
+  inviteCoach() {
+    // ask the email of the new user
+    this.alertCtrl.create({
+        message: 'To invite a new user of the application without the requirement of a validation,'
+          + 'please enter the email address of the new user to invite:',
+        inputs: [{ value: '', label: 'Email', type: 'text', name: 'email' }],
+        buttons: [ 'Cancel',
+          { text: 'Invite', handler: (data) => {
+            this.invitationService.invite(data.email).subscribe();
+          }},
+        ]
+      }).then( (alert) => alert.present() );
   }
 }

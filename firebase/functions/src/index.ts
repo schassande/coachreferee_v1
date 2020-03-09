@@ -1,3 +1,4 @@
+import { Invitation } from './invitation';
 import { Competency } from './assessment';
 import { SkillProfile } from './skill';
 import { Assessment } from './../../../mobile/src/app/model/assessment';
@@ -18,6 +19,7 @@ const gmailPassword = func.config().gmail.password;
 const collectionCoaching = 'coaching';
 const collectionAssessment = 'assessment';
 const collectionUser = 'user';
+const collectionInvitation = 'invitation';
 const collectionReferee = 'referee';
 const collectionSkillprofile = 'skillprofile';
 
@@ -209,7 +211,7 @@ export const sendNewAccountToAdmin = func.https.onRequest((request, response) =>
 })
 
 export const sendNewAccountToUser = func.https.onRequest((request, response) => {
-    console.log('sendAssessment: request=' + request.method 
+    console.log('sendNewAccountToUser: request=' + request.method 
         + ', \nheaders=' + JSON.stringify(request.headers, null, 2) 
         + ', \nbody=' + JSON.stringify(request.body, null, 2));
     const corsOptions: any = {
@@ -245,6 +247,67 @@ export const sendNewAccountToUser = func.https.onRequest((request, response) => 
                             html: `Hi ${user.firstName} ${user.lastName}, 
                                     <br>You created an account on the app CoachRefere.com. Welcome !
                                     <br>In order to control the data access a validation is required by the application admin.
+                                    <br>
+                                    <br>Best regard
+                                    <br>Coach Referee App`
+                        };
+                        //Send email
+                        transporter.sendMail(email, 
+                            (erro: any) => {
+                                if(erro){
+                                    return response.send(erro.toString());
+                                } else {
+                                    return response.send({ data: 'ok', error: null});
+                                }
+                            });
+                        return 'ok';
+                    }).catch((err: any) => {
+                        console.log(err);
+                        response.status(500).send({ error: err});
+                    })
+            })
+    });
+})
+
+export const sendInvitation = func.https.onRequest((request, response) => {
+    console.log('sendInvitation: request=' + request.method 
+        + ', \nheaders=' + JSON.stringify(request.headers, null, 2) 
+        + ', \nbody=' + JSON.stringify(request.body, null, 2));
+    const corsOptions: any = {
+        origin: (origin: string, callback: any) => {
+            // console.log('sendAssessment: origin=' + origin);
+            callback(null, true);
+            // ['*', 'https://app.coachreferee.com'],
+        },
+        optionsSuccessStatus: 200
+    }
+    cors(corsOptions)(request, response, () => {
+        //get token
+        const tokenStr = request.get('Authorization');
+        if(!tokenStr) {
+            throw new Error('Token required');
+        }
+        const tokenId = tokenStr.split('Bearer ')[1];
+        //Verify token
+        return admin.auth().verifyIdToken(tokenId)
+            .then((decoded: admin.auth.DecodedIdToken) => {
+                // console.log('decoded: ' + decoded);
+                // load data from datastore
+                return loadInvitation(request, response)
+                    .then( (invitation: Invitation) => {
+                        //Build email
+                        const subject = `[CoachReferee.com] Invitation`;
+                        const email = {
+                            from: gmailEmail,
+                            cc: gmailEmail,
+                            to: invitation.email,
+                            subject,
+                            html: `Hi, 
+                                    <br>${invitation.sponsor} invites you to use the web application refereecoach.com.
+                                    <br>The application is a tool for the the touch referee coaches.
+                                    <br>
+                                    <br>To test the application, please go on web site and create an account:
+                                    <br> <a href="https://app.coachreferee.com">https://app.coachreferee.com</a>
                                     <br>
                                     <br>Best regard
                                     <br>Coach Referee App`
@@ -747,4 +810,9 @@ function getAssessmentDateAsString(assessment: Assessment) {
     return assessment.date.getFullYear()
       + DATE_SEP + to2Digit(assessment.date.getMonth() + 1)
       + DATE_SEP + to2Digit(assessment.date.getDate());
+}
+
+async function loadInvitation(request:any, response: any): Promise<Invitation> {
+    const invitation: Invitation = await loadFromDb(collectionInvitation, request.body.data.invitationId, response) as Invitation;
+    return invitation;
 }

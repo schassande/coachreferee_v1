@@ -1,3 +1,4 @@
+import { InvitationService } from './service/InvitationService';
 import { CompetitionRankingNewComponent } from './../pages/competition/competition-ranking-list/competition-ranking-new.component';
 import { CompetitionRankingListComponent } from './../pages/competition/competition-ranking-list/competition-ranking-list.component';
 import { HelpService } from './service/HelpService';
@@ -107,7 +108,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     CoachingEditPage, CoachingGamePage, CoachingImprovmentFeedbackEditPage, CoachingListPage, CoachingPositiveFeedbackEditPage,
     CompetitionImportComponent, CompetitionListPage, CompetitionEditComponent,
     CompetitionCoachesPage, CompetitionHomePage, CompetitionRankingPage, CompetitionUpgradesPage, CompetitionRefereesPage,
-    CompetitionRankingPage, CompetitionRankingBestOf2Page, CompetitionGamesPage, CompetitionRankingListComponent, 
+    CompetitionRankingPage, CompetitionRankingBestOf2Page, CompetitionGamesPage, CompetitionRankingListComponent,
     CompetitionRankingNewComponent,
     HelpWidgetComponent, HomePage,
     ProEditPage, ProListPage,
@@ -147,6 +148,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     DateService,
     EmailService,
     HelpService,
+    InvitationService,
     LocalDatabaseService,
     OfflinesService,
     PROService,

@@ -36,6 +36,8 @@ Priority 2:
 
 ## Next version
 
+- Add the invitation feature. An invited people does not need a validation step by the application administrator.
+
 ## Versin 2.6.0 2020/03/09
 
 - Coaching list: Make closable the sub list of coachings

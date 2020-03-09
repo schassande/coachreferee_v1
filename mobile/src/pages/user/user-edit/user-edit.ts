@@ -1,6 +1,7 @@
+import { InvitationService } from './../../../app/service/InvitationService';
 import { PersistentDataUpdater } from '../../../app/service/PersistentDataFonctions';
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { LoadingController, NavController, ToastController, AlertController } from '@ionic/angular';
 import { ConnectedUserService } from '../../../app/service/ConnectedUserService';
@@ -33,6 +34,7 @@ export class UserEditPage implements OnInit {
     private route: ActivatedRoute,
     public userService: UserService,
     public connectedUserService: ConnectedUserService,
+    private invitationService: InvitationService,
     private toastController: ToastController,
     public loadingCtrl: LoadingController) {
   }
@@ -159,23 +161,31 @@ export class UserEditPage implements OnInit {
   public newUser(event) {
     if (this.isValid()) {
       this.saving = true;
-      this.userService.save(this.user).subscribe((response: ResponseWithData<User>) => {
-        this.saving = false;
-        if (response.error) {
-          if (response.error.code === 'auth/email-already-in-use') {
-            console.log('The email addresse is already used.');
-            this.toastController.create({ message: 'The email addresse is already used: ' + this.user.email, duration: 5000})
-              .then((toast) => toast.present());
-          } else {
-            this.toastController.create({ message: 'Error when saving the user info: ' + this.error, duration: 5000})
-              .then((toast) => toast.present());
+      this.invitationService.getByEmail(this.user.email).pipe(
+        flatMap((rinv) => {
+          if (rinv.data && rinv.data.expirationDate.getTime() > new Date().getTime()) {
+            this.user.accountStatus = 'ACTIVE';
           }
-        } else {
-          this.user = response.data;
-          console.log('Saved user: ', this.user);
-          this.navController.navigateRoot('/home');
-        }
-      });
+          return this.userService.save(this.user);
+        }),
+        map((response: ResponseWithData<User>) => {
+          this.saving = false;
+          if (response.error) {
+            if (response.error.code === 'auth/email-already-in-use') {
+              console.log('The email addresse is already used.');
+              this.toastController.create({ message: 'The email addresse is already used: ' + this.user.email, duration: 5000})
+                .then((toast) => toast.present());
+            } else {
+              this.toastController.create({ message: 'Error when saving the user info: ' + this.error, duration: 5000})
+                .then((toast) => toast.present());
+            }
+          } else {
+            this.user = response.data;
+            console.log('Saved user: ', this.user);
+            this.navController.navigateRoot('/home');
+          }
+        })
+      );
     }
   }
 
