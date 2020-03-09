@@ -36,6 +36,8 @@ Priority 2:
 
 ## Next version
 
+## Versin 2.6.0 2020/03/09
+
 - Coaching list: Make closable the sub list of coachings
 - Coaching list: Can lock the sub list of coachings
 - Coaching edit: Time slot is each 5 minutes
