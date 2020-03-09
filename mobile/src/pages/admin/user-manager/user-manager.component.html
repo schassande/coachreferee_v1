@@ -37,7 +37,7 @@
                     <ion-button *ngIf="user.accountStatus === 'VALIDATION_REQUIRED'" color="success" name="checkmark" shape="round" (click)="validate(user)">validate</ion-button>
                     <ion-button *ngIf="user.accountStatus === 'VALIDATION_REQUIRED'" color="danger" name="close" shape="round" (click)="unvalidate(user)">Reject</ion-button>
                     <ion-button name="trash" color="danger" shape="round" (click)="delete(user)">Delete</ion-button>
-                    <ion-button name="trash" shape="round" (click)="resetPassword(user)">Reset Pwd</ion-button>
+                    <ion-button name="resetPassword" shape="round" (click)="resetPassword(user)">Reset Pwd</ion-button>
                 </div>
             </ion-label>
         </ion-item>
