@@ -36,11 +36,12 @@ Priority 2:
 
 ## Next version
 
-- Time slot is each 5 minutes
-- closable list of coaching in the coaching list page
-- Can lock coaching list in the coaching list page
+- Coaching list: Make closable the sub list of coachings
+- Coaching list: Can lock the sub list of coachings
+- Coaching edit: Time slot is each 5 minutes
+- Coaching Game: can switch period of an item by click on period icon
 
-## Versin 2.5.0
+## Versin 2.5.0 2020/03/07
 
 - Import of referees in a competition. Based on the list of short names.
 - Permit to delete all referees from a competition.
@@ -53,7 +54,7 @@ Priority 2:
 - New feature helping to decide the referee upgrades over a season/year
 - On coaching list page, there is a new button to filter coaching of the day by default
 
-## Versin 2.3.2 (current)
+## Versin 2.3.2
 
 - New admin page showing the use of the application with charts
 - show user id users admin page

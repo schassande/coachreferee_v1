@@ -1,3 +1,5 @@
+import { AssessmentService } from './../../../app/service/AssessmentService';
+import { Assessment } from './../../../app/model/assessment';
 import { HelpService } from './../../../app/service/HelpService';
 import { LocalAppSettings } from '../../../app/model/settings';
 import { AppSettingsService } from '../../../app/service/AppSettingsService';
@@ -35,6 +37,7 @@ export class CoachingGamePage implements OnInit {
   currentRefereeIdx = 0;
   currentReferee: Referee;
   id2referee: Map<string, Referee> = new Map<string, Referee>();
+  id2assessments: Map<string, Assessment[]> = new Map<string, Assessment[]>();
   refereesLoaded = false;
   periods: number[] = [1, 2];
   currentPeriod = 1;
@@ -47,6 +50,7 @@ export class CoachingGamePage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private assessmentService: AssessmentService,
     private navController: NavController,
     public coachingService: CoachingService,
     private helpService: HelpService,
@@ -79,6 +83,7 @@ export class CoachingGamePage implements OnInit {
         this.computeCoachingValues();
         this.loadingReferees();
         this.bookmarkPage();
+        this.loadAssessments();
       }
     });
   }
@@ -170,6 +175,17 @@ export class CoachingGamePage implements OnInit {
     ).subscribe();
   }
 
+  private loadAssessments() {
+    this.coaching.refereeIds.forEach((refId) => {
+      this.assessmentService.getAssessmentByReferee(refId).pipe(
+        map((rassessments) => {
+          this.id2assessments.set(refId, rassessments.data);
+          console.log('Assessment of ', refId, rassessments.data);
+        })
+      ).subscribe();
+    });
+  }
+
   private bookmarkPage() {
     const refereeNames: string[] = this.coaching.referees.map((referee) => referee.refereeShortName);
     const datestring = ('0' + this.coaching.date.getDate()).slice(-2) + '/'
@@ -253,6 +269,16 @@ export class CoachingGamePage implements OnInit {
     this.navController.navigateRoot(`/coaching/coach/${this.coaching.id}/referee/${this.currentRefereeIdx}/positiveFeedback/${index}`);
   }
 
+  switchPeriod(feedback: any) {
+    if (this.coaching.closed) {
+      return;
+    }
+    if (feedback.period === 1) {
+      feedback.period = 2;
+    } else if (feedback.period === 2) {
+      feedback.period = 1;
+    }
+  }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////// IMPROVMENT FEEDBACK //////////////////////////////////////
