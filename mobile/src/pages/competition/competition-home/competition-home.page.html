@@ -17,20 +17,19 @@
         <span style="font-size: 1.4em;">{{competition.name}}</span>
         <br>{{dateService.date2string(competition.date)}} <span *ngIf="competition.allocations.length">over {{competition.allocations.length}} day(s)</span>
         <br>in {{competition.country}} / {{competition.region}}
-        <span *ngIf="owner"><br>Own by {{owner}}</span>
     </div>
     <ion-list>
         <ion-item detail routerLink="/competition/{{competition.id}}/edit">
             <ion-label class="menu-entry">Edit general infos</ion-label>
         </ion-item>
         <ion-item detail routerLink="/competition/{{competition.id}}/referees">
-            <ion-label class="menu-entry">Referees</ion-label>
+            <ion-label class="menu-entry">Referees ({{competition.referees.length}})</ion-label>
         </ion-item>
         <ion-item detail routerLink="/competition/{{competition.id}}/coaches">
-            <ion-label class="menu-entry">Referee Coaches</ion-label>
+            <ion-label class="menu-entry">Referee Coaches ({{competition.refereeCoaches.length}})</ion-label>
         </ion-item>
         <ion-item detail routerLink="/competition/{{competition.id}}/games" *ngIf="competition.allocations.length">
-            <ion-label class="menu-entry">Games</ion-label>
+            <ion-label class="menu-entry">Games ({{competition.allocations.length}})</ion-label>
         </ion-item>
         <ion-item detail routerLink="/competition/{{competition.id}}/upgrades" *ngIf="competition.referees.length">
             <ion-label class="menu-entry">Upgrades</ion-label>
@@ -45,4 +44,5 @@
             <ion-label class="menu-entry">Delete</ion-label>
         </ion-item>
     </ion-list>
+    <div *ngIf="owner" style="font-size:0.7em; text-align: center;"><br>Own by {{owner}}</div>
 </ion-content>

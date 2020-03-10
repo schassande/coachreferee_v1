@@ -36,7 +36,13 @@ Priority 2:
 
 ## Next version
 
+## Versin 2.6.2 2020/03/10
+
 - Add the invitation feature. An invited people does not need a validation step by the application administrator.
+- Sort the user when adding a coach to a competition.
+- Add new game categories
+- Show number of referees/coaches on competition home page.
+- On competition coach page, the button to add a coach is now consistent with the rest of the application style (Button bottom, right).
 
 ## Versin 2.6.0 2020/03/09
 

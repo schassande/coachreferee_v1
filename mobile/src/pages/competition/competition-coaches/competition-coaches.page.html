@@ -23,7 +23,6 @@
         <ion-item-group style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey;">
             <ion-item-divider color="light" style="text-align: center; font-size: 1.2em; padding: 10px;">
                 <ion-label>{{coaches.length}} Referee Coach(es)</ion-label>
-                <ion-icon slot="end" name="add" (click)="addRefereeCoach()"></ion-icon>
             </ion-item-divider>
             <ion-item *ngFor="let coach of coaches">
                 <ion-icon slot="start" *ngIf="!coach.photoId" name="person"></ion-icon>
@@ -40,5 +39,14 @@
 
         </ion-item-group>
     </ion-list>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-row>
+            <ion-col>
+                <ion-fab-button (click)="addRefereeCoach()" style='--background:green; font-size: 1.6em; margin-bottom: 10px;'>
+                    +
+                </ion-fab-button>
+            </ion-col>
+        </ion-row>
+    </ion-fab>
 
 </ion-content>

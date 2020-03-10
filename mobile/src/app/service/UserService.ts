@@ -417,4 +417,17 @@ export class UserService  extends RemotePersistentDataService<User> {
     public sendAccountNotValidated(userId: string): Observable<any> {
         return this.angularFireFunctions.httpsCallable('sendAccountNotValidated')({userId});
     }
+
+    public sortUsers(users: User[]): User[] {
+        if (users) {
+            users.sort((u1, u2) => {
+                let res = u1.firstName.localeCompare(u2.firstName);
+                if (res === 0) {
+                    res = u1.lastName.localeCompare(u2.lastName);
+                }
+                return res;
+            });
+        }
+        return users;
+    }
 }

@@ -83,7 +83,7 @@ export class CompetitionCoachesPage implements OnInit {
     console.log('loadCoaches');
     const obs: Observable<User>[] = [];
     const newCoaches: User[] = [];
-    if (!this.competition.referees || this.competition.referees.length === 0) {
+    if (!this.competition.refereeCoaches || this.competition.refereeCoaches.length === 0) {
       this.coaches = newCoaches;
       return of(this.coaches);
     }
@@ -122,7 +122,9 @@ export class CompetitionCoachesPage implements OnInit {
       const selection: SharedWith = data.data as SharedWith;
       if (selection) {
         selection.users.forEach((user) => {
-          this.toolService.addToSetById(this.competition.refereeCoaches, { coachShortName: user.shortName, coachId: user.id}, 'coachId');
+          console.log({ coachShortName: user.shortName, coachId: user.id});
+          this.toolService.addToSetById(this.competition.refereeCoaches,
+            { coachShortName: user.shortName, coachId: user.id}, 'coachId');
           this.toolService.addToSetById(this.coaches, user);
         });
         this.save().subscribe();

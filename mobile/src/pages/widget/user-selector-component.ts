@@ -37,7 +37,7 @@ export class UserSelectorComponent implements OnInit {
 
     loadUser() {
       this.userService.all().subscribe((response: ResponseWithData<User[]>) => {
-        this.users = response.data;
+        this.users = this.userService.sortUsers(response.data);
         this.error = response.error;
         if (this.users == null || this.users.length === 0) {
             this.modalCtrl.dismiss( { user: null});
