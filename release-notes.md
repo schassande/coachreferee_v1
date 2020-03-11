@@ -36,6 +36,8 @@ Priority 2:
 
 ## Next version
 
+- Export a referee list from a competition
+
 ## Versin 2.6.2 2020/03/10
 
 - Add the invitation feature. An invited people does not need a validation step by the application administrator.
