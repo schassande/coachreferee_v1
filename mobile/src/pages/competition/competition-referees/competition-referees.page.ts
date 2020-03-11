@@ -240,4 +240,16 @@ export class CompetitionRefereesPage implements OnInit {
       this.navController.navigateRoot(`/competition/list`);
     }
   }
+
+  exportReferees() {
+    const content = this.refereeService.listToCSV(this.referees);
+    const oMyBlob = new Blob([content], {type : 'text/csv'});
+    const url = URL.createObjectURL(oMyBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `CoachReferee_export_referees_${this.competition.name}_${this.dateService.date2string(new Date())}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  }
 }

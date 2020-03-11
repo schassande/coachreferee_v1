@@ -48,4 +48,18 @@ export class RefereeService extends RemotePersistentDataService<Referee> {
         const validText = text && text !== null  && text.trim().length > 0 ? text.trim() : null;
         return validText === null ? null : (referee: Referee) => validText === referee.shortName;
     }
+
+    public listToCSV(referees: Referee[]): string {
+        let content = 'firstName, lastName, shortName, country, email, gender, mobilePhones'
+        + ', speakingLanguages, refereeLevel, refereeCategory, nextRefereeLevel\n';
+        referees.forEach((ref) => {
+            content += `${ref.firstName},${ref.lastName},${ref.shortName},${ref.country},${ref.email},${ref.firstName}`;
+            content += `,${ref.gender},${ref.firstName},`;
+            content += `"${ref.mobilePhones ? ref.mobilePhones : ''}"`;
+            content += `,"${ref.speakingLanguages ? ref.speakingLanguages.join(',') : ''}"`;
+            content += `,${ref.referee.refereeLevel},${ref.referee.refereeCategory}`;
+            content += `,${ref.referee.nextRefereeLevel ? ref.referee.nextRefereeLevel : ''}\n`;
+        });
+        return content;
+    }
 }

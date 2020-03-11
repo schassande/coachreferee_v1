@@ -102,16 +102,7 @@ export class RefereeListPage implements OnInit {
   }
   exportReferees() {
     this.refereeService.all().subscribe((rref) => {
-      let content = 'firstName, lastName, shortName, country, email, gender, mobilePhones'
-        + ', speakingLanguages, refereeLevel, refereeCategory, nextRefereeLevel\n';
-      rref.data.forEach((ref) => {
-        content += `${ref.firstName},${ref.lastName},${ref.shortName},${ref.country},${ref.email},${ref.firstName}`;
-        content += `,${ref.gender},${ref.firstName},`;
-        content += `"${ref.mobilePhones ? ref.mobilePhones : ''}"`;
-        content += `,"${ref.speakingLanguages ? ref.speakingLanguages.join(',') : ''}"`;
-        content += `,${ref.referee.refereeLevel},${ref.referee.refereeCategory}`;
-        content += `,${ref.referee.nextRefereeLevel ? ref.referee.nextRefereeLevel : ''}\n`;
-      });
+      const content = this.refereeService.listToCSV(rref.data);
       const oMyBlob = new Blob([content], {type : 'text/csv'});
       const url = URL.createObjectURL(oMyBlob);
       const a = document.createElement('a');
