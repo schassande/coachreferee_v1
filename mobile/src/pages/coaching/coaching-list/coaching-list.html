@@ -43,7 +43,7 @@
 
                 </ion-item-divider>
                 <div *ngIf="coachingList.visible">
-                    <ion-item *ngFor="let coaching of coachingList.coachings" [color]="isPast(coaching) ? '' : 'medium'">
+                    <ion-item *ngFor="let coaching of coachingList.coachings" [color]="getCoachingColor(coaching)">
                         <!-- #BEF990 style='--color: #D8FFFF;' -->
                         <ion-label style="border: none;" class="listItemButton" (click)="coachingSelected($event, coaching)">
                             <p>{{getCoachingDate(coaching)}} {{coaching.timeSlot}}: Field {{coaching.field}}, {{coaching.gameCategory}}<br> Referees: {{getRefereeShortNames(coaching)}}</p>

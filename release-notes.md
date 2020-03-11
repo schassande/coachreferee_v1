@@ -11,8 +11,8 @@ This file lists the development task to do:
 
 Priority 1:
 
+- Function sendXpReport
 - Migrate to IOnic 5 / Angular 9
-- Export of the list of refereees
 - Create user group used to simplify the sharing
 - Une page myday avec coaching du jour
 
@@ -24,19 +24,18 @@ Priority 2:
 - In context menu, of coaching game, add the next and the previous game
 - Settings: limit to referee to a region or a group => defintion of referee group
 - Find a solution to force pushing data when switch online
-- Function sendXpReport
 - Offline photo for users & referees
 - Create a trigger to delete unused photo on storage every week end
 - Referee list : infinite scroll, group by short name or level
 - Coaching list : infinite scroll
 - Assessment list : infinite scroll
-- In coaching-list use a different color for the futur coaching
 - Auto detect disconnected mode.
 - Organize Angular code in submodules with lazy loading.
 
 ## Next version
 
 - Export a referee list from a competition
+- In coaching-list use a different color for the futur coaching
 
 ## Versin 2.6.2 2020/03/10
 

@@ -155,4 +155,16 @@ export class CoachingListPage implements OnInit {
       }
     });
   }
+
+  getCoachingColor(coaching: Coaching): string {
+    const comp = this.dateService.compareDate(coaching.date, new Date());
+    if (comp < 0) { // past
+      return '';
+    } else if (comp === 0) { // today
+      const nowTime: string = this.dateService.time2string(new Date());
+      return nowTime < coaching.timeSlot ? 'danger' : 'success';
+    } else { // futur
+      return 'primary';
+    }
+  }
 }

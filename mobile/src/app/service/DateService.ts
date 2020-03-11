@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 const DATE_SEP = '-';
+const TIME_SEP = ':';
 
 @Injectable()
 export class DateService {
@@ -25,6 +26,11 @@ export class DateService {
     return aDate.getFullYear()
       + DATE_SEP + this.to2Digit(aDate.getMonth() + 1)
       + DATE_SEP + this.to2Digit(aDate.getDate());
+  }
+
+  public time2string(aDate: Date) {
+    return this.to2Digit(aDate.getHours())
+      + TIME_SEP + this.to2Digit(aDate.getMinutes());
   }
 
   public string2date(dateStr: string, aDate: Date): Date {
