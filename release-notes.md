@@ -11,6 +11,7 @@ This file lists the development task to do:
 
 Priority 1:
 
+- test competition referee ranking on a competition with plenty of referees
 - Function sendXpReport
 - Migrate to IOnic 5 / Angular 9
 - Create user group used to simplify the sharing
