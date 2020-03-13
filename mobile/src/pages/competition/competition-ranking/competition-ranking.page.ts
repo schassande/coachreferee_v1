@@ -80,14 +80,16 @@ export class CompetitionRankingPage implements OnInit, RefereeComparator {
         this.list.ranked ? this.list.rankedReferees : this.competition.referees).pipe(
         map( (id2referee) => {
           this.id2referee = id2referee;
+          console.log('id2referee', this.id2referee);
           return paramMap;
         })
       )),
       flatMap((paramMap) => {
-        if (!this.list.ranked && this.list.method === 'A') {
+        if (!this.list.ranked) {
           return this.competitionRefereeRankingService.loadCoachings(this.competition.id, this.list.rankedReferees).pipe(
             map((refereeId2coachings) => {
               this.refereeId2coachings = refereeId2coachings;
+              console.log('refereeId2coachings', this.refereeId2coachings);
               this.autoRanking();
             }
           ));
@@ -130,6 +132,7 @@ export class CompetitionRankingPage implements OnInit, RefereeComparator {
   public askUserChoiseBetween2Referees(ref1: RefereeRef,
                                        ref2: RefereeRef,
                                        list: CompetitionRankingList): Observable<StepResult<string>> {
+    console.log('askUserChoiseBetween2Referees', this.id2referee, this.refereeId2coachings);
     this.refereeData1 = {
       refereeId: ref1.refereeId,
       referee: this.id2referee.get(ref1.refereeId),

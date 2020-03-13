@@ -28,7 +28,9 @@
                 <ion-label>
                     <span>{{importedData.readReferee.firstName}} {{importedData.readReferee.lastName}} ({{importedData.readReferee.shortName}})</span>
                     <span><br>Line {{importedData.lineNumber}}</span>
-                    <span *ngIf="importedData.foundReferee"><br>Already exist in database</span>
+                    <span *ngIf="importedData.foundReferee" style="background-color: orange;"><br>Already exist in database
+                        <br>{{importedData.foundReferee.firstName}} {{importedData.foundReferee.lastName}} from {{importedData.foundReferee.country}}
+                    </span>
                     <span *ngIf="!importedData.foundReferee">
                         <br>from: {{importedData.readReferee.country}}
                         <br>email: {{importedData.readReferee.email}}

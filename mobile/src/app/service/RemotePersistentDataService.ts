@@ -185,8 +185,15 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
         );
     }
     public allO(options: 'default' | 'server' | 'cache'): Observable<ResponseWithData<D[]>> {
-        console.log('DatabaseService[' + this.getLocalStoragePrefix() + '].all()');
-        return from(this.getCollectionRef().get({ source: options})).pipe(
+        console.log(`DatabaseService[${this.getLocalStoragePrefix()}].all(${options})`);
+        let adjustedOptions = options;
+        return this.appSettingsService.get().pipe(
+            flatMap((las) => {
+                if (adjustedOptions === 'default') {
+                    adjustedOptions = las.forceOffline ? 'cache' : 'server';
+                }
+                return from(this.getCollectionRef().get({ source: adjustedOptions}));
+            }),
             map((qs: QuerySnapshot<D>) => this.snapshotToObs(qs)),
             catchError((err) => {
                 // console.log(err);
@@ -235,7 +242,15 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     }
 
     public query(query: Query, options: 'default' | 'server' | 'cache'): Observable<ResponseWithData<D[]>> {
-        return from(query.get({ source: options})).pipe(
+        let adjustedOptions = options;
+        return this.appSettingsService.get().pipe(
+            flatMap((las) => {
+                if (adjustedOptions === 'default') {
+                    adjustedOptions = las.forceOffline ? 'cache' : 'server';
+                }
+                // console.log('query', adjustedOptions);
+                return from(query.get({ source: adjustedOptions}));
+            }),
             map((qs: QuerySnapshot<D>) => this.snapshotToObs(qs)),
             catchError((err) => {
                 console.log(err);
@@ -245,7 +260,14 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
     }
 
     public queryOne(query: Query, options: 'default' | 'server' | 'cache'): Observable<ResponseWithData<D>> {
-        return from(query.limit(1).get({ source: options})).pipe(
+        let adjustedOptions = options;
+        return this.appSettingsService.get().pipe(
+            flatMap((las) => {
+                if (adjustedOptions === 'default') {
+                    adjustedOptions = las.forceOffline ? 'cache' : 'server';
+                }
+                return from(query.limit(1).get({ source: options}));
+            }),
             catchError((err) => {
                 console.log(err);
                 return of({ error: err, data: null});

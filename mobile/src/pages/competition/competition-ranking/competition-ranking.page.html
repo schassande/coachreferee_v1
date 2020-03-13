@@ -14,7 +14,8 @@
 
 <ion-content *ngIf="list">
     <ion-item>
-        <ion-label style="text-align: center">List: <span style="font-weight: bold;">{{list.listName}}</span></ion-label>
+        <ion-label style="text-align: center">List: <span style="font-weight: bold;">{{list.listName}}</span>
+            <span><br>Loading ...</span></ion-label>
     </ion-item>
     <ion-item>
         <ion-label>Competition: {{competition.name}}</ion-label>
@@ -53,7 +54,7 @@
                     <ion-icon name="trash"></ion-icon>
                 </ion-fab-button>
             </ion-col>
-            <ion-col *ngIf="!list.ranked && list.method === 'A' && !showBestOf2">
+            <ion-col *ngIf="!list.ranked && list.method === 'A' && !showBestOf2 && !loading">
                 <ion-fab-button (click)="autoRanking()" class="plusButton">
                     <ion-icon name="git-compare"></ion-icon>
                 </ion-fab-button>

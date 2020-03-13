@@ -146,10 +146,17 @@ export class CompetitionRefereeRankingService extends RemotePersistentDataServic
   public loadCoachings(competitionId: string, referees: RefereeRef[]): Observable<Map<string, Coaching[]>> {
     const refereeId2coachings: Map<string, Coaching[]> = new Map<string, Coaching[]>();
     return forkJoin(referees.map((ref) => {
+      // console.log('loadCoachings for ref', ref.refereeShortName);
       return this.coachingService.getCoachingByRefereeCompetition(ref.refereeId, competitionId).pipe(
-        map(rcoachings => refereeId2coachings.set(ref.refereeId, rcoachings.data))
+        map(rcoachings => {
+          console.log('loadCoachings for ref', ref.refereeId, rcoachings.data);
+          refereeId2coachings.set(ref.refereeId, rcoachings.data);
+        })
       );
-    })).pipe(map(() => refereeId2coachings));
+    })).pipe(map(() => {
+      console.log('loadCoachings after forkjoin');
+      return refereeId2coachings;
+    }));
   }
 
   private createGroupForEachLevel(list: CompetitionRankingList, id2referee: Map<string, Referee>) {

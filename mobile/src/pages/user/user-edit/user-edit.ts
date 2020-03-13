@@ -185,7 +185,7 @@ export class UserEditPage implements OnInit {
             this.navController.navigateRoot('/home');
           }
         })
-      );
+      ).subscribe();
     }
   }
 

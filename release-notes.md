@@ -11,7 +11,11 @@ This file lists the development task to do:
 
 Priority 1:
 
+- coachiing game page / exis of improvment / Be able to indicate an improvement without enter into the detail of the feedback item (just clicking on an icon => 2 colors/shape of the icon in the line)
 - test competition referee ranking on a competition with plenty of referees
+- work in progress indicator: competition import
+- work in progress indicator: sharing of coaching
+- work in progress indicator: account creation
 - Function sendXpReport
 - Migrate to IOnic 5 / Angular 9
 - Create user group used to simplify the sharing
@@ -35,8 +39,10 @@ Priority 2:
 
 ## Next version
 
+## Versin 2.6.3 2020/03/14
 - Export a referee list from a competition
 - In coaching-list use a different color for the futur coaching
+- Fix bug about user creation
 
 ## Versin 2.6.2 2020/03/10
 
