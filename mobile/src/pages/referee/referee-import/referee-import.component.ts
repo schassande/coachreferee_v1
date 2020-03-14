@@ -1,3 +1,4 @@
+import { NavController } from '@ionic/angular';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable, of, forkJoin } from 'rxjs';
@@ -22,8 +23,10 @@ export class RefereeImportComponent implements OnInit {
   importStatus: 'NONE' | 'IMPORTING' | 'IMPORTED' = 'NONE';
   nbToImport: 0;
   showImportButton = false;
+  showNotImportedOnly = false;
 
   constructor(
+    private navController: NavController,
     private refereeService: RefereeService,
     private userService: UserService
   ) { }
@@ -66,8 +69,8 @@ export class RefereeImportComponent implements OnInit {
                 this.nbToImport ++;
               }
             });
-            this.computesEnableImportButton();
             this.analysisStatus = 'ANALYSED';
+            this.computesEnableImportButton();
             // console.log('Analysis completed');
           });
         });
@@ -205,8 +208,19 @@ export class RefereeImportComponent implements OnInit {
     });
     if (obs.length) {
       this.importStatus = 'IMPORTING';
-      forkJoin(obs).subscribe(() => this.importStatus = 'IMPORTED');
+      forkJoin(obs).subscribe(() => {
+        this.importStatus = 'IMPORTED';
+        this.computesEnableImportButton();
+        this.navController.navigateRoot('/referee/list');
+      });
     }
+  }
+  showAll() {
+    this.showNotImportedOnly = false;
+  }
+
+  showNotImported() {
+    this.showNotImportedOnly = true;
   }
 }
 

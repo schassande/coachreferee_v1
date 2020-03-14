@@ -39,6 +39,8 @@ Priority 2:
 
 ## Next version
 
+- improve import of referees
+
 ## Versin 2.6.3 2020/03/14
 - Export a referee list from a competition
 - In coaching-list use a different color for the futur coaching
