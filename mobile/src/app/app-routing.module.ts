@@ -38,6 +38,7 @@ import { XpEditComponent } from '../pages/xp/xp-edit/xp-edit.component';
 import { XpListComponent } from '../pages/xp/xp-list/xp-list.component';
 import { UserLoginComponent } from 'src/pages/user/user-login/user-login.component';
 import { UserManagerComponent } from './../pages/admin/user-manager/user-manager.component';
+import { UserWaitingValidationPage } from '../pages/user/user-waiting-validation/user-waiting-validation'
 
 import { AuthGuard } from './AuthGuard';
 import { AdminGuard } from './AdminGuard';
@@ -94,6 +95,7 @@ const routes: Routes = [
 
   { path: 'user/login', component: UserLoginComponent},
   { path: 'user/create', component: UserEditPage},
+  { path: 'user/waiting-validation', component: UserWaitingValidationPage},
   { path: 'user/edit/:id', component: UserEditPage, canActivate: [AuthGuard] },
 
   { path: 'xp/list', component: XpListComponent, canActivate: [AuthGuard]},

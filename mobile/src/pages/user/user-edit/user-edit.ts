@@ -95,7 +95,7 @@ export class UserEditPage implements OnInit {
       lastName: '',
       shortName: '',
       country: CONSTANTES.countries[0][0],
-      email: '@',
+      email: '',
       gender: 'M',
       mobilePhones: [ ],
       photo: {
@@ -164,6 +164,7 @@ export class UserEditPage implements OnInit {
       this.invitationService.getByEmail(this.user.email).pipe(
         flatMap((rinv) => {
           if (rinv.data && rinv.data.expirationDate.getTime() > new Date().getTime()) {
+            console.log('The user has been invited.');
             this.user.accountStatus = 'ACTIVE';
           }
           return this.userService.save(this.user);
@@ -171,18 +172,22 @@ export class UserEditPage implements OnInit {
         map((response: ResponseWithData<User>) => {
           if (response.error) {
             this.saving = false;
+            this.error = response.error.error;
             if (response.error.code === 'auth/email-already-in-use') {
               console.log('The email addresse is already used.');
-              this.toastController.create({ message: 'The email addresse is already used: ' + this.user.email, duration: 5000})
+              this.toastController.create({ message: 'The email addresse is already used: ' + this.user.email, duration: 10000})
                 .then((toast) => toast.present());
             } else {
-              this.toastController.create({ message: 'Error when saving the user info: ' + this.error, duration: 5000})
+              console.log('Error', response.error);
+              this.toastController.create({ message: 'Error when saving the user info: ' + response.error, duration: 10000})
                 .then((toast) => toast.present());
             }
           } else {
             this.user = response.data;
             console.log('Saved user: ', this.user);
-            this.navController.navigateRoot('/home');
+            if (this.user.accountStatus === 'VALIDATION_REQUIRED') {
+              this.navController.navigateRoot('/user/waiting-validation');
+            }
             this.saving = false;
           }
         })

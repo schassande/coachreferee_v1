@@ -64,22 +64,27 @@ export class UserService  extends RemotePersistentDataService<User> {
             return obs.pipe(
                 flatMap((userCred: firebase.auth.UserCredential) => {
                     // Store in application user datbase the firestore user id
+                    console.log('User has been created on firebase with the id: ', userCred.user.uid);
                     user.accountId = userCred.user.uid;
                     return super.save(user);
                 }),
                 flatMap((ruser) => {
                     if (ruser.data) {
-                        // TODO send an email to admin with the account to validate
+                        console.log('User has been created on user database with the id: ', ruser.data.id);
+                        // Send an email to admin with the account to validate
                         this.sendNewAccountToAdmin(ruser.data.id);
                         this.sendNewAccountToUser(ruser.data.id);
                         this.appSettingsService.setLastUser(user.email, password);
-                        return this.autoLogin();
+                        if (ruser.data.accountStatus === 'ACTIVE') {
+                            return this.autoLogin();
+                        }
                     } else {
-                        return of(ruser);
+                        console.log('Error on the user creation: ', ruser.error);
                     }
+                    return of(ruser);
                 }),
                 catchError((err) => {
-                    console.error(err);
+                    console.error('Error on the user creation: ', err);
                     return of({ error: err, data: null});
                 }),
             );
@@ -188,7 +193,7 @@ export class UserService  extends RemotePersistentDataService<User> {
             flatMap((settings: LocalAppSettings) => {
                 const email = settings.lastUserEmail;
                 const password = settings.lastUserPassword;
-                // console.log('UserService.autoLogin(): lastUserEmail=' + email + ', lastUserPassword=' + password);
+                console.log('UserService.autoLogin(): lastUserEmail=' + email + ', lastUserPassword=' + password);
                 if (!email) {
                     loading.dismiss();
                     return of({ error: null, data: null});
@@ -200,7 +205,7 @@ export class UserService  extends RemotePersistentDataService<User> {
                 }
                 if (password) {
                     // password is defined => try to login
-                    // console.log('UserService.autoLogin(): login(' + email + ', ' + password + ')');
+                    console.log('UserService.autoLogin(): login(' + email + ', ' + password + ')');
                     return this.login(email, password).pipe(
                         map((ruser) =>  {
                             loading.dismiss();

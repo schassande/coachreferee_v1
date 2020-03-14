@@ -95,6 +95,7 @@ import { CameraIconComponent } from '../pages/widget/camera-icon-component';
 import { CompetencyPointsComponent } from '../pages/assessment/assess-referee/competency-points-component';
 import { SharingComponent } from '../pages/widget/sharing-component';
 import { UserSelectorComponent } from '../pages/widget/user-selector-component';
+import { UserWaitingValidationPage } from '../pages/user/user-waiting-validation/user-waiting-validation';
 
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 
@@ -115,7 +116,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     RefereeListPage, RefereeViewPage, RefereeSelectPage, RefereeEditPage, RefereeSeasonUpgradeComponent,
     SettingsPage,
     SkillEditPage, SkillProfileEditPage, SkillProfileListPage, SkillSetEditPage,
-    UserEditPage, UserLoginComponent,
+    UserEditPage, UserLoginComponent, UserWaitingValidationPage,
     XpListComponent, XpEditComponent,
     SharingComponent, CompetencyComponent, CompetencyPointsComponent, PeriodSelectorComponent, CompetitionSelectorComponent,
     CameraIconComponent, UserSelectorComponent],
