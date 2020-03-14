@@ -129,7 +129,7 @@
         </ul>
     </div>
     <div style="text-align: center;">
-        <ion-button shape="round" color="danger" (click)="deleteAccount()" *ngIf="user.dataStatus !== 'NEW'">Delete Account</ion-button>
+        <ion-button shape="round" color="danger" (click)="deleteAccount()" *ngIf="user.dataStatus !== 'NEW' && !saving">Delete Account</ion-button>
         <ion-button shape="round" (click)="newUser($event)" [disabled]="firstName.invalid && lastName.invalid && !saving">Save</ion-button>
     </div>
 </ion-content>

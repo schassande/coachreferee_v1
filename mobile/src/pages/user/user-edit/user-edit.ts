@@ -169,8 +169,8 @@ export class UserEditPage implements OnInit {
           return this.userService.save(this.user);
         }),
         map((response: ResponseWithData<User>) => {
-          this.saving = false;
           if (response.error) {
+            this.saving = false;
             if (response.error.code === 'auth/email-already-in-use') {
               console.log('The email addresse is already used.');
               this.toastController.create({ message: 'The email addresse is already used: ' + this.user.email, duration: 5000})
@@ -183,6 +183,7 @@ export class UserEditPage implements OnInit {
             this.user = response.data;
             console.log('Saved user: ', this.user);
             this.navController.navigateRoot('/home');
+            this.saving = false;
           }
         })
       ).subscribe();
