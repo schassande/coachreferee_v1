@@ -39,9 +39,13 @@ Priority 2:
 
 ## Next version
 
+## Versin 2.6.4 2020/03/14
+
 - improve import of referees
+- bug fix in user creation
 
 ## Versin 2.6.3 2020/03/14
+
 - Export a referee list from a competition
 - In coaching-list use a different color for the futur coaching
 - Fix bug about user creation
