@@ -23,3 +23,12 @@ export interface SharedElement {
     sharedWith: string[];
 }
 
+export type DataRegion =
+    'Europe'
+    |'Australia'
+    |'New Zealand'
+    |'Others'
+    | ''
+    ;
+
+export const DATA_REGIONS =  [ 'Europe', 'Australia', 'New Zealand', 'Others'];

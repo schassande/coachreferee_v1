@@ -43,10 +43,10 @@ export interface SharedWith {
 
 export type DataRegion =
     'Europe'
-    |'Australlia'
+    |'Australia'
     |'New Zealand'
     |'Others'
     | ''
     ;
 
-export const DATA_REGIONS =  [ 'Europe', 'Australlia', 'New Zealand', 'Others'];
+export const DATA_REGIONS =  [ 'Europe', 'Australia', 'New Zealand', 'Others'];

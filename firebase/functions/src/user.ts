@@ -1,5 +1,5 @@
 import { CoachDataSharingAgreement, RefereeDataSharingAgreement } from './privacy';
-import { PersistentData } from './common';
+import { PersistentData, DataRegion } from './common';
 import { GameCategory } from './game';
 
 export type RefereeCoachLevel = 'NONE' | 'EURO_0' | 'EURO_1' | 'EURO_2' | 'EURO_3' |'EURO_4' |'EURO_5'
@@ -108,15 +108,22 @@ export interface Referee extends Person {
     dataSharingAgreement?: RefereeDataSharingAgreement;
 }
 
+export type AuthProvider = 'EMAIL' | 'GOOGLE' | 'FACEBOOK';
 export type AppRole = 'USER' | 'PROFILE_ADMIN' | 'ADMIN';
+export type AccountStatus = 'VALIDATION_REQUIRED' | 'ACTIVE' | 'LOCKED' | 'DELETED';
 export interface User extends Referee {
     password?: string;
     accountId: string;
     token?: string;
     defaultCompetition: string;
+    defaultCompetitionId?: string;
     defaultGameCatory: GameCategory;
     dataSharingAgreement?: CoachDataSharingAgreement;
+    region?: DataRegion;
     role: AppRole;
+    groupIds: string[];
+    authProvider?: AuthProvider;
+    accountStatus: AccountStatus;
 }
 
 export interface UserGroup extends PersistentData {

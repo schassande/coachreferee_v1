@@ -39,6 +39,8 @@ Priority 2:
 
 ## Next version
 
+- fix bug: on invitation the email to the user and the admin must not indicate a validation is required.
+
 ## Versin 2.6.4 2020/03/14
 
 - improve import of referees

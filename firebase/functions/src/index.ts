@@ -1,3 +1,4 @@
+import { AccountStatus } from './../../../mobile/src/app/model/user';
 import { Invitation } from './invitation';
 import { Competency } from './assessment';
 import { SkillProfile } from './skill';
@@ -186,8 +187,9 @@ export const sendNewAccountToAdmin = func.https.onRequest((request, response) =>
                             to: gmailEmail + ', chassande@gmail.com',
                             subject,
                             html: `Hi Admin, 
-                                    <br>${user.firstName} ${user.lastName} has created an account. A validation from an admin is required.
-                                    <br><a href="https://app.coachreferee.com/admin/users">https://app.coachreferee.com/admin/users</a>
+                                    <br>${user.firstName} ${user.lastName} has created an account.`
+                                    + (user.accountStatus === 'VALIDATION_REQUIRED' ? `A validation from an admin is required.` : '')
+                                    + `<br><a href="https://app.coachreferee.com/admin/users">https://app.coachreferee.com/admin/users</a>
                                     <br>
                                     <br>Best regard
                                     <br>Coach Referee App`
@@ -245,9 +247,9 @@ export const sendNewAccountToUser = func.https.onRequest((request, response) => 
                             to: user.email,
                             subject,
                             html: `Hi ${user.firstName} ${user.lastName}, 
-                                    <br>You created an account on the app CoachRefere.com. Welcome !
-                                    <br>In order to control the data access a validation is required by the application admin.
-                                    <br>
+                                    <br>You created an account on the app CoachRefere.com. Welcome !`
+                                    + (user.accountStatus === 'VALIDATION_REQUIRED' ? `<br>In order to control the data access a validation is required by the application admin.` : '')
+                                    + `<br>
                                     <br>Best regard
                                     <br>Coach Referee App`
                         };
